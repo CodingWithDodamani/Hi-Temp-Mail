@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="AR TEMPMAIL — Instant disposable email. No login, no signup, just privacy." />
+  <meta name="theme-color" content="#7c3aed" />
+  <title>AR TEMPMAIL — No Login, No Signup, Just Privacy</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Theme boot: apply saved preference before first paint (default: light) -->
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) { /* no-op */ }
+  </script>
+
+  <style>
+    /* ---------- Icon font ---------- */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      user-select: none;
+    }
+    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+
+    /* ---------- Utilities ---------- */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
+    body { -webkit-tap-highlight-color: transparent; }
+
+    /* ---------- Splash screen ---------- */
+    @keyframes progressFill { from { width: 0%; } to { width: 100%; } }
+    .progress-fill { animation: progressFill 2.4s cubic-bezier(.4, 0, .2, 1) forwards; }
+    @keyframes splashFade { to { opacity: 0; visibility: hidden; } }
+    .splash-hide { animation: splashFade .6s ease forwards; }
+    @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+    .pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+
+    /* ---------- App entrance ---------- */
+    #app { opacity: 0; transition: opacity .5s ease; }
+    #app.ready { opacity: 1; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    #app.ready .fade-up { animation: fadeUp .45s cubic-bezier(.21, 1.02, .73, 1) both; }
+
+    /* ---------- Toast ---------- */
+    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 16px) scale(.95); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+    @keyframes toastOut { from { opacity: 1; transform: translate(-50%, 0) scale(1); } to { opacity: 0; transform: translate(-50%, 12px) scale(.95); } }
+    .toast-in { animation: toastIn .3s cubic-bezier(.21, 1.02, .73, 1) forwards; }
+    .toast-out { animation: toastOut .3s ease forwards; }
+
+    /* ---------- Spinners ---------- */
+    @keyframes spin360 { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 1em; height: 1em;
+      border: 2px solid currentColor; border-right-color: transparent;
+      border-radius: 9999px; display: inline-block; vertical-align: -.125em;
+      animation: spin360 .6s linear infinite;
+    }
+    .btn-spinner .material-symbols-outlined { display: none; }
+    .refreshing .material-symbols-outlined { animation: spin360 1s linear infinite; }
+
+    /* ---------- Rendered email body ---------- */
+    .email-body { word-break: break-word; overflow-wrap: anywhere; }
+    .email-body img, .email-body video { max-width: 100%; height: auto; border-radius: .5rem; }
+    .email-body a { color: #7c3aed; text-decoration: underline; text-underline-offset: 2px; }
+    .dark .email-body a { color: #c4b5fd; }
+    .email-body p { margin: 0 0 .9em; }
+    .email-body h1, .email-body h2, .email-body h3 { font-weight: 700; line-height: 1.3; margin: .5em 0 .45em; }
+    .email-body h1 { font-size: 1.3em; } .email-body h2 { font-size: 1.18em; } .email-body h3 { font-size: 1.06em; }
+    .email-body ul, .email-body ol { margin: 0 0 .9em 1.25em; }
+    .email-body ul { list-style: disc; } .email-body ol { list-style: decimal; }
+    .email-body li { margin-bottom: .3em; }
+    .email-body hr { border: 0; border-top: 1px solid rgb(0 0 0 / .1); margin: 1em 0; }
+    .dark .email-body hr { border-top-color: rgb(255 255 255 / .12); }
+    .email-body blockquote { border-left: 3px solid rgb(124 58 237 / .4); padding-left: .8em; margin: 0 0 .9em; opacity: .8; }
+    .email-body pre { background: rgb(0 0 0 / .05); padding: .8em; border-radius: .6em; overflow-x: auto; font-size: .85em; margin: 0 0 .9em; }
+    .dark .email-body pre { background: rgb(255 255 255 / .08); }
+    .email-body table { max-width: 100%; border-collapse: collapse; }
+  </style>
+</head>
+
+<body class="bg-zinc-100 font-sans text-zinc-900 antialiased selection:bg-violet-500/25 dark:bg-zinc-950 dark:text-zinc-100">
+
+  <!-- ============================== SPLASH SCREEN ============================== -->
+  <div id="splash" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 px-8 dark:from-violet-700 dark:via-purple-800 dark:to-fuchsia-800">
+    <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 shadow-2xl ring-1 ring-white/25 backdrop-blur">
+      <span class="material-symbols-outlined icon-fill !text-[44px] text-white">mail_lock</span>
+    </div>
+    <h1 class="mt-6 text-3xl font-bold tracking-wide text-white">AR TEMPMAIL</h1>
+    <p class="mt-2 text-center text-sm font-medium text-white/80">No Login, No Signup, Just Privacy.</p>
+    <div class="mt-9 h-1.5 w-56 overflow-hidden rounded-full bg-white/25">
+      <div id="splashBar" class="progress-fill h-full rounded-full bg-white"></div>
+    </div>
+    <p class="pulse-soft mt-4 text-xs font-medium tracking-wide text-white/70">Initializing secure mailbox…</p>
+  </div>
+
+  <!-- ============================== APP ============================== -->
+  <div id="app" class="flex min-h-screen flex-col">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/80">
+      <div class="mx-auto flex h-14 max-w-md items-center justify-between px-4">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
+          <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
+        </div>
+        <h1 class="text-lg font-bold tracking-tight">
+          AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
+        </h1>
+        <button id="themeToggle" type="button" aria-label="Toggle dark mode"
+          class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
+          <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="w-full flex-1">
+      <!-- ============================ HOME SCREEN ============================ -->
+      <div id="homeScreen" class="mx-auto max-w-md px-4 pb-10 pt-5">
+
+        <!-- Action buttons -->
+        <div class="grid grid-cols-2 gap-3">
+          <button id="changeBtn" type="button"
+            class="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg shadow-zinc-900/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:bg-zinc-800 active:scale-[.98] dark:bg-white dark:text-zinc-900 dark:shadow-black/30 dark:hover:bg-zinc-200">
+            <span class="material-symbols-outlined text-[20px]">autorenew</span> Change Mail
+          </button>
+          <button id="deleteBtn" type="button"
+            class="flex h-12 items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 hover:bg-rose-100 active:scale-[.98] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+            <span class="material-symbols-outlined text-[20px]">delete</span> Delete Mail
+          </button>
+        </div>
+
+        <!-- Email address card -->
+        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 60ms">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your temporary email</span>
+            <span id="statusBadge" class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>ACTIVE
+            </span>
+          </div>
+          <p id="emailAddress" class="mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
+          <button id="copyBtn" type="button"
+            class="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:opacity-95 active:scale-[.98]">
+            <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy
+          </button>
+        </section>
+
+        <!-- Timer card -->
+        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 120ms">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 dark:text-amber-400">
+                <span class="material-symbols-outlined">timer</span>
+              </div>
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Mail lifetime</p>
+                <p id="timerText" class="mt-0.5 text-2xl font-bold leading-none tabular-nums">10:00</p>
+              </div>
+            </div>
+            <button id="extendBtn" type="button"
+              class="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-zinc-200 px-4 text-sm font-semibold text-zinc-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:border-violet-300 hover:text-violet-600 active:scale-[.98] dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+              <span class="material-symbols-outlined text-[18px]">more_time</span> Extend
+            </button>
+          </div>
+          <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+            <div id="timerBar" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-1000 ease-linear" style="width: 100%"></div>
+          </div>
+        </section>
+
+        <!-- Inbox -->
+        <section class="fade-up mt-6" style="animation-delay: 180ms">
+          <div class="mb-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-bold">Inbox</h2>
+              <span id="inboxCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
+            </div>
+            <button id="refreshBtn" type="button" aria-label="Refresh inbox"
+              class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+              <span class="material-symbols-outlined text-[20px]">refresh</span>
+              <span class="sr-only">Refresh</span>
+            </button>
+          </div>
+          <div id="inboxList" class="max-h-96 space-y-2 overflow-y-auto no-scrollbar pr-0.5" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <!-- ============================ DETAIL SCREEN ============================ -->
+      <div id="detailScreen" class="mx-auto hidden max-w-md px-4 pb-10 pt-4">
+        <button id="backBtn" type="button"
+          class="mb-4 flex h-10 items-center gap-1.5 rounded-xl border border-zinc-200 bg-white pl-2.5 pr-4 text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span> Inbox
+        </button>
+
+        <article class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div class="border-b border-zinc-100 p-5 dark:border-zinc-800">
+            <h2 id="detailSubject" class="text-lg font-bold leading-snug">…</h2>
+            <div class="mt-4 flex items-center gap-3">
+              <div id="detailAvatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-lg font-bold uppercase text-white shadow-md shadow-violet-500/20">·</div>
+              <div class="min-w-0 flex-1">
+                <p id="detailFromName" class="truncate text-sm font-semibold">—</p>
+                <p id="detailFromAddress" class="truncate text-xs text-zinc-500 dark:text-zinc-400"></p>
+              </div>
+              <div class="shrink-0 text-right">
+                <p id="detailTime" class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400"></p>
+                <p class="mt-0.5 flex items-center justify-end gap-1 text-[10px] text-zinc-400 dark:text-zinc-500">
+                  <span class="material-symbols-outlined !text-[12px]">schedule</span> received
+                </p>
+              </div>
+            </div>
+          </div>
+          <div id="detailBody" class="email-body p-5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"></div>
+        </article>
+
+        <button id="deleteMsgBtn" type="button"
+          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 active:scale-[.99] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+          <span class="material-symbols-outlined text-[20px]">delete</span> Delete Message
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer (sticks to bottom on short pages, pushed naturally on long pages) -->
+    <footer class="mt-auto w-full border-t border-zinc-200/70 bg-white/60 backdrop-blur dark:border-zinc-800/70 dark:bg-zinc-950/60">
+      <p class="mx-auto flex max-w-md items-center justify-center gap-1.5 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-4 text-center text-[11px] font-medium text-zinc-500 dark:text-zinc-500">
+        <span class="material-symbols-outlined !text-[13px]">lock</span>
+        AR TEMPMAIL · Temporary inboxes vanish — never use for important accounts · Powered by Mail.tm
+      </p>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite"
+    class="pointer-events-none fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 z-[90] hidden"></div>
+
+  <script type="module">
+    'use strict';
+
+    /* ======================================================================
+       AR TEMPMAIL — single-file temporary email app
+       API: https://api.mail.tm  ·  Polling: every 10s  ·  Timer: 10 minutes
+       ====================================================================== */
+
+    const DIRECT_API = 'https://api.mail.tm'; // official Mail.tm API (per spec)
+    const RELAY_API = '/api/mailtm';          // optional same-origin relay, used only if the
+                                              // browser blocks the direct call (Mail.tm sends
+                                              // CORS headers to its own origin only)
+    let API_BASE = DIRECT_API;
+    const POLL_INTERVAL = 10000;   // inbox auto-refresh
+    const TIMER_SECONDS = 600;     // 10-minute lifetime
+
+    const state = {
+      account: null,          // { id, address, password, token }
+      messages: [],           // last fetched list
+      seenIds: new Set(),     // locally opened message ids
+      hiddenIds: new Set(),   // locally deleted (simulated) message ids
+      secondsLeft: TIMER_SECONDS,
+      timerInterval: null,
+      expired: false,
+      pollInterval: null,
+      firstLoadDone: false,
+      generating: false,
+    };
+
+    /* ---------------- DOM ---------------- */
+    const $ = (id) => document.getElementById(id);
+    const el = {
+      splash: $('splash'), app: $('app'),
+      themeToggle: $('themeToggle'), themeIcon: $('themeIcon'),
+      changeBtn: $('changeBtn'), deleteBtn: $('deleteBtn'),
+      emailAddress: $('emailAddress'), copyBtn: $('copyBtn'), statusBadge: $('statusBadge'),
+      timerText: $('timerText'), timerBar: $('timerBar'), extendBtn: $('extendBtn'),
+      refreshBtn: $('refreshBtn'), inboxList: $('inboxList'), inboxCount: $('inboxCount'),
+      homeScreen: $('homeScreen'), detailScreen: $('detailScreen'), backBtn: $('backBtn'),
+      detailSubject: $('detailSubject'), detailAvatar: $('detailAvatar'),
+      detailFromName: $('detailFromName'), detailFromAddress: $('detailFromAddress'),
+      detailTime: $('detailTime'), detailBody: $('detailBody'), deleteMsgBtn: $('deleteMsgBtn'),
+      toast: $('toast'),
+    };
+
+    /* ---------------- Helpers ---------------- */
+    function escapeHTML(str = '') {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDate(iso) {
+      const then = new Date(iso).getTime();
+      if (Number.isNaN(then)) return '';
+      const diff = Math.max(0, Date.now() - then);
+      const s = Math.floor(diff / 1000);
+      if (s < 60) return 'Just now';
+      const m = Math.floor(s / 60);
+      if (m < 60) return m + ' min ago';
+      const h = Math.floor(m / 60);
+      if (h < 24) return h + 'h ago';
+      const d = Math.floor(h / 24);
+      if (d < 7) return d + 'd ago';
+      return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function randString(len) {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let out = '';
+      if (globalThis.crypto && crypto.getRandomValues) {
+        const bytes = new Uint8Array(len);
+        crypto.getRandomValues(bytes);
+        for (let i = 0; i < len; i++) out += chars[bytes[i] % chars.length];
+      } else {
+        for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return out;
+    }
+
+    function randomLocalPart() {
+      const letters = 'abcdefghijklmnopqrstuvwxyz';
+      const alnum = letters + '0123456789';
+      let out = letters[Math.floor(Math.random() * letters.length)];
+      const n = 7 + Math.floor(Math.random() * 4);
+      for (let i = 0; i < n; i++) out += alnum[Math.floor(Math.random() * alnum.length)];
+      return out;
+    }
+
+    /** Safe fetch with timeout error handling. */
+    async function fetchWithTimeout(url, options = {}, timeout = 15000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } catch (err) {
+        if (err && err.name === 'AbortError') throw new Error('Request timed out. Check your connection.');
+        throw err; // keep raw TypeError so the CORS/network fallback can detect it
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    /**
+     * Small wrapper around the Mail.tm REST API.
+     * - Calls the official API first; if the browser blocks it (CORS / network),
+     *   transparently retries once through the same-origin relay endpoint.
+     * - Auto-retries rate-limited (429) responses with a short backoff.
+     */
+    async function api(path, { method = 'GET', body, auth = false, timeout } = {}) {
+      const call = (base) => {
+        const headers = { Accept: 'application/json' };
+        if (body !== undefined) headers['Content-Type'] = 'application/json';
+        if (auth && state.account && state.account.token) headers.Authorization = 'Bearer ' + state.account.token;
+        return fetchWithTimeout(base + path, {
+          method,
+          headers,
+          body: body !== undefined ? JSON.stringify(body) : undefined,
+        }, timeout);
+      };
+
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      let res = null;
+
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          res = await call(API_BASE);
+        } catch (err) {
+          if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+            console.warn('[AR TEMPMAIL] direct Mail.tm API unreachable — switching to relay endpoint');
+            API_BASE = RELAY_API;
+            showToast('Using secure relay for the Mail.tm API', 'info');
+            continue; // retry immediately through the relay
+          } else if (err instanceof TypeError) {
+            throw new Error('Network error — check your connection.');
+          } else {
+            throw err;
+          }
+        }
+        if (res.status === 429 && attempt < 2) {
+          await sleep(1500 * (attempt + 1)); // rate limited → back off and retry
+          continue;
+        }
+        break;
+      }
+
+      if (res.status === 204) return null;
+
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+
+      if (!res.ok) {
+        const err = new Error(
+          (data && (data['hydra:description'] || data.detail || data.message)) ||
+          ('Request failed (' + res.status + ')')
+        );
+        err.status = res.status;
+        throw err;
+      }
+      return data;
+    }
+
+    /* ---------------- Toast ---------------- */
+    const TOAST_STYLE = {
+      success: { icon: 'check_circle', ring: 'ring-emerald-400/30',  iconColor: 'text-emerald-400' },
+      error:   { icon: 'error',       ring: 'ring-rose-400/30',     iconColor: 'text-rose-400' },
+      warning: { icon: 'warning',     ring: 'ring-amber-400/30',    iconColor: 'text-amber-400' },
+      info:    { icon: 'info',        ring: 'ring-violet-400/30',   iconColor: 'text-violet-300' },
+    };
+    let toastTimer = null;
+
+    function showToast(msg, type = 'info') {
+      const meta = TOAST_STYLE[type] || TOAST_STYLE.info;
+      el.toast.innerHTML =
+        '<div class="flex items-center gap-2.5 rounded-2xl bg-zinc-900/95 px-4 py-3 shadow-2xl ring-1 backdrop-blur dark:bg-zinc-800/95 dark:ring-white/10 ' + meta.ring + '">' +
+          '<span class="material-symbols-outlined icon-fill !text-[20px] ' + meta.iconColor + '">' + meta.icon + '</span>' +
+          '<p class="max-w-[82vw] break-words text-sm font-medium text-white">' + escapeHTML(msg) + '</p>' +
+        '</div>';
+      el.toast.classList.remove('hidden', 'toast-out');
+      el.toast.classList.add('toast-in');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        el.toast.classList.remove('toast-in');
+        el.toast.classList.add('toast-out');
+        setTimeout(() => {
+          el.toast.classList.add('hidden');
+          el.toast.classList.remove('toast-out');
+        }, 320);
+      }, 3000);
+    }
+
+    /* ---------------- Button spinners ---------------- */
+    function showSpinner(button) {
+      if (!button || button.dataset.loading === '1') return;
+      button.dataset.loading = '1';
+      button.disabled = true;
+      button.classList.add('btn-spinner', 'cursor-wait');
+      const s = document.createElement('span');
+      s.className = 'spinner';
+      s.setAttribute('aria-hidden', 'true');
+      button.prepend(s);
+    }
+
+    function hideSpinner(button) {
+      if (!button) return;
+      button.querySelectorAll('.spinner').forEach((n) => n.remove());
+      button.classList.remove('btn-spinner', 'cursor-wait');
+      button.disabled = false;
+      delete button.dataset.loading;
+    }
+
+    /* ---------------- Theme ---------------- */
+    function applyTheme(dark) {
+      document.documentElement.classList.toggle('dark', dark);
+      el.themeIcon.textContent = dark ? 'light_mode' : 'dark_mode';
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* no-op */ }
+    }
+
+    function initTheme() {
+      let theme = 'light';
+      try { theme = localStorage.getItem('theme') || 'light'; } catch (e) { /* no-op */ }
+      applyTheme(theme === 'dark');
+    }
+
+    el.themeToggle.addEventListener('click', () => {
+      const dark = !document.documentElement.classList.contains('dark');
+      applyTheme(dark);
+      showToast(dark ? 'Dark mode enabled' : 'Light mode enabled', 'info');
+    });
+
+    /* ---------------- Timer ---------------- */
+    function renderTimer() {
+      const m = Math.floor(state.secondsLeft / 60);
+      const s = state.secondsLeft % 60;
+      el.timerText.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      const pct = Math.max(0, Math.min(100, (state.secondsLeft / TIMER_SECONDS) * 100));
+      el.timerBar.style.width = pct + '%';
+      const danger = state.expired || state.secondsLeft <= 60;
+      el.timerText.classList.toggle('text-rose-500', danger);
+      el.timerText.classList.toggle('dark:text-rose-400', danger);
+    }
+
+    function stopTimer() {
+      if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+    }
+
+    function startTimer(seconds = TIMER_SECONDS) {
+      stopTimer();
+      state.secondsLeft = seconds;
+      state.expired = false;
+      renderTimer();
+      state.timerInterval = setInterval(() => {
+        if (state.secondsLeft > 0) state.secondsLeft--;
+        if (state.secondsLeft <= 0 && !state.expired) {
+          state.expired = true;
+          renderTimer();
+          showToast('Timer expired! Extend or get new email.', 'warning');
+          return;
+        }
+        renderTimer();
+      }, 1000);
+    }
+
+    function extendTimer() {
+      startTimer(TIMER_SECONDS);
+      showToast('Timer extended — 10 more minutes', 'success');
+    }
+
+    /* ---------------- Polling ---------------- */
+    function stopPolling() {
+      if (state.pollInterval) { clearInterval(state.pollInterval); state.pollInterval = null; }
+    }
+
+    function startPolling() {
+      stopPolling();
+      state.pollInterval = setInterval(() => checkInbox(false), POLL_INTERVAL);
+    }
+
+    /* ---------------- Email address card ---------------- */
+    function setStatusBadge(text, tone) {
+      const tones = {
+        active:  'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+        loading: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+        error:   'bg-rose-500/10 text-rose-600 dark:text-rose-400',
+      };
+      el.statusBadge.className = 'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold ' + (tones[tone] || tones.active);
+      el.statusBadge.innerHTML = '<span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>' + escapeHTML(text);
+    }
+
+    function setEmailLoading(loading) {
+      if (loading) {
+        el.emailAddress.innerHTML =
+          '<span class="spinner text-violet-500"></span><span class="ml-2 text-base font-medium text-zinc-400 dark:text-zinc-500">Generating secure mailbox…</span>';
+      } else if (state.account) {
+        el.emailAddress.textContent = state.account.address;
+      } else {
+        el.emailAddress.textContent = '—';
+      }
+    }
+
+    function setEmailError(msg) {
+      el.emailAddress.innerHTML =
+        '<span class="text-base font-semibold text-rose-500 dark:text-rose-400">' + escapeHTML(msg) + '</span>';
+    }
+
+    /* ---------------- Core: generate a new temp email ---------------- */
+    async function getNewEmail(triggerBtn = null) {
+      if (state.generating) return;
+      state.generating = true;
+      if (triggerBtn) showSpinner(triggerBtn);
+      stopPolling();
+      stopTimer();
+      setEmailLoading(true);
+      setStatusBadge('GENERATING', 'loading');
+
+      try {
+        /* 1) Fetch available public domain */
+        const domainsData = await api('/domains?page=1');
+        const domains = ((domainsData && domainsData['hydra:member']) || domainsData || [])
+          .filter((d) => d && d.isActive && !d.isPrivate && d.domain)
+          .map((d) => d.domain);
+        if (!domains.length) throw new Error('No mail domains available right now.');
+        const domain = domains[Math.floor(Math.random() * domains.length)];
+
+        /* 2) Create account (retry on address collision) */
+        let account = null;
+        for (let attempt = 0; attempt < 4 && !account; attempt++) {
+          const address = (randomLocalPart() + '@' + domain).toLowerCase();
+          const password = randString(16);
+          try {
+            const created = await api('/accounts', { method: 'POST', body: { address, password } });
+            account = { id: created.id, address: created.address || address, password };
+          } catch (err) {
+            if (err.status === 422 || err.status === 400) continue; // address taken → retry
+            throw err;
+          }
+        }
+        if (!account) throw new Error('Could not create a mailbox. Please try again.');
+
+        /* 3) Get auth token */
+        const tokenData = await api('/token', {
+          method: 'POST',
+          body: { address: account.address, password: account.password },
+        });
+        account.token = tokenData.token;
+
+        /* 4) Switch session */
+        state.account = account;
+        state.messages = [];
+        state.seenIds = new Set();
+        state.hiddenIds = new Set();
+        state.firstLoadDone = false;
+        state.generating = false;
+
+        setEmailLoading(false);
+        setStatusBadge('ACTIVE', 'active');
+        renderInbox();
+        startTimer(TIMER_SECONDS);
+        startPolling();
+        checkInbox(false);
+        showToast('New email generated!', 'success');
+      } catch (err) {
+        state.generating = false;
+        console.error('[AR TEMPMAIL] getNewEmail failed:', err);
+        setStatusBadge('OFFLINE', 'error');
+        setEmailError(err.message || 'Failed to generate email.');
+        showToast(err.message || 'Failed to generate email.', 'error');
+      } finally {
+        state.generating = false;
+        if (triggerBtn) hideSpinner(triggerBtn);
+      }
+    }
+
+    /* ---------------- Core: delete current account, then regenerate ---------------- */
+    async function deleteMail() {
+      showSpinner(el.deleteBtn);
+      const acc = state.account;
+      if (acc) {
+        try {
+          await api('/accounts/' + encodeURIComponent(acc.id), { method: 'DELETE', auth: true });
+        } catch (err) {
+          console.warn('[AR TEMPMAIL] account delete failed (regenerating anyway):', err);
+        }
+      }
+      await getNewEmail(el.deleteBtn); // spinner is kept & cleared inside
+    }
+
+    /* ---------------- Inbox ---------------- */
+    const EMPTY_INBOX_HTML =
+      '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+        '<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-500 dark:text-violet-400">' +
+          '<span class="material-symbols-outlined icon-fill pulse-soft !text-[32px]">inbox</span>' +
+        '</div>' +
+        '<p class="mt-4 text-sm font-semibold">Your inbox is empty</p>' +
+        '<p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Waiting for incoming emails…<br/>Auto-refreshes every 10 seconds.</p>' +
+      '</div>';
+
+    function renderInbox() {
+      const visible = state.messages.filter((m) => !state.hiddenIds.has(m.id));
+      el.inboxCount.textContent = String(visible.length);
+
+      if (!visible.length) {
+        el.inboxList.innerHTML = EMPTY_INBOX_HTML;
+        return;
+      }
+
+      el.inboxList.innerHTML = visible.map((m, i) => {
+        const fromName = ((m.from && (m.from.name || m.from.address)) || 'Unknown sender').trim();
+        const initial = escapeHTML((fromName[0] || '?').toUpperCase());
+        const subject = escapeHTML(m.subject || '(No subject)');
+        const intro = escapeHTML(m.intro || 'No preview available');
+        const unread = !state.seenIds.has(m.id) && !m.seen;
+        const delay = ' style="animation-delay:' + Math.min(i * 40, 200) + 'ms"';
+        return (
+          '<button type="button" data-id="' + escapeHTML(m.id) + '"' + delay +
+            ' class="mail-item group w-full rounded-2xl border border-zinc-200 bg-white p-3.5 text-left transition hover:border-violet-300 hover:shadow-md hover:shadow-violet-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-500/40 fade-up">' +
+            '<span class="flex items-start gap-3">' +
+              '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
+              '<span class="min-w-0 flex-1">' +
+                '<span class="flex items-center justify-between gap-2">' +
+                  '<span class="truncate text-sm font-semibold ' + (unread ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-300') + '">' + escapeHTML(fromName) + '</span>' +
+                  '<span class="shrink-0 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">' + escapeHTML(formatDate(m.createdAt)) + '</span>' +
+                '</span>' +
+                '<span class="mt-0.5 block truncate text-[13px] font-medium ' + (unread ? 'text-violet-600 dark:text-violet-400' : 'text-zinc-500 dark:text-zinc-400') + '">' + subject + '</span>' +
+                '<span class="mt-0.5 block truncate text-xs text-zinc-400 dark:text-zinc-500">' + intro + '</span>' +
+              '</span>' +
+              (unread ? '<span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-violet-500"></span>' : '') +
+            '</span>' +
+          '</button>'
+        );
+      }).join('');
+    }
+
+    async function checkInbox(manual) {
+      if (state.generating || !state.account || !state.account.token) {
+        if (manual) showToast('No active mailbox yet.', 'warning');
+        return;
+      }
+      if (manual) el.refreshBtn.classList.add('refreshing');
+      try {
+        const data = await api('/messages?page=1', { auth: true });
+        const list = (data && data['hydra:member']) || data || [];
+        list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // newest first
+
+        const prevIds = new Set(state.messages.map((m) => m.id));
+        const fresh = state.firstLoadDone
+          ? list.filter((m) => !prevIds.has(m.id) && !state.hiddenIds.has(m.id))
+          : [];
+
+        state.messages = list;
+        state.firstLoadDone = true;
+        renderInbox();
+        if (fresh.length) showToast(fresh.length + ' new email' + (fresh.length > 1 ? 's' : '') + ' received!', 'success');
+      } catch (err) {
+        if (err.status === 401) {
+          if (!state.generating) {
+            stopPolling();
+            showToast('Session expired — generating a new email…', 'warning');
+            await getNewEmail();
+          }
+          return;
+        }
+        console.error('[AR TEMPMAIL] checkInbox failed:', err);
+        if (manual) showToast(err.message || 'Could not refresh inbox.', 'error');
+      } finally {
+        el.refreshBtn.classList.remove('refreshing');
+      }
+    }
+
+    /* ---------------- Message detail ---------------- */
+    function switchScreen(screen) {
+      const showHome = screen === 'home';
+      el.homeScreen.classList.toggle('hidden', !showHome);
+      el.detailScreen.classList.toggle('hidden', showHome);
+      window.scrollTo(0, 0);
+    }
+
+    function sanitizeHTML(dirty = '') {
+      const doc = new DOMParser().parseFromString(dirty, 'text/html');
+      doc.querySelectorAll('script, style, iframe, frame, frameset, object, embed, link, meta, base, form, input, button, textarea, select')
+        .forEach((n) => n.remove());
+      doc.querySelectorAll('*').forEach((node) => {
+        for (const attr of Array.from(node.attributes || [])) {
+          const name = attr.name.toLowerCase();
+          if (name.startsWith('on')) { node.removeAttribute(attr.name); continue; }
+          if ((name === 'href' || name === 'src' || name === 'xlink:href' || name === 'srcset' || name === 'action') &&
+              /^\s*(javascript|vbscript|data:text\/html)/i.test(attr.value)) {
+            node.removeAttribute(attr.name);
+          }
+        }
+        if (node.tagName === 'A') {
+          node.setAttribute('target', '_blank');
+          node.setAttribute('rel', 'noopener noreferrer nofollow');
+        }
+      });
+      return (doc.body && doc.body.innerHTML) || '';
+    }
+
+    function renderEmailBody(msg) {
+      const htmlParts = Array.isArray(msg.html) ? msg.html : (msg.html ? [msg.html] : []);
+      if (htmlParts.length) return sanitizeHTML(htmlParts.join('\n'));
+      if (msg.text) {
+        return '<div class="whitespace-pre-wrap">' + escapeHTML(msg.text) + '</div>';
+      }
+      return '<p class="text-sm italic text-zinc-400 dark:text-zinc-500">This email has no content.</p>';
+    }
+
+    function renderDetail(msg) {
+      const fromName = ((msg.from && (msg.from.name || msg.from.address)) || 'Unknown sender').trim();
+      el.detailSubject.textContent = msg.subject || '(No subject)';
+      el.detailAvatar.textContent = (fromName[0] || '?').toUpperCase();
+      el.detailFromName.textContent = fromName;
+      el.detailFromAddress.textContent = (msg.from && msg.from.address) || '';
+      el.detailTime.textContent = formatDate(msg.createdAt);
+      el.detailBody.innerHTML = renderEmailBody(msg);
+      el.deleteMsgBtn.dataset.id = msg.id || '';
+    }
+
+    async function openEmail(id) {
+      if (!state.account || !state.account.token) return;
+      switchScreen('detail');
+      el.detailSubject.textContent = 'Loading…';
+      el.detailAvatar.textContent = '·';
+      el.detailFromName.textContent = '—';
+      el.detailFromAddress.textContent = '';
+      el.detailTime.textContent = '';
+      el.deleteMsgBtn.dataset.id = '';
+      el.detailBody.innerHTML =
+        '<div class="flex items-center justify-center gap-2 py-10 text-zinc-400 dark:text-zinc-500">' +
+          '<span class="spinner"></span><span class="text-sm">Loading message…</span>' +
+        '</div>';
+
+      try {
+        const msg = await api('/messages/' + encodeURIComponent(id), { auth: true });
+        if (msg) renderDetail(msg);
+        state.seenIds.add(id);
+        renderInbox();
+      } catch (err) {
+        if (err.status === 401) {
+          if (!state.generating) {
+            stopPolling();
+            showToast('Session expired — generating a new email…', 'warning');
+            await getNewEmail();
+            switchScreen('home');
+          }
+          return;
+        }
+        console.error('[AR TEMPMAIL] openEmail failed:', err);
+        el.detailBody.innerHTML =
+          '<p class="text-sm text-rose-500 dark:text-rose-400">Failed to load message: ' + escapeHTML(err.message || 'unknown error') + '</p>';
+        showToast('Failed to load message.', 'error');
+      }
+    }
+
+    /* ---------------- Clipboard ---------------- */
+    async function copyToClipboard() {
+      const address = state.account && state.account.address;
+      if (!address) { showToast('No email address to copy yet.', 'warning'); return; }
+      let ok = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(address);
+          ok = true;
+        } else {
+          throw new Error('fallback');
+        }
+      } catch (e) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = address;
+          ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ok = document.execCommand('copy');
+          ta.remove();
+        } catch (e2) { ok = false; }
+      }
+      showToast(ok ? 'Copied!' : 'Copy failed — select the address manually.', ok ? 'success' : 'error');
+    }
+
+    /* ---------------- Event wiring ---------------- */
+    el.changeBtn.addEventListener('click', () => getNewEmail(el.changeBtn));
+    el.deleteBtn.addEventListener('click', deleteMail);
+    el.copyBtn.addEventListener('click', copyToClipboard);
+    el.extendBtn.addEventListener('click', extendTimer);
+    el.refreshBtn.addEventListener('click', () => checkInbox(true));
+    el.backBtn.addEventListener('click', () => { switchScreen('home'); checkInbox(false); });
+
+    el.inboxList.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-id]');
+      if (item) openEmail(item.dataset.id);
+    });
+
+    el.deleteMsgBtn.addEventListener('click', () => {
+      const id = el.deleteMsgBtn.dataset.id;
+      if (id) {
+        state.hiddenIds.add(id);
+        state.messages = state.messages.filter((m) => m.id !== id);
+        renderInbox();
+        showToast('Message deleted', 'success');
+      }
+      switchScreen('home');
+    });
+
+    // Instant refresh when returning to the tab
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && state.account) checkInbox(false);
+    });
+
+    /* ---------------- App init ---------------- */
+    function initApp() {
+      initTheme();
+      getNewEmail(); // generate first email in parallel with the splash animation
+      setTimeout(() => {
+        el.splash.classList.add('splash-hide'); // progress bar reached 100% → fade out
+        el.app.classList.add('ready');
+        setTimeout(() => { if (el.splash && el.splash.parentNode) el.splash.parentNode.removeChild(el.splash); }, 700);
+      }, 2600);
+    }
+
+    initApp();
+
+    /* QA / debug handle (non-intrusive) */
+    window.__AR_TEMPMAIL__ = { state, checkInbox, getNewEmail, renderDetail, renderInbox, switchScreen, showToast };
+  </script>
+</body>
+</html>
