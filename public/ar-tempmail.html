@@ -11,7 +11,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
 
   <!-- Tailwind CSS (CDN) -->
@@ -22,7 +22,19 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Space Grotesk"', 'Inter', 'ui-sans-serif', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+          },
+          colors: {
+            // v4 surface tokens — violet-tinted neutrals so the whole app hums with the brand hue
+            paper: { light: '#f5f3fb', dark: '#0b0912' },
+            card:  { light: '#ffffff', dark: '#16131f' },
+            line:  { light: '#e8e4f2', dark: '#262133' },
+          },
+          boxShadow: {
+            card: '0 1px 2px rgb(24 16 48 / .05), 0 10px 30px -14px rgb(24 16 48 / .14)',
+            pop:  '0 16px 44px -14px rgb(124 58 237 / .45)',
           },
         },
       },
@@ -89,7 +101,7 @@
       position: relative; width: 46px; height: 26px; border-radius: 9999px;
       background: #d4d4d8; transition: background .2s ease; flex-shrink: 0; cursor: pointer;
     }
-    .dark .switch { background: #3f3f46; }
+    .dark .switch { background: #2b2439; }
     .switch[data-on="true"] { background: linear-gradient(to right, #8b5cf6, #d946ef); }
     .switch .knob {
       position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
@@ -99,25 +111,27 @@
     .switch[data-on="true"] .knob { transform: translateX(20px); }
 
     /* ---------- Segmented control ---------- */
-    .seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: #e4e4e7; }
-    .dark .seg { background: #27272a; }
+    .seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: #e9e5f3; }
+    .dark .seg { background: #251f33; }
     .seg button {
       padding: 6px 14px; border-radius: 9px; font-size: 12px; font-weight: 600; color: #71717a;
       transition: all .15s ease;
     }
     .dark .seg button { color: #a1a1aa; }
     .seg button.active { background: #fff; color: #7c3aed; box-shadow: 0 1px 4px rgb(0 0 0 / .12); }
-    .dark .seg button.active { background: #3f3f46; color: #d8b4fe; }
+    .dark .seg button.active { background: #342b47; color: #d8b4fe; }
 
-    /* ---------- OTP chip ---------- */
+    /* ---------- OTP chip (mono — codes must scan as codes) ---------- */
     .otp-chip {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: rgb(139 92 246 / .12); color: #7c3aed;
-      border: 1px dashed rgb(139 92 246 / .45);
-      border-radius: 8px; padding: 2px 8px;
-      font-weight: 700; font-size: 12px; letter-spacing: .08em; font-variant-numeric: tabular-nums;
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgb(139 92 246 / .1); color: #6d28d9;
+      border: 1px dashed rgb(139 92 246 / .5);
+      border-radius: 9px; padding: 3px 9px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-weight: 700; font-size: 12px; letter-spacing: .1em; font-variant-numeric: tabular-nums;
     }
-    .dark .otp-chip { background: rgb(139 92 246 / .15); color: #d8b4fe; border-color: rgb(216 180 254 / .4); }
+    .dark .otp-chip { background: rgb(167 139 250 / .12); color: #d8b4fe; border-color: rgb(196 181 253 / .45); }
+    .otp-chip:hover { background: rgb(139 92 246 / .18); }
 
     /* ---------- Rendered email body ---------- */
     .email-body { word-break: break-word; overflow-wrap: anywhere; }
@@ -142,8 +156,41 @@
     body.privacy-blur:not(.revealed) .blur-target { filter: blur(7px); }
 
     /* ---------- Confirm / import sheets ---------- */
-    @keyframes sheetPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
-    .sheet-pop { animation: sheetPop .22s cubic-bezier(.21, 1.02, .73, 1) both; }
+    @keyframes sheetPop { from { opacity: 0; transform: translateY(20px) scale(.96); } to { opacity: 1; transform: none; } }
+    .sheet-pop { animation: sheetPop .3s cubic-bezier(.22, 1.2, .36, 1) both; }
+
+    /* ---------- v4 design system ---------- */
+    /* Deterministic sender avatar gradients — hue picked by name hash, no blue/indigo */
+    .av-0 { background-image: linear-gradient(135deg, #8b5cf6, #d946ef); }
+    .av-1 { background-image: linear-gradient(135deg, #d946ef, #ec4899); }
+    .av-2 { background-image: linear-gradient(135deg, #a855f7, #7c3aed); }
+    .av-3 { background-image: linear-gradient(135deg, #f43f5e, #fb923c); }
+    .av-4 { background-image: linear-gradient(135deg, #14b8a6, #10b981); }
+    .av-5 { background-image: linear-gradient(135deg, #f59e0b, #f43f5e); }
+    .av-6 { background-image: linear-gradient(135deg, #ec4899, #a855f7); }
+    .av-7 { background-image: linear-gradient(135deg, #10b981, #a3e635); }
+
+    /* Timer ring (conic progress; --p = 0..100) with warning / danger tones */
+    .timer-ring { background: conic-gradient(#8b5cf6 calc(var(--p, 100) * 1%), rgb(139 92 246 / .14) 0); }
+    .timer-ring.warn { background: conic-gradient(#f59e0b calc(var(--p, 100) * 1%), rgb(245 158 11 / .14) 0); }
+    .timer-ring.danger { background: conic-gradient(#f43f5e calc(var(--p, 100) * 1%), rgb(244 63 94 / .14) 0); }
+
+    /* Bottom-nav animated active pill */
+    .tab-btn::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      width: 34px; height: 3px; border-radius: 0 0 9999px 9999px;
+      background: linear-gradient(to right, #8b5cf6, #d946ef);
+      transform: translateX(-50%) scaleX(0); opacity: 0;
+      transition: transform .25s cubic-bezier(.21, 1.02, .73, 1), opacity .2s ease;
+    }
+    .tab-btn.active::before { transform: translateX(-50%) scaleX(1); opacity: 1; }
+
+    /* Slim branded scrollbar for long lists */
+    .thin-scroll { scrollbar-width: thin; scrollbar-color: rgb(139 92 246 / .35) transparent; }
+    .thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .thin-scroll::-webkit-scrollbar-track { background: transparent; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: rgb(139 92 246 / .3); border-radius: 9999px; }
+    .thin-scroll::-webkit-scrollbar-thumb:hover { background: rgb(139 92 246 / .5); }
 
     /* ---------- Attachment chip ---------- */
     .att-chip { transition: border-color .15s ease, background .15s ease; }
@@ -161,7 +208,7 @@
   </style>
 </head>
 
-<body class="bg-zinc-100 font-sans text-zinc-900 antialiased selection:bg-violet-500/25 dark:bg-zinc-950 dark:text-zinc-100">
+<body class="bg-paper-light font-sans text-zinc-900 antialiased selection:bg-violet-500/25 dark:bg-paper-dark dark:text-zinc-100">
 
   <!-- Decorative background glows -->
   <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
@@ -177,7 +224,7 @@
         <span class="material-symbols-outlined icon-fill !text-[44px] text-white">mail_lock</span>
       </div>
     </div>
-    <h1 class="mt-7 text-3xl font-bold tracking-wide text-white">AR TEMPMAIL</h1>
+    <h1 class="font-display mt-7 text-3xl font-bold tracking-tight text-white">AR TEMPMAIL</h1>
     <p class="mt-2 text-center text-sm font-medium text-white/80">No Login, No Signup, Just Privacy.</p>
     <div class="mt-9 h-1.5 w-56 overflow-hidden rounded-full bg-white/25">
       <div id="splashBar" class="progress-fill h-full rounded-full bg-white"></div>
@@ -189,16 +236,16 @@
   <div id="app" class="flex min-h-screen flex-col">
 
     <!-- Header -->
-    <header class="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/80">
+    <header class="sticky top-0 z-40 border-b border-line-light/70 bg-card-light/80 backdrop-blur-xl dark:border-line-dark/70 dark:bg-paper-dark/85">
       <div class="mx-auto flex h-14 max-w-md items-center justify-between px-4">
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
           <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
         </div>
-        <h1 class="text-lg font-bold tracking-tight">
+        <h1 class="font-display text-lg font-bold tracking-tight">
           AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
         </h1>
         <button id="themeToggle" type="button" aria-label="Toggle dark mode"
-          class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
+          class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
           <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
         </button>
       </div>
@@ -235,14 +282,14 @@
         </div>
 
         <!-- Identity card -->
-        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 60ms">
+        <section class="fade-up mt-4 rounded-2xl border border-line-light bg-card-light p-5 shadow-card dark:border-line-dark dark:bg-card-dark" style="animation-delay: 60ms">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your temporary email</span>
+            <span class="text-[10px] font-bold uppercase tracking-[.14em] text-zinc-500 dark:text-zinc-400">Your temporary email</span>
             <span id="statusBadge" class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
               <span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>ACTIVE
             </span>
           </div>
-          <p id="emailAddress" class="blur-target mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
+          <p id="emailAddress" class="blur-target mt-2.5 break-all font-mono text-[15px] font-bold leading-snug tracking-tight sm:text-base">Generating secure mailbox…</p>
           <div class="mt-4 flex gap-2">
             <button id="copyBtn" type="button"
               class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:opacity-95 active:scale-[.98]">
@@ -263,25 +310,25 @@
           </p>
         </section>
 
-        <!-- Timer card -->
-        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 120ms">
+        <!-- Timer card (v4: conic progress ring) -->
+        <section class="fade-up mt-4 rounded-2xl border border-line-light bg-card-light p-5 shadow-card dark:border-line-dark dark:bg-card-dark" style="animation-delay: 120ms">
           <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 dark:text-amber-400">
-                <span class="material-symbols-outlined">timer</span>
+            <div class="flex items-center gap-4">
+              <div class="relative h-16 w-16 shrink-0" role="timer" aria-label="Mailbox lifetime">
+                <div id="timerRing" class="timer-ring h-16 w-16 rounded-full"></div>
+                <div class="absolute inset-[5px] flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark">
+                  <p id="timerText" class="font-mono text-sm font-bold leading-none tabular-nums">10:00</p>
+                </div>
               </div>
               <div>
-                <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Mail lifetime</p>
-                <p id="timerText" class="mt-0.5 text-2xl font-bold leading-none tabular-nums">10:00</p>
+                <p class="text-[10px] font-bold uppercase tracking-[.14em] text-zinc-500 dark:text-zinc-400">Mail lifetime</p>
+                <p class="mt-1 text-xs font-medium leading-snug text-zinc-400 dark:text-zinc-500">Saved addresses keep working beyond the timer.</p>
               </div>
             </div>
             <button id="extendBtn" type="button"
-              class="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-zinc-200 px-4 text-sm font-semibold text-zinc-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:border-violet-300 hover:text-violet-600 active:scale-[.98] dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+              class="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-line-light bg-card-light px-4 text-sm font-semibold text-zinc-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:border-violet-300 hover:text-violet-600 active:scale-[.98] dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
               <span class="material-symbols-outlined text-[18px]">more_time</span> Extend
             </button>
-          </div>
-          <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
-            <div id="timerBar" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-1000 ease-linear" style="width: 100%"></div>
           </div>
         </section>
 
@@ -289,21 +336,21 @@
         <section class="fade-up mt-6" style="animation-delay: 180ms">
           <div class="mb-3 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <h2 class="text-base font-bold">Inbox</h2>
+              <h2 class="font-display text-base font-bold tracking-tight">Inbox</h2>
               <span id="inboxCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
             </div>
             <div class="flex items-center gap-2">
               <button id="markAllReadBtn" type="button" aria-label="Mark all as read"
-                class="hidden h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-[11px] font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                class="hidden h-9 items-center justify-center gap-1.5 rounded-xl border border-line-light bg-card-light px-3 text-[11px] font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
                 <span class="material-symbols-outlined !text-[16px]">done_all</span> Read all
               </button>
               <button id="privacyEyeBtn" type="button" aria-label="Temporarily reveal private content"
-                class="hidden h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                class="hidden h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
                 <span id="privacyEyeIcon" class="material-symbols-outlined text-[20px]">visibility</span>
                 <span class="sr-only">Reveal</span>
               </button>
               <button id="refreshBtn" type="button" aria-label="Refresh inbox"
-                class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
                 <span class="material-symbols-outlined text-[20px]">refresh</span>
                 <span class="sr-only">Refresh</span>
               </button>
@@ -322,10 +369,10 @@
           <div class="relative mb-3">
             <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 !text-[20px] text-zinc-400 -translate-y-1/2">search</span>
             <input id="inboxSearch" type="search" placeholder="Search sender, subject or preview…" autocomplete="off"
-              class="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-sm font-medium placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder:text-zinc-500" />
+              class="h-11 w-full rounded-xl border border-line-light bg-card-light pl-10 pr-4 text-sm font-medium placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-line-dark dark:bg-card-dark dark:placeholder:text-zinc-500" />
           </div>
 
-          <div id="inboxList" class="max-h-96 space-y-2 overflow-y-auto no-scrollbar pr-0.5" aria-live="polite"></div>
+          <div id="inboxList" class="thin-scroll max-h-96 space-y-2 overflow-y-auto pr-1" aria-live="polite"></div>
         </section>
       </div>
 
@@ -333,7 +380,7 @@
       <div id="savedScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-5">
         <div class="mb-4 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h2 class="text-lg font-bold">Saved Mailboxes</h2>
+            <h2 class="font-display text-lg font-bold tracking-tight">Saved Mailboxes</h2>
             <span id="savedHeaderCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
           </div>
         </div>
@@ -353,10 +400,10 @@
 
       <!-- ============================ SETTINGS SCREEN ============================ -->
       <div id="settingsScreen" class="mx-auto hidden max-w-md space-y-4 px-4 pb-32 pt-5">
-        <h2 class="mb-1 text-lg font-bold">Settings</h2>
+        <h2 class="font-display mb-1 text-lg font-bold tracking-tight">Settings</h2>
 
         <!-- Appearance -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-1 shadow-card dark:border-line-dark dark:bg-card-dark">
           <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Appearance</p>
           <div class="flex items-center justify-between gap-3 p-4">
             <div class="flex items-center gap-3">
@@ -373,7 +420,7 @@
         </section>
 
         <!-- Mailbox -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-1 shadow-card dark:border-line-dark dark:bg-card-dark">
           <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Mailbox</p>
           <div class="flex items-center justify-between gap-3 p-4">
             <div class="flex items-center gap-3">
@@ -403,7 +450,7 @@
         </section>
 
         <!-- Notifications -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-1 shadow-card dark:border-line-dark dark:bg-card-dark">
           <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Notifications</p>
           <div class="flex items-center justify-between gap-3 p-4">
             <div class="flex items-center gap-3">
@@ -444,7 +491,7 @@
         </section>
 
         <!-- Privacy -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-1 shadow-card dark:border-line-dark dark:bg-card-dark">
           <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Privacy</p>
           <div class="flex items-center justify-between gap-3 p-4">
             <div class="flex items-center gap-3">
@@ -461,7 +508,7 @@
         </section>
 
         <!-- Data -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-1 shadow-card dark:border-line-dark dark:bg-card-dark">
           <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Data</p>
           <div class="flex items-center justify-between gap-3 p-4">
             <div class="flex items-center gap-3">
@@ -490,15 +537,15 @@
             </div>
             <div class="flex shrink-0 items-center gap-1.5">
               <button id="exportSavedBtn" type="button" aria-label="Export backup to clipboard"
-                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Export</button>
+                class="h-10 rounded-xl border border-line-light bg-card-light px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Export</button>
               <button id="importSavedBtn" type="button" aria-label="Import saved mailboxes"
-                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Import</button>
+                class="h-10 rounded-xl border border-line-light bg-card-light px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Import</button>
             </div>
           </div>
         </section>
 
         <!-- Security -->
-        <section class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <section class="rounded-2xl border border-line-light bg-card-light p-5 shadow-card dark:border-line-dark dark:bg-card-dark">
           <div class="flex items-center gap-3">
             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
               <span class="material-symbols-outlined text-[20px]">verified_user</span>
@@ -515,25 +562,25 @@
         <!-- About -->
         <p class="flex items-center justify-center gap-1.5 pt-2 text-center text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
           <span class="material-symbols-outlined !text-[13px]">lock</span>
-          AR TEMPMAIL v3.0 · Private by design · Powered by Mail.tm
+          AR TEMPMAIL v4.0 · Private by design · Powered by Mail.tm
         </p>
       </div>
 
       <!-- ============================ DETAIL SCREEN ============================ -->
       <div id="detailScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-4">
         <button id="backBtn" type="button"
-          class="mb-4 flex h-10 items-center gap-1.5 rounded-xl border border-zinc-200 bg-white pl-2.5 pr-4 text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+          class="mb-4 flex h-10 items-center gap-1.5 rounded-xl border border-line-light bg-card-light pl-2.5 pr-4 text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.98] dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
           <span class="material-symbols-outlined text-[20px]">arrow_back</span> Inbox
         </button>
 
-        <article class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div class="border-b border-zinc-100 p-5 dark:border-zinc-800">
-            <h2 id="detailSubject" class="text-lg font-bold leading-snug">…</h2>
+        <article class="overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark">
+          <div class="border-b border-line-light/70 p-5 dark:border-line-dark/70">
+            <h2 id="detailSubject" class="font-display text-lg font-bold leading-snug tracking-tight">…</h2>
             <div class="mt-4 flex items-center gap-3">
-              <div id="detailAvatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-lg font-bold uppercase text-white shadow-md shadow-violet-500/20">·</div>
+              <div id="detailAvatar" class="av-0 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg font-bold uppercase text-white shadow-md shadow-black/15">·</div>
               <div class="min-w-0 flex-1">
                 <p id="detailFromName" class="truncate text-sm font-semibold">—</p>
-                <p id="detailFromAddress" class="truncate text-xs text-zinc-500 dark:text-zinc-400"></p>
+                <p id="detailFromAddress" class="truncate font-mono text-[11px] text-zinc-500 dark:text-zinc-400"></p>
               </div>
               <div class="shrink-0 text-right">
                 <p id="detailTime" class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400"></p>
@@ -545,13 +592,13 @@
           </div>
 
           <!-- OTP banner -->
-          <div id="detailOtp" class="hidden border-b border-zinc-100 bg-gradient-to-r from-violet-50 to-fuchsia-50 px-5 py-3.5 dark:border-zinc-800 dark:from-violet-500/10 dark:to-fuchsia-500/10">
+          <div id="detailOtp" class="hidden border-b border-line-light/70 bg-gradient-to-r from-violet-50 to-fuchsia-50 px-5 py-3.5 dark:border-line-dark/70 dark:from-violet-500/10 dark:to-fuchsia-500/10">
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-2.5">
                 <span class="material-symbols-outlined !text-[20px] text-violet-500 dark:text-violet-400">key</span>
                 <div>
                   <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Verification code detected</p>
-                  <p id="detailOtpCode" class="text-xl font-bold tracking-[.25em] text-violet-600 tabular-nums dark:text-violet-300">······</p>
+                  <p id="detailOtpCode" class="font-mono text-xl font-bold tracking-[.25em] text-violet-600 tabular-nums dark:text-violet-300">······</p>
                 </div>
               </div>
               <button id="detailOtpCopy" type="button"
@@ -562,7 +609,7 @@
           </div>
 
           <!-- Attachments -->
-          <div id="detailAttachments" class="hidden border-b border-zinc-100 px-5 py-3.5 dark:border-zinc-800">
+          <div id="detailAttachments" class="hidden border-b border-line-light/70 px-5 py-3.5 dark:border-line-dark/70">
             <p class="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               <span class="material-symbols-outlined !text-[14px]">attach_file</span>
               <span id="attachmentCount">Attachments</span>
@@ -574,7 +621,7 @@
         </article>
 
         <button id="copyTextBtn" type="button"
-          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line-light bg-card-light text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
           <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy text
         </button>
 
@@ -587,7 +634,7 @@
   </div>
 
   <!-- ============================ BOTTOM NAVIGATION ============================ -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-zinc-200/70 bg-white/90 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/90" aria-label="Main navigation">
+  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-line-light/70 bg-card-light/90 backdrop-blur-xl dark:border-line-dark/70 dark:bg-paper-dark/90" aria-label="Main navigation">
     <div class="mx-auto grid max-w-md grid-cols-3 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1.5">
       <button type="button" data-tab="mail" aria-label="Mail tab"
         class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-violet-600 transition active:scale-95 dark:text-violet-400">
@@ -611,14 +658,14 @@
 
   <!-- ============================ CONFIRM SHEET ============================ -->
   <div id="confirmSheet" class="fixed inset-0 z-[95] hidden flex items-center justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-    <div id="confirmBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+    <div id="confirmBackdrop" class="absolute inset-0 bg-black/55 backdrop-blur-md"></div>
+    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-line-light bg-card-light p-5 shadow-2xl dark:border-line-dark dark:bg-card-dark">
       <div class="flex items-start gap-3">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
           <span class="material-symbols-outlined">warning</span>
         </div>
         <div class="min-w-0">
-          <h3 id="confirmTitle" class="text-base font-bold">Are you sure?</h3>
+          <h3 id="confirmTitle" class="font-display text-base font-bold tracking-tight">Are you sure?</h3>
           <p id="confirmMsg" class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400"></p>
         </div>
       </div>
@@ -628,7 +675,7 @@
       </label>
       <div class="mt-5 flex gap-2">
         <button id="confirmCancel" type="button"
-          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+          class="h-11 flex-1 rounded-xl border border-line-light bg-card-light text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
         <button id="confirmOk" type="button"
           class="h-11 flex-1 rounded-xl bg-rose-500 text-sm font-bold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600 active:scale-[.98]">Delete</button>
       </div>
@@ -637,10 +684,10 @@
 
   <!-- ============================ IMPORT SHEET ============================ -->
   <div id="importSheet" class="fixed inset-0 z-[95] hidden flex items-end justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="Import saved mailboxes">
-    <div id="importBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+    <div id="importBackdrop" class="absolute inset-0 bg-black/55 backdrop-blur-md"></div>
+    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-line-light bg-card-light p-5 shadow-2xl dark:border-line-dark dark:bg-card-dark">
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold">Import saved mailboxes</h3>
+        <h3 class="font-display text-base font-bold tracking-tight">Import saved mailboxes</h3>
         <button id="importClose" type="button" aria-label="Close import" class="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300">
           <span class="material-symbols-outlined !text-[18px]">close</span>
         </button>
@@ -650,7 +697,7 @@
         class="mt-3 w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50 p-3 font-mono text-[11px] leading-relaxed text-zinc-700 placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-200"></textarea>
       <div class="mt-4 flex gap-2">
         <button id="importCancel" type="button"
-          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+          class="h-11 flex-1 rounded-xl border border-line-light bg-card-light text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
         <button id="importApply" type="button"
           class="h-11 flex-1 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition hover:opacity-95 active:scale-[.98]">Import</button>
       </div>
@@ -672,6 +719,11 @@
        settings (auto-refresh interval, vibrate, auto-copy OTP, remember).
        v3: attachments (view + download), confirm/undo safety, backup export/import,
        sound chime, privacy blur, mark-all-read, pull-to-refresh, security hardening.
+       v4: design-system refresh — Inter (body) + Space Grotesk (display) + JetBrains Mono
+       (addresses/codes) type scale; violet-tinted surface tokens (paper/card/line);
+       conic timer ring with warn/danger tones; hashed per-sender avatar gradients;
+       animated nav pill; branded scrollbar; richer toasts; copy-button success morph;
+       search now also matches OTP codes. Same storage keys, same API flows.
        ====================================================================== */
 
     const DIRECT_API = 'https://api.mail.tm'; // official Mail.tm API (per spec)
@@ -725,7 +777,7 @@
       changeBtn: $('changeBtn'), deleteBtn: $('deleteBtn'),
       emailAddress: $('emailAddress'), copyBtn: $('copyBtn'), statusBadge: $('statusBadge'),
       saveBtn: $('saveBtn'), saveIcon: $('saveIcon'), shareBtn: $('shareBtn'),
-      timerText: $('timerText'), timerBar: $('timerBar'), extendBtn: $('extendBtn'),
+      timerText: $('timerText'), timerRing: $('timerRing'), extendBtn: $('extendBtn'),
       refreshBtn: $('refreshBtn'), inboxList: $('inboxList'), inboxCount: $('inboxCount'),
       inboxSearch: $('inboxSearch'),
       mailScreen: $('mailScreen'), savedScreen: $('savedScreen'), settingsScreen: $('settingsScreen'),
@@ -829,6 +881,16 @@
       const mb = kb / 1024;
       if (mb < 1024) return mb.toFixed(mb < 10 ? 1 : 0) + ' MB';
       return (mb / 1024).toFixed(1) + ' GB';
+    }
+
+    /* v4: deterministic gradient class for sender avatars — same sender always gets
+       the same hue, making long inboxes scannable. No blue/indigo hues by design. */
+    const AVATAR_GRADS = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4', 'av-5', 'av-6', 'av-7'];
+    function avatarClass(seed) {
+      let h = 0;
+      const s = String(seed || '').toLowerCase();
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return AVATAR_GRADS[h % AVATAR_GRADS.length];
     }
 
     function randString(len) {
@@ -1035,15 +1097,17 @@
       const meta = TOAST_STYLE[type] || TOAST_STYLE.info;
       pendingToastAction = (opts.action && typeof opts.action.fn === 'function') ? opts.action.fn : null;
       const copyChip = opts.copyValue
-        ? '<span data-copy="' + escapeHTML(opts.copyValue) + '" class="pointer-events-auto cursor-pointer rounded-md bg-white/10 px-1.5 py-0.5 font-bold tracking-[.15em] underline decoration-white/40 underline-offset-2">' + escapeHTML(opts.copyValue) + '</span>'
+        ? '<span data-copy="' + escapeHTML(opts.copyValue) + '" class="pointer-events-auto cursor-pointer rounded-md bg-white/10 px-1.5 py-0.5 font-mono text-xs font-bold tracking-[.12em] underline decoration-white/40 underline-offset-2">' + escapeHTML(opts.copyValue) + '</span>'
         : '';
       const actionBtn = opts.action
         ? '<button type="button" data-toast-action class="pointer-events-auto shrink-0 rounded-lg bg-white/15 px-2.5 py-1 text-xs font-bold text-white transition hover:bg-white/25">' + escapeHTML(opts.action.label || 'View') + '</button>'
         : '';
       el.toast.innerHTML =
-        '<div class="flex items-center gap-2.5 rounded-2xl bg-zinc-900/95 px-4 py-3 shadow-2xl ring-1 backdrop-blur dark:bg-zinc-800/95 dark:ring-white/10 ' + meta.ring + '">' +
-          '<span class="material-symbols-outlined icon-fill !text-[20px] ' + meta.iconColor + '">' + meta.icon + '</span>' +
-          '<p class="max-w-[60vw] break-words text-sm font-medium text-white">' + escapeHTML(msg) + '</p>' + copyChip + actionBtn +
+        '<div class="flex items-center gap-3 rounded-2xl bg-[#171321]/95 px-4 py-3 shadow-2xl ring-1 backdrop-blur-xl dark:bg-[#1d1829]/95 ' + meta.ring + '">' +
+          '<span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">' +
+            '<span class="material-symbols-outlined icon-fill !text-[17px] ' + meta.iconColor + '">' + meta.icon + '</span>' +
+          '</span>' +
+          '<p class="max-w-[52vw] break-words text-[13px] font-semibold text-white">' + escapeHTML(msg) + '</p>' + copyChip + actionBtn +
         '</div>';
       el.toast.classList.remove('hidden', 'toast-out');
       el.toast.classList.add('toast-in');
@@ -1090,10 +1154,24 @@
       return ok;
     }
 
-    function copyToClipboard() {
+    let copyMorphTimer = null;
+    function morphCopySuccess() {
+      const icon = el.copyBtn.querySelector('.material-symbols-outlined');
+      if (!icon) return;
+      icon.textContent = 'check_circle';
+      el.copyBtn.classList.add('from-emerald-500', 'to-teal-500');
+      clearTimeout(copyMorphTimer);
+      copyMorphTimer = setTimeout(() => {
+        icon.textContent = 'content_copy';
+        el.copyBtn.classList.remove('from-emerald-500', 'to-teal-500');
+      }, 1600);
+    }
+
+    async function copyToClipboard() {
       const address = state.account && state.account.address;
       if (!address) { showToast('No email address to copy yet.', 'warning'); return; }
-      copyText(address, 'Copied!');
+      const ok = await copyText(address, 'Copied!');
+      if (ok) morphCopySuccess();
     }
 
     async function shareCurrent() {
@@ -1135,7 +1213,7 @@
     function applyTheme(dark, announce = false) {
       document.documentElement.classList.toggle('dark', dark);
       el.themeIcon.textContent = dark ? 'light_mode' : 'dark_mode';
-      if (el.metaThemeColor) el.metaThemeColor.setAttribute('content', dark ? '#09090b' : '#7c3aed');
+      if (el.metaThemeColor) el.metaThemeColor.setAttribute('content', dark ? '#0b0912' : '#7c3aed');
       try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* no-op */ }
       updateSettingsUI();
       if (announce) showToast(dark ? 'Dark mode enabled' : 'Light mode enabled', 'info');
@@ -1158,8 +1236,10 @@
       const s = state.secondsLeft % 60;
       el.timerText.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
       const pct = Math.max(0, Math.min(100, (state.secondsLeft / TIMER_SECONDS) * 100));
-      el.timerBar.style.width = pct + '%';
+      el.timerRing.style.setProperty('--p', pct.toFixed(2));
       const danger = state.expired || state.secondsLeft <= 60;
+      el.timerRing.classList.toggle('danger', danger);
+      el.timerRing.classList.toggle('warn', !danger && state.secondsLeft <= 300);
       el.timerText.classList.toggle('text-rose-500', danger);
       el.timerText.classList.toggle('dark:text-rose-400', danger);
     }
@@ -1363,7 +1443,7 @@
     }
 
     const SAVED_EMPTY_HTML =
-      '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-12 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+      '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line-light bg-card-light/60 px-6 py-12 text-center dark:border-line-dark dark:bg-card-dark/60">' +
         '<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-500 dark:text-violet-400">' +
           '<span class="material-symbols-outlined icon-fill pulse-soft !text-[32px]">bookmark</span>' +
         '</div>' +
@@ -1386,12 +1466,12 @@
         const isActive = state.account && state.account.address === s.address;
         const lastUsed = s.lastUsedAt ? ' · used ' + formatDate(s.lastUsedAt) : '';
         return (
-          '<div class="rounded-2xl border ' + (isActive ? 'border-violet-400 dark:border-violet-500/60' : 'border-zinc-200 dark:border-zinc-800') +
-            ' bg-white p-4 shadow-sm fade-up dark:bg-zinc-900" style="animation-delay:' + Math.min(i * 40, 200) + 'ms">' +
+          '<div class="rounded-2xl border ' + (isActive ? 'border-violet-400 dark:border-violet-500/60' : 'border-line-light dark:border-line-dark') +
+            ' bg-card-light p-4 shadow-card fade-up dark:bg-card-dark" style="animation-delay:' + Math.min(i * 40, 200) + 'ms">' +
             '<div class="flex items-start gap-3">' +
-              '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
+              '<span class="' + avatarClass(s.address) + ' flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
               '<div class="min-w-0 flex-1">' +
-                '<p class="truncate text-sm font-bold blur-target">' + escapeHTML(s.address) + '</p>' +
+                '<p class="truncate font-mono text-[13px] font-bold blur-target">' + escapeHTML(s.address) + '</p>' +
                 '<p class="mt-0.5 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">Saved ' + formatDate(s.savedAt) + lastUsed + '</p>' +
                 (isActive ? '<span class="mt-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"><span class="material-symbols-outlined !text-[11px]">check_circle</span>ACTIVE NOW</span>' : '') +
               '</div>' +
@@ -1594,7 +1674,7 @@
       const all = state.messages.filter((m) => !state.hiddenIds.has(m.id));
       const visible = q
         ? all.filter((m) =>
-            (fromName(m) + ' ' + (m.subject || '') + ' ' + (m.intro || '')).toLowerCase().includes(q))
+            (fromName(m) + ' ' + (m.subject || '') + ' ' + (m.intro || '') + ' ' + (extractOtp(m.subject, m.intro) || '')).toLowerCase().includes(q))
         : all;
 
       const unread = all.filter((m) => !state.seenIds.has(m.id) && !m.seen).length;
@@ -1604,7 +1684,7 @@
 
       if (!all.length) {
         el.inboxList.innerHTML =
-          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line-light bg-card-light/60 px-6 py-10 text-center dark:border-line-dark dark:bg-card-dark/60">' +
             '<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-500 dark:text-violet-400">' +
               '<span class="material-symbols-outlined icon-fill pulse-soft !text-[32px]">inbox</span>' +
             '</div>' +
@@ -1616,7 +1696,7 @@
 
       if (!visible.length) {
         el.inboxList.innerHTML =
-          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-8 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line-light bg-card-light/60 px-6 py-8 text-center dark:border-line-dark dark:bg-card-dark/60">' +
             '<span class="material-symbols-outlined !text-[28px] text-zinc-400">search_off</span>' +
             '<p class="mt-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">No emails match your search</p>' +
           '</div>';
@@ -1636,9 +1716,9 @@
         const delay = ' style="animation-delay:' + Math.min(i * 40, 200) + 'ms"';
         return (
           '<button type="button" data-id="' + escapeHTML(m.id) + '"' + delay +
-            ' class="mail-item group w-full rounded-2xl border border-zinc-200 bg-white p-3.5 text-left transition hover:border-violet-300 hover:shadow-md hover:shadow-violet-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-500/40 fade-up">' +
+            ' class="mail-item group w-full rounded-2xl border border-line-light bg-card-light p-3.5 text-left shadow-card transition hover:border-violet-300 hover:shadow-pop focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-line-dark dark:bg-card-dark dark:hover:border-violet-500/40 fade-up">' +
             '<span class="flex items-start gap-3">' +
-              '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
+              '<span class="' + avatarClass(name) + ' flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
               '<span class="min-w-0 flex-1">' +
                 '<span class="flex items-center justify-between gap-2">' +
                   '<span class="truncate text-sm font-semibold blur-target ' + (unreadMsg ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-300') + '">' + escapeHTML(name) + '</span>' +
@@ -1915,6 +1995,7 @@
       document.querySelectorAll('.tab-btn').forEach((btn) => {
         const isActive = btn.dataset.tab === activeTab;
         const icon = btn.querySelector('.material-symbols-outlined');
+        btn.classList.toggle('active', isActive);
         btn.classList.toggle('text-violet-600', isActive);
         btn.classList.toggle('dark:text-violet-400', isActive);
         btn.classList.toggle('text-zinc-400', !isActive);
@@ -2011,6 +2092,7 @@
     function renderDetail(msg) {
       const name = fromName(msg);
       el.detailSubject.textContent = msg.subject || '(No subject)';
+      el.detailAvatar.className = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg font-bold uppercase text-white shadow-md shadow-black/15 ' + avatarClass(name);
       el.detailAvatar.textContent = (name[0] || '?').toUpperCase();
       el.detailFromName.textContent = name;
       el.detailFromAddress.textContent = (msg.from && msg.from.address) || '';
@@ -2241,7 +2323,7 @@
       state.settings = loadSettings();
       initTheme();
       if (el.metaThemeColor) {
-        el.metaThemeColor.setAttribute('content', document.documentElement.classList.contains('dark') ? '#09090b' : '#7c3aed');
+        el.metaThemeColor.setAttribute('content', document.documentElement.classList.contains('dark') ? '#0b0912' : '#7c3aed');
       }
       applyBlur();
       try { if (!localStorage.getItem(LS_TIP)) el.tipBanner.classList.remove('hidden'); } catch (e) { /* no-op */ }

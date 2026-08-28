@@ -66,3 +66,22 @@ Stage Summary:
 - Deliberately not added (rationale recorded): server database, user accounts, websocket push — would add attack surface or complexity without serving the anonymous temp-mail use case.
 - Storage keys: ar_saved_mails, ar_active_session, ar_settings (now {autoRefresh, vibrate, sound, autoCopyOtp, blur, rememberSession}), ar_tip_v3_dismissed (+ theme).
 - Known limits: real inbound mail still untestable in sandbox (no outbound SMTP) — pipeline verified via /messages endpoints and mock UI; pull-to-refresh verified via synthetic TouchEvents (headless has no real touch).
+
+---
+Task ID: 4
+Agent: Z.ai Code (orchestrator)
+Task: v4 upgrade — "upgrade existing features/functionality, UI/UX, typography, colour palette; must work with current database and codebase." Audit-first approach: only improvements that run on the existing localStorage store, single-file architecture and Mail.tm+relay API.
+
+Work Log:
+- Audited v3 (2,278 lines) and scoped by feasibility: KEPT all storage keys (ar_saved_mails, ar_active_session, ar_settings, theme, ar_tip_v3_dismissed), API flows, sanitizer, PTR, attachments, backup; REJECTED new tabs/APIs/themes as bloat.
+- Typography system: body/UI switched to Inter, brand/display stays Space Grotesk (new font-display utility on header/splash/screen titles/detail subject), addresses + OTP codes + timer digits now JetBrains Mono; single combined Google Fonts request (3 families).
+- Colour palette: new Tailwind tokens — paper (#f5f3fb light / #0b0912 dark, violet-tinted), card (#fff / #16131f), line (#e8e4f2 / #262133) — applied to body, header, nav, every card/sheet/input/list item incl. JS-rendered templates; layered shadow-card + violet glow shadow-pop; seg/switch/OTP-chip literals re-tinted; meta theme-color dark value synced to #0b0912.
+- Components: timer bar replaced by 64px conic-gradient progress ring (mono time inside; --p custom prop; warn <5min amber, danger <1min rose + rose digits); deterministic per-sender avatar gradients (avatarClass hash → av-0..av-7, no blue/indigo) in inbox, saved list and detail; bottom-nav animated top pill (.tab-btn.active::before) driven by updateTabUI; inbox list gets branded thin-scroll scrollbar (replaces no-scrollbar per UI standard); toasts rebuilt (icon bubble, mono copy chip); sheets springier pop + darker blurred backdrops.
+- Functionality: inbox search now also matches the extracted OTP code (e.g. "482913" finds the mail); Copy button morphs to emerald check_circle for 1.6s on successful copy (gated on copyText result — headless clipboard denial correctly does NOT morph); saved-card address mono'd; version → v4.0 in about line + header comment.
+- Fixed mid-implementation: sequential MultiEdit partial-application required re-grepping exact live strings; final pass verified 0 leftover timerBar refs, 0 old zinc surface pairs, JS syntax (node --check) and all 78 $('id') refs resolve.
+- Browser-verified (agent-browser, iframe at /): mobile 390x844 light+dark — address mono, ring counting (--p=91→08:23), paper tokens (rgb 245,243,251 / rgb 11,9,18), meta theme sync; save → bookmark_added + toast; Saved tab card (av-6 hashed avatar, mono address, ACTIVE NOW); mock OTP mail → inbox chip (mono) + unread badge; search "482913" finds it, "zzz999" shows no-match; renderDetail → banner 482913 mono + av-7 avatar; Change Mail → real new address; restoreMailbox → real POST /token back to saved address on Mail tab with fresh token; confirm sheet cancel keeps mailbox; toast bubble + code chip; desktop 1280x800 light+dark; session restore across reload; 0 page errors, 0 app console errors (only Next.js/HMR + expected relay-switch warn); lint clean; index.html ≡ public/ar-tempmail.html (2,360 lines); dev.log shows clean /messages 200 polling.
+
+Stage Summary:
+- Deliverable: index.html v4.0 (2,360 lines) mirrored to public/ar-tempmail.html; no backend/storage/API changes.
+- v4 = pure design-system + micro-interaction upgrade on the proven v3 feature set: Inter/JetBrains-Mono/Space-Grotesk type scale, violet-tinted paper/card/line tokens, conic timer ring, hashed avatar gradients, nav pill, richer toasts/sheets, branded scrollbar, copy morph, search-by-OTP-code.
+- Copy-success morph is intentionally gated on clipboard success (verified it does not fire when clipboard is denied).

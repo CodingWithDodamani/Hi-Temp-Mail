@@ -1,0 +1,2002 @@
+     1→<!DOCTYPE html>
+     2→<html lang="en">
+     3→<head>
+     4→  <meta charset="UTF-8" />
+     5→  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+     6→  <meta name="description" content="AR TEMPMAIL — Instant disposable email with saved mailboxes and OTP auto-detection. No login, no signup, just privacy." />
+     7→  <meta id="metaThemeColor" name="theme-color" content="#7c3aed" />
+     8→  <title>AR TEMPMAIL — No Login, No Signup, Just Privacy</title>
+     9→  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%23d946ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z' fill='%23fff' opacity='.96'/%3E%3Cpath d='M14 24l18 12 18-12' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' opacity='.96'/%3E%3C/svg%3E" />
+    10→
+    11→  <!-- Fonts -->
+    12→  <link rel="preconnect" href="https://fonts.googleapis.com" />
+    13→  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    14→  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    15→  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+    16→
+    17→  <!-- Tailwind CSS (CDN) -->
+    18→  <script src="https://cdn.tailwindcss.com"></script>
+    19→  <script>
+    20→    tailwind.config = {
+    21→      darkMode: 'class',
+    22→      theme: {
+    23→        extend: {
+    24→          fontFamily: {
+    25→            sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+    26→          },
+    27→        },
+    28→      },
+    29→    };
+    30→  </script>
+    31→
+    32→  <!-- Theme boot: apply saved preference before first paint (default: light) -->
+    33→  <script>
+    34→    try {
+    35→      if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    36→    } catch (e) { /* no-op */ }
+    37→  </script>
+    38→
+    39→  <style>
+    40→    /* ---------- Icon font ---------- */
+    41→    .material-symbols-outlined {
+    42→      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    43→      user-select: none;
+    44→    }
+    45→    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+    46→
+    47→    /* ---------- Utilities ---------- */
+    48→    .no-scrollbar::-webkit-scrollbar { display: none; }
+    49→    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    50→    html { scroll-behavior: smooth; }
+    51→    body { -webkit-tap-highlight-color: transparent; }
+    52→
+    53→    /* ---------- Splash screen ---------- */
+    54→    @keyframes progressFill { from { width: 0%; } to { width: 100%; } }
+    55→    .progress-fill { animation: progressFill 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+    56→    @keyframes splashFade { to { opacity: 0; visibility: hidden; } }
+    57→    .splash-hide { animation: splashFade .6s ease forwards; }
+    58→    @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+    59→    .pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+    60→    @keyframes ringPulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.8); opacity: 0; } }
+    61→    .splash-ring { animation: ringPulse 1.8s cubic-bezier(.2, .6, .4, 1) infinite; }
+    62→
+    63→    /* ---------- App entrance & screens ---------- */
+    64→    #app { opacity: 0; transition: opacity .5s ease; }
+    65→    #app.ready { opacity: 1; }
+    66→    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    67→    #app.ready .fade-up { animation: fadeUp .45s cubic-bezier(.21, 1.02, .73, 1) both; }
+    68→    .screen-anim { animation: fadeUp .28s ease both; }
+    69→
+    70→    /* ---------- Toast ---------- */
+    71→    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 16px) scale(.95); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+    72→    @keyframes toastOut { from { opacity: 1; transform: translate(-50%, 0) scale(1); } to { opacity: 0; transform: translate(-50%, 12px) scale(.95); } }
+    73→    .toast-in { animation: toastIn .3s cubic-bezier(.21, 1.02, .73, 1) forwards; }
+    74→    .toast-out { animation: toastOut .3s ease forwards; }
+    75→
+    76→    /* ---------- Spinners ---------- */
+    77→    @keyframes spin360 { to { transform: rotate(360deg); } }
+    78→    .spinner {
+    79→      width: 1em; height: 1em;
+    80→      border: 2px solid currentColor; border-right-color: transparent;
+    81→      border-radius: 9999px; display: inline-block; vertical-align: -.125em;
+    82→      animation: spin360 .6s linear infinite;
+    83→    }
+    84→    .btn-spinner .material-symbols-outlined { display: none; }
+    85→    .refreshing .material-symbols-outlined { animation: spin360 1s linear infinite; }
+    86→
+    87→    /* ---------- Switch ---------- */
+    88→    .switch {
+    89→      position: relative; width: 46px; height: 26px; border-radius: 9999px;
+    90→      background: #d4d4d8; transition: background .2s ease; flex-shrink: 0; cursor: pointer;
+    91→    }
+    92→    .dark .switch { background: #3f3f46; }
+    93→    .switch[data-on="true"] { background: linear-gradient(to right, #8b5cf6, #d946ef); }
+    94→    .switch .knob {
+    95→      position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+    96→      border-radius: 9999px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / .3);
+    97→      transition: transform .2s cubic-bezier(.4, 0, .2, 1);
+    98→    }
+    99→    .switch[data-on="true"] .knob { transform: translateX(20px); }
+   100→
+   101→    /* ---------- Segmented control ---------- */
+   102→    .seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: #e4e4e7; }
+   103→    .dark .seg { background: #27272a; }
+   104→    .seg button {
+   105→      padding: 6px 14px; border-radius: 9px; font-size: 12px; font-weight: 600; color: #71717a;
+   106→      transition: all .15s ease;
+   107→    }
+   108→    .dark .seg button { color: #a1a1aa; }
+   109→    .seg button.active { background: #fff; color: #7c3aed; box-shadow: 0 1px 4px rgb(0 0 0 / .12); }
+   110→    .dark .seg button.active { background: #3f3f46; color: #d8b4fe; }
+   111→
+   112→    /* ---------- OTP chip ---------- */
+   113→    .otp-chip {
+   114→      display: inline-flex; align-items: center; gap: 4px;
+   115→      background: rgb(139 92 246 / .12); color: #7c3aed;
+   116→      border: 1px dashed rgb(139 92 246 / .45);
+   117→      border-radius: 8px; padding: 2px 8px;
+   118→      font-weight: 700; font-size: 12px; letter-spacing: .08em; font-variant-numeric: tabular-nums;
+   119→    }
+   120→    .dark .otp-chip { background: rgb(139 92 246 / .15); color: #d8b4fe; border-color: rgb(216 180 254 / .4); }
+   121→
+   122→    /* ---------- Rendered email body ---------- */
+   123→    .email-body { word-break: break-word; overflow-wrap: anywhere; }
+   124→    .email-body img, .email-body video { max-width: 100%; height: auto; border-radius: .5rem; }
+   125→    .email-body a { color: #7c3aed; text-decoration: underline; text-underline-offset: 2px; }
+   126→    .dark .email-body a { color: #c4b5fd; }
+   127→    .email-body p { margin: 0 0 .9em; }
+   128→    .email-body h1, .email-body h2, .email-body h3 { font-weight: 700; line-height: 1.3; margin: .5em 0 .45em; }
+   129→    .email-body h1 { font-size: 1.3em; } .email-body h2 { font-size: 1.18em; } .email-body h3 { font-size: 1.06em; }
+   130→    .email-body ul, .email-body ol { margin: 0 0 .9em 1.25em; }
+   131→    .email-body ul { list-style: disc; } .email-body ol { list-style: decimal; }
+   132→    .email-body li { margin-bottom: .3em; }
+   133→    .email-body hr { border: 0; border-top: 1px solid rgb(0 0 0 / .1); margin: 1em 0; }
+   134→    .dark .email-body hr { border-top-color: rgb(255 255 255 / .12); }
+   135→    .email-body blockquote { border-left: 3px solid rgb(124 58 237 / .4); padding-left: .8em; margin: 0 0 .9em; opacity: .8; }
+   136→    .email-body pre { background: rgb(0 0 0 / .05); padding: .8em; border-radius: .6em; overflow-x: auto; font-size: .85em; margin: 0 0 .9em; }
+   137→    .dark .email-body pre { background: rgb(255 255 255 / .08); }
+   138→    .email-body table { max-width: 100%; border-collapse: collapse; }
+   139→
+   140→    /* ---------- Privacy blur (Settings → Privacy) ---------- */
+   141→    .blur-target { transition: filter .18s ease; }
+   142→    body.privacy-blur:not(.revealed) .blur-target { filter: blur(7px); }
+   143→
+   144→    /* ---------- Confirm / import sheets ---------- */
+   145→    @keyframes sheetPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+   146→    .sheet-pop { animation: sheetPop .22s cubic-bezier(.21, 1.02, .73, 1) both; }
+   147→
+   148→    /* ---------- Attachment chip ---------- */
+   149→    .att-chip { transition: border-color .15s ease, background .15s ease; }
+   150→    .att-chip:hover { border-color: rgb(139 92 246 / .5); }
+   151→
+   152→    /* ---------- Reduced motion (accessibility) ---------- */
+   153→    @media (prefers-reduced-motion: reduce) {
+   154→      *, *::before, *::after {
+   155→        animation-duration: .01ms !important;
+   156→        animation-iteration-count: 1 !important;
+   157→        transition-duration: .01ms !important;
+   158→        scroll-behavior: auto !important;
+   159→      }
+   160→    }
+   161→  </style>
+   162→</head>
+   163→
+   164→<body class="bg-zinc-100 font-sans text-zinc-900 antialiased selection:bg-violet-500/25 dark:bg-zinc-950 dark:text-zinc-100">
+   165→
+   166→  <!-- Decorative background glows -->
+   167→  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+   168→    <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-400/20 blur-3xl dark:bg-violet-700/15"></div>
+   169→    <div class="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-fuchsia-400/15 blur-3xl dark:bg-fuchsia-800/10"></div>
+   170→  </div>
+   171→
+   172→  <!-- ============================== SPLASH SCREEN ============================== -->
+   173→  <div id="splash" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 px-8 dark:from-violet-700 dark:via-purple-800 dark:to-fuchsia-800">
+   174→    <div class="relative flex h-24 w-24 items-center justify-center">
+   175→      <div class="splash-ring absolute inset-0 rounded-[2rem] bg-white/25"></div>
+   176→      <div class="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-white/15 shadow-2xl ring-1 ring-white/25 backdrop-blur">
+   177→        <span class="material-symbols-outlined icon-fill !text-[44px] text-white">mail_lock</span>
+   178→      </div>
+   179→    </div>
+   180→    <h1 class="mt-7 text-3xl font-bold tracking-wide text-white">AR TEMPMAIL</h1>
+   181→    <p class="mt-2 text-center text-sm font-medium text-white/80">No Login, No Signup, Just Privacy.</p>
+   182→    <div class="mt-9 h-1.5 w-56 overflow-hidden rounded-full bg-white/25">
+   183→      <div id="splashBar" class="progress-fill h-full rounded-full bg-white"></div>
+   184→    </div>
+   185→    <p class="pulse-soft mt-4 text-xs font-medium tracking-wide text-white/70">Preparing your secure mailbox…</p>
+   186→  </div>
+   187→
+   188→  <!-- ============================== APP ============================== -->
+   189→  <div id="app" class="flex min-h-screen flex-col">
+   190→
+   191→    <!-- Header -->
+   192→    <header class="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/80">
+   193→      <div class="mx-auto flex h-14 max-w-md items-center justify-between px-4">
+   194→        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
+   195→          <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
+   196→        </div>
+   197→        <h1 class="text-lg font-bold tracking-tight">
+   198→          AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
+   199→        </h1>
+   200→        <button id="themeToggle" type="button" aria-label="Toggle dark mode"
+   201→          class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
+   202→          <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
+   203→        </button>
+   204→      </div>
+   205→    </header>
+   206→
+   207→    <main class="w-full flex-1">
+   208→
+   209→      <!-- ============================ MAIL SCREEN ============================ -->
+   210→      <div id="mailScreen" class="mx-auto max-w-md px-4 pb-32 pt-5">
+   211→
+   212→        <!-- One-time onboarding tip -->
+   213→        <div id="tipBanner" class="hidden mb-4 flex items-start gap-3 rounded-2xl border border-amber-200/70 bg-amber-50 p-4 dark:border-amber-500/20 dark:bg-amber-500/10">
+   214→          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-500 dark:text-amber-400">
+   215→            <span class="material-symbols-outlined text-[20px]">lightbulb</span>
+   216→          </div>
+   217→          <p class="flex-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+   218→            <span class="font-bold text-zinc-800 dark:text-zinc-100">Tip:</span> tap the <span class="material-symbols-outlined !text-[13px] align-[-2px]">bookmark</span> bookmark icon under your address to keep this mailbox forever — OTPs keep arriving even days later.
+   219→          </p>
+   220→          <button id="tipDismiss" type="button" aria-label="Dismiss tip" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-amber-500/10 hover:text-zinc-600 dark:hover:text-zinc-300">
+   221→            <span class="material-symbols-outlined !text-[16px]">close</span>
+   222→          </button>
+   223→        </div>
+   224→
+   225→        <!-- Quick actions -->
+   226→        <div class="grid grid-cols-2 gap-3">
+   227→          <button id="changeBtn" type="button"
+   228→            class="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg shadow-zinc-900/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:bg-zinc-800 active:scale-[.98] dark:bg-white dark:text-zinc-900 dark:shadow-black/30 dark:hover:bg-zinc-200">
+   229→            <span class="material-symbols-outlined text-[20px]">autorenew</span> Change Mail
+   230→          </button>
+   231→          <button id="deleteBtn" type="button"
+   232→            class="flex h-12 items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 hover:bg-rose-100 active:scale-[.98] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   233→            <span class="material-symbols-outlined text-[20px]">delete</span> Delete Mail
+   234→          </button>
+   235→        </div>
+   236→
+   237→        <!-- Identity card -->
+   238→        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 60ms">
+   239→          <div class="flex items-center justify-between">
+   240→            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your temporary email</span>
+   241→            <span id="statusBadge" class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+   242→              <span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>ACTIVE
+   243→            </span>
+   244→          </div>
+   245→          <p id="emailAddress" class="blur-target mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
+   246→          <div class="mt-4 flex gap-2">
+   247→            <button id="copyBtn" type="button"
+   248→              class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:opacity-95 active:scale-[.98]">
+   249→              <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy
+   250→            </button>
+   251→            <button id="saveBtn" type="button" aria-pressed="false" aria-label="Save this mailbox"
+   252→              class="flex h-11 w-11 items-center justify-center rounded-xl border border-zinc-200 text-zinc-500 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   253→              <span id="saveIcon" class="material-symbols-outlined text-[22px]">bookmark</span>
+   254→            </button>
+   255→            <button id="shareBtn" type="button" aria-label="Share this address"
+   256→              class="flex h-11 w-11 items-center justify-center rounded-xl border border-zinc-200 text-zinc-500 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   257→              <span class="material-symbols-outlined text-[22px]">share</span>
+   258→            </button>
+   259→          </div>
+   260→          <p class="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
+   261→            <span class="material-symbols-outlined !text-[14px]">bookmark_added</span>
+   262→            Save it to keep using this address later — OTPs keep arriving in the Saved tab.
+   263→          </p>
+   264→        </section>
+   265→
+   266→        <!-- Timer card -->
+   267→        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 120ms">
+   268→          <div class="flex items-center justify-between gap-3">
+   269→            <div class="flex items-center gap-3">
+   270→              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 dark:text-amber-400">
+   271→                <span class="material-symbols-outlined">timer</span>
+   272→              </div>
+   273→              <div>
+   274→                <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Mail lifetime</p>
+   275→                <p id="timerText" class="mt-0.5 text-2xl font-bold leading-none tabular-nums">10:00</p>
+   276→              </div>
+   277→            </div>
+   278→            <button id="extendBtn" type="button"
+   279→              class="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-zinc-200 px-4 text-sm font-semibold text-zinc-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:border-violet-300 hover:text-violet-600 active:scale-[.98] dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   280→              <span class="material-symbols-outlined text-[18px]">more_time</span> Extend
+   281→            </button>
+   282→          </div>
+   283→          <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+   284→            <div id="timerBar" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-1000 ease-linear" style="width: 100%"></div>
+   285→          </div>
+   286→        </section>
+   287→
+   288→        <!-- Inbox -->
+   289→        <section class="fade-up mt-6" style="animation-delay: 180ms">
+   290→          <div class="mb-3 flex items-center justify-between">
+   291→            <div class="flex items-center gap-2">
+   292→              <h2 class="text-base font-bold">Inbox</h2>
+   293→              <span id="inboxCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
+   294→            </div>
+   295→            <div class="flex items-center gap-2">
+   296→              <button id="markAllReadBtn" type="button" aria-label="Mark all as read"
+   297→                class="hidden h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-[11px] font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   298→                <span class="material-symbols-outlined !text-[16px]">done_all</span> Read all
+   299→              </button>
+   300→              <button id="privacyEyeBtn" type="button" aria-label="Temporarily reveal private content"
+   301→                class="hidden h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   302→                <span id="privacyEyeIcon" class="material-symbols-outlined text-[20px]">visibility</span>
+   303→                <span class="sr-only">Reveal</span>
+   304→              </button>
+   305→              <button id="refreshBtn" type="button" aria-label="Refresh inbox"
+   306→                class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   307→                <span class="material-symbols-outlined text-[20px]">refresh</span>
+   308→                <span class="sr-only">Refresh</span>
+   309→              </button>
+   310→            </div>
+   311→          </div>
+   312→
+   313→          <!-- Pull-to-refresh indicator -->
+   314→          <div id="ptrIndicator" class="overflow-hidden text-center text-xs font-semibold text-violet-500 dark:text-violet-400" style="height: 0" aria-hidden="true">
+   315→            <span class="inline-flex items-center gap-1.5 py-1">
+   316→              <span id="ptrIcon" class="material-symbols-outlined !text-[16px] transition-transform">arrow_downward</span>
+   317→              <span id="ptrText">Pull to refresh</span>
+   318→            </span>
+   319→          </div>
+   320→
+   321→          <!-- Search -->
+   322→          <div class="relative mb-3">
+   323→            <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 !text-[20px] text-zinc-400 -translate-y-1/2">search</span>
+   324→            <input id="inboxSearch" type="search" placeholder="Search sender, subject or preview…" autocomplete="off"
+   325→              class="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-sm font-medium placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder:text-zinc-500" />
+   326→          </div>
+   327→
+   328→          <div id="inboxList" class="max-h-96 space-y-2 overflow-y-auto no-scrollbar pr-0.5" aria-live="polite"></div>
+   329→        </section>
+   330→      </div>
+   331→
+   332→      <!-- ============================ SAVED SCREEN ============================ -->
+   333→      <div id="savedScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-5">
+   334→        <div class="mb-4 flex items-center justify-between">
+   335→          <div class="flex items-center gap-2">
+   336→            <h2 class="text-lg font-bold">Saved Mailboxes</h2>
+   337→            <span id="savedHeaderCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
+   338→          </div>
+   339→        </div>
+   340→
+   341→        <div class="mb-4 flex items-start gap-3 rounded-2xl border border-violet-200/70 bg-gradient-to-br from-violet-50 to-fuchsia-50 p-4 dark:border-violet-500/20 dark:from-violet-500/10 dark:to-fuchsia-500/10">
+   342→          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 dark:text-violet-400">
+   343→            <span class="material-symbols-outlined text-[20px]">bolt</span>
+   344→          </div>
+   345→          <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+   346→            <span class="font-bold text-zinc-800 dark:text-zinc-100">Keep an address for later.</span>
+   347→            Saved mailboxes stay alive — sign up anywhere, come back the same day (or days later), tap <span class="font-semibold">Open</span>, and OTP or verification emails land right here.
+   348→          </p>
+   349→        </div>
+   350→
+   351→        <div id="savedList" class="space-y-2" aria-live="polite"></div>
+   352→      </div>
+   353→
+   354→      <!-- ============================ SETTINGS SCREEN ============================ -->
+   355→      <div id="settingsScreen" class="mx-auto hidden max-w-md space-y-4 px-4 pb-32 pt-5">
+   356→        <h2 class="mb-1 text-lg font-bold">Settings</h2>
+   357→
+   358→        <!-- Appearance -->
+   359→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   360→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Appearance</p>
+   361→          <div class="flex items-center justify-between gap-3 p-4">
+   362→            <div class="flex items-center gap-3">
+   363→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   364→                <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+   365→              </div>
+   366→              <div>
+   367→                <p class="text-sm font-semibold">Dark mode</p>
+   368→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Easy on the eyes at night</p>
+   369→              </div>
+   370→            </div>
+   371→            <button id="themeSwitch" class="switch" role="switch" aria-checked="false" aria-label="Toggle dark mode"><span class="knob"></span></button>
+   372→          </div>
+   373→        </section>
+   374→
+   375→        <!-- Mailbox -->
+   376→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   377→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Mailbox</p>
+   378→          <div class="flex items-center justify-between gap-3 p-4">
+   379→            <div class="flex items-center gap-3">
+   380→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   381→                <span class="material-symbols-outlined text-[20px]">history</span>
+   382→              </div>
+   383→              <div>
+   384→                <p class="text-sm font-semibold">Remember session</p>
+   385→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Restore current mailbox on reload</p>
+   386→              </div>
+   387→            </div>
+   388→            <button id="rememberSwitch" class="switch" role="switch" aria-checked="false" aria-label="Remember session"><span class="knob"></span></button>
+   389→          </div>
+   390→          <div class="flex items-center justify-between gap-3 p-4 pt-0 sm:pt-0">
+   391→            <div class="flex items-center gap-3">
+   392→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   393→                <span class="material-symbols-outlined text-[20px]">refresh</span>
+   394→              </div>
+   395→              <p class="text-sm font-semibold">Auto-refresh</p>
+   396→            </div>
+   397→            <div id="intervalSeg" class="seg" role="group" aria-label="Auto refresh interval">
+   398→              <button type="button" data-val="5">5s</button>
+   399→              <button type="button" data-val="10" class="active">10s</button>
+   400→              <button type="button" data-val="30">30s</button>
+   401→            </div>
+   402→          </div>
+   403→        </section>
+   404→
+   405→        <!-- Notifications -->
+   406→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   407→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Notifications</p>
+   408→          <div class="flex items-center justify-between gap-3 p-4">
+   409→            <div class="flex items-center gap-3">
+   410→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   411→                <span class="material-symbols-outlined text-[20px]">vibration</span>
+   412→              </div>
+   413→              <div>
+   414→                <p class="text-sm font-semibold">Vibrate on new mail</p>
+   415→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Haptic pulse when email arrives</p>
+   416→              </div>
+   417→            </div>
+   418→            <button id="vibrateSwitch" class="switch" role="switch" aria-checked="false" aria-label="Vibrate on new mail"><span class="knob"></span></button>
+   419→          </div>
+   420→          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+   421→            <div class="flex items-center gap-3">
+   422→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   423→                <span class="material-symbols-outlined text-[20px]">volume_up</span>
+   424→              </div>
+   425→              <div>
+   426→                <p class="text-sm font-semibold">Sound on new mail</p>
+   427→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Play a short chime when email arrives</p>
+   428→              </div>
+   429→            </div>
+   430→            <button id="soundSwitch" class="switch" role="switch" aria-checked="false" aria-label="Sound on new mail"><span class="knob"></span></button>
+   431→          </div>
+   432→          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+   433→            <div class="flex items-center gap-3">
+   434→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   435→                <span class="material-symbols-outlined text-[20px]">key</span>
+   436→              </div>
+   437→              <div>
+   438→                <p class="text-sm font-semibold">Auto-copy OTP codes</p>
+   439→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Copy the code as soon as it lands</p>
+   440→              </div>
+   441→            </div>
+   442→            <button id="autoCopySwitch" class="switch" role="switch" aria-checked="false" aria-label="Auto copy OTP codes"><span class="knob"></span></button>
+   443→          </div>
+   444→        </section>
+   445→
+   446→        <!-- Privacy -->
+   447→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   448→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Privacy</p>
+   449→          <div class="flex items-center justify-between gap-3 p-4">
+   450→            <div class="flex items-center gap-3">
+   451→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   452→                <span class="material-symbols-outlined text-[20px]">blur_on</span>
+   453→              </div>
+   454→              <div>
+   455→                <p class="text-sm font-semibold">Privacy blur</p>
+   456→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Blur senders &amp; previews until revealed</p>
+   457→              </div>
+   458→            </div>
+   459→            <button id="blurSwitch" class="switch" role="switch" aria-checked="false" aria-label="Privacy blur"><span class="knob"></span></button>
+   460→          </div>
+   461→        </section>
+   462→
+   463→        <!-- Data -->
+   464→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   465→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Data</p>
+   466→          <div class="flex items-center justify-between gap-3 p-4">
+   467→            <div class="flex items-center gap-3">
+   468→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   469→                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+   470→              </div>
+   471→              <div>
+   472→                <p class="text-sm font-semibold">Saved mailboxes</p>
+   473→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500"><span id="savedTotal">0</span> stored on this device</p>
+   474→              </div>
+   475→            </div>
+   476→            <button id="clearSavedBtn" type="button"
+   477→              class="h-10 shrink-0 rounded-xl border border-rose-200 bg-rose-50 px-4 text-xs font-bold text-rose-600 transition hover:bg-rose-100 active:scale-95 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   478→              Clear all
+   479→            </button>
+   480→          </div>
+   481→          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+   482→            <div class="flex items-center gap-3">
+   483→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   484→                <span class="material-symbols-outlined text-[20px]">sync_alt</span>
+   485→              </div>
+   486→              <div>
+   487→                <p class="text-sm font-semibold">Backup &amp; restore</p>
+   488→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Move saved mailboxes to another device</p>
+   489→              </div>
+   490→            </div>
+   491→            <div class="flex shrink-0 items-center gap-1.5">
+   492→              <button id="exportSavedBtn" type="button" aria-label="Export backup to clipboard"
+   493→                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Export</button>
+   494→              <button id="importSavedBtn" type="button" aria-label="Import saved mailboxes"
+   495→                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Import</button>
+   496→            </div>
+   497→          </div>
+   498→        </section>
+   499→
+   500→        <!-- Security -->
+   501→        <section class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   502→          <div class="flex items-center gap-3">
+   503→            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+   504→              <span class="material-symbols-outlined text-[20px]">verified_user</span>
+   505→            </div>
+   506→            <p class="text-sm font-semibold">Security &amp; privacy</p>
+   507→          </div>
+   508→          <ul class="mt-3 space-y-2 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+   509→            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Credentials and saved mailboxes never leave this device — there is no server account.</li>
+   510→            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Email HTML is sanitized — scripts, frames and trackers never run.</li>
+   511→            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Mailboxes live on Mail.tm only until you delete them. No analytics, no tracking.</li>
+   512→          </ul>
+   513→        </section>
+   514→
+   515→        <!-- About -->
+   516→        <p class="flex items-center justify-center gap-1.5 pt-2 text-center text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
+   517→          <span class="material-symbols-outlined !text-[13px]">lock</span>
+   518→          AR TEMPMAIL v3.0 · Private by design · Powered by Mail.tm
+   519→        </p>
+   520→      </div>
+   521→
+   522→      <!-- ============================ DETAIL SCREEN ============================ -->
+   523→      <div id="detailScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-4">
+   524→        <button id="backBtn" type="button"
+   525→          class="mb-4 flex h-10 items-center gap-1.5 rounded-xl border border-zinc-200 bg-white pl-2.5 pr-4 text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   526→          <span class="material-symbols-outlined text-[20px]">arrow_back</span> Inbox
+   527→        </button>
+   528→
+   529→        <article class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   530→          <div class="border-b border-zinc-100 p-5 dark:border-zinc-800">
+   531→            <h2 id="detailSubject" class="text-lg font-bold leading-snug">…</h2>
+   532→            <div class="mt-4 flex items-center gap-3">
+   533→              <div id="detailAvatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-lg font-bold uppercase text-white shadow-md shadow-violet-500/20">·</div>
+   534→              <div class="min-w-0 flex-1">
+   535→                <p id="detailFromName" class="truncate text-sm font-semibold">—</p>
+   536→                <p id="detailFromAddress" class="truncate text-xs text-zinc-500 dark:text-zinc-400"></p>
+   537→              </div>
+   538→              <div class="shrink-0 text-right">
+   539→                <p id="detailTime" class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400"></p>
+   540→                <p class="mt-0.5 flex items-center justify-end gap-1 text-[10px] text-zinc-400 dark:text-zinc-500">
+   541→                  <span class="material-symbols-outlined !text-[12px]">schedule</span> received
+   542→                </p>
+   543→              </div>
+   544→            </div>
+   545→          </div>
+   546→
+   547→          <!-- OTP banner -->
+   548→          <div id="detailOtp" class="hidden border-b border-zinc-100 bg-gradient-to-r from-violet-50 to-fuchsia-50 px-5 py-3.5 dark:border-zinc-800 dark:from-violet-500/10 dark:to-fuchsia-500/10">
+   549→            <div class="flex items-center justify-between gap-3">
+   550→              <div class="flex items-center gap-2.5">
+   551→                <span class="material-symbols-outlined !text-[20px] text-violet-500 dark:text-violet-400">key</span>
+   552→                <div>
+   553→                  <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Verification code detected</p>
+   554→                  <p id="detailOtpCode" class="text-xl font-bold tracking-[.25em] text-violet-600 tabular-nums dark:text-violet-300">······</p>
+   555→                </div>
+   556→              </div>
+   557→              <button id="detailOtpCopy" type="button"
+   558→                class="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-xs font-bold text-white shadow-md shadow-violet-500/25 transition hover:bg-violet-700 active:scale-95 dark:bg-violet-500 dark:hover:bg-violet-600">
+   559→                <span class="material-symbols-outlined !text-[15px]">content_copy</span> Copy
+   560→              </button>
+   561→            </div>
+   562→          </div>
+   563→
+   564→          <!-- Attachments -->
+   565→          <div id="detailAttachments" class="hidden border-b border-zinc-100 px-5 py-3.5 dark:border-zinc-800">
+   566→            <p class="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+   567→              <span class="material-symbols-outlined !text-[14px]">attach_file</span>
+   568→              <span id="attachmentCount">Attachments</span>
+   569→            </p>
+   570→            <div id="attachmentList" class="space-y-2"></div>
+   571→          </div>
+   572→
+   573→          <div id="detailBody" class="email-body p-5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"></div>
+   574→        </article>
+   575→
+   576→        <button id="copyTextBtn" type="button"
+   577→          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   578→          <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy text
+   579→        </button>
+   580→
+   581→        <button id="deleteMsgBtn" type="button"
+   582→          class="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 active:scale-[.99] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   583→          <span class="material-symbols-outlined text-[20px]">delete</span> Delete Message
+   584→        </button>
+   585→      </div>
+   586→    </main>
+   587→  </div>
+   588→
+   589→  <!-- ============================ BOTTOM NAVIGATION ============================ -->
+   590→  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-zinc-200/70 bg-white/90 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/90" aria-label="Main navigation">
+   591→    <div class="mx-auto grid max-w-md grid-cols-3 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1.5">
+   592→      <button type="button" data-tab="mail" aria-label="Mail tab"
+   593→        class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-violet-600 transition active:scale-95 dark:text-violet-400">
+   594→        <span class="material-symbols-outlined icon-fill text-[24px]">mail</span>
+   595→        <span class="text-[10px] font-bold">Mail</span>
+   596→        <span id="navMailBadge" class="absolute right-[24%] top-0 hidden min-w-[16px] rounded-full bg-rose-500 px-1 text-center text-[9px] font-bold leading-4 text-white shadow"></span>
+   597→      </button>
+   598→      <button type="button" data-tab="saved" aria-label="Saved tab"
+   599→        class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-zinc-400 transition active:scale-95 dark:text-zinc-500">
+   600→        <span class="material-symbols-outlined text-[24px]">bookmark</span>
+   601→        <span class="text-[10px] font-bold">Saved</span>
+   602→        <span id="navSavedBadge" class="absolute right-[24%] top-0 hidden min-w-[16px] rounded-full bg-violet-500 px-1 text-center text-[9px] font-bold leading-4 text-white shadow"></span>
+   603→      </button>
+   604→      <button type="button" data-tab="settings" aria-label="Settings tab"
+   605→        class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-zinc-400 transition active:scale-95 dark:text-zinc-500">
+   606→        <span class="material-symbols-outlined text-[24px]">settings</span>
+   607→        <span class="text-[10px] font-bold">Settings</span>
+   608→      </button>
+   609→    </div>
+   610→  </nav>
+   611→
+   612→  <!-- ============================ CONFIRM SHEET ============================ -->
+   613→  <div id="confirmSheet" class="fixed inset-0 z-[95] hidden flex items-center justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+   614→    <div id="confirmBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+   615→    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+   616→      <div class="flex items-start gap-3">
+   617→        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+   618→          <span class="material-symbols-outlined">warning</span>
+   619→        </div>
+   620→        <div class="min-w-0">
+   621→          <h3 id="confirmTitle" class="text-base font-bold">Are you sure?</h3>
+   622→          <p id="confirmMsg" class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400"></p>
+   623→        </div>
+   624→      </div>
+   625→      <label id="confirmCheckWrap" class="mt-4 hidden cursor-pointer items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 py-3 text-xs font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300">
+   626→        <input id="confirmCheck" type="checkbox" checked class="h-4 w-4 accent-violet-600" />
+   627→        <span id="confirmCheckLabel"></span>
+   628→      </label>
+   629→      <div class="mt-5 flex gap-2">
+   630→        <button id="confirmCancel" type="button"
+   631→          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+   632→        <button id="confirmOk" type="button"
+   633→          class="h-11 flex-1 rounded-xl bg-rose-500 text-sm font-bold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600 active:scale-[.98]">Delete</button>
+   634→      </div>
+   635→    </div>
+   636→  </div>
+   637→
+   638→  <!-- ============================ IMPORT SHEET ============================ -->
+   639→  <div id="importSheet" class="fixed inset-0 z-[95] hidden flex items-end justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="Import saved mailboxes">
+   640→    <div id="importBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+   641→    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+   642→      <div class="flex items-center justify-between">
+   643→        <h3 class="text-base font-bold">Import saved mailboxes</h3>
+   644→        <button id="importClose" type="button" aria-label="Close import" class="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300">
+   645→          <span class="material-symbols-outlined !text-[18px]">close</span>
+   646→        </button>
+   647→      </div>
+   648→      <p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Paste an AR TEMPMAIL backup below. It contains mailbox credentials — only import backups you trust.</p>
+   649→      <textarea id="importText" rows="5" spellcheck="false" placeholder='{ "mailboxes": [ … ] }'
+   650→        class="mt-3 w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50 p-3 font-mono text-[11px] leading-relaxed text-zinc-700 placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-200"></textarea>
+   651→      <div class="mt-4 flex gap-2">
+   652→        <button id="importCancel" type="button"
+   653→          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+   654→        <button id="importApply" type="button"
+   655→          class="h-11 flex-1 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition hover:opacity-95 active:scale-[.98]">Import</button>
+   656→      </div>
+   657→    </div>
+   658→  </div>
+   659→
+   660→  <!-- Toast -->
+   661→  <div id="toast" role="status" aria-live="polite"
+   662→    class="pointer-events-none fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-1/2 z-[90] hidden"></div>
+   663→
+   664→  <script type="module">
+   665→    'use strict';
+   666→
+   667→    /* ======================================================================
+   668→       AR TEMPMAIL v3 — single-file temporary email app
+   669→       API: https://api.mail.tm · Polling: configurable · Timer: 10 minutes
+   670→       New in v2: Saved Mailboxes (restore anytime), session restore on reload,
+   671→       OTP auto-detection + copy chips, search, share, bottom navigation,
+   672→       settings (auto-refresh interval, vibrate, auto-copy OTP, remember).
+   673→       v3: attachments (view + download), confirm/undo safety, backup export/import,
+   674→       sound chime, privacy blur, mark-all-read, pull-to-refresh, security hardening.
+   675→       ====================================================================== */
+   676→
+   677→    const DIRECT_API = 'https://api.mail.tm'; // official Mail.tm API (per spec)
+   678→    const RELAY_API = '/api/mailtm';          // optional same-origin relay, used only if the
+   679→                                              // browser blocks the direct call (Mail.tm sends
+   680→                                              // CORS headers to its own origin only)
+   681→    let API_BASE = DIRECT_API;
+   682→    const TIMER_SECONDS = 600;     // 10-minute session lifetime
+   683→    const LS_SAVED = 'ar_saved_mails';
+   684→    const LS_SESSION = 'ar_active_session';
+   685→    const LS_SETTINGS = 'ar_settings';
+   686→    const LS_TIP = 'ar_tip_v3_dismissed';
+   687→
+   688→    const DEFAULT_SETTINGS = {
+   689→      autoRefresh: 10,       // seconds
+   690→      vibrate: true,
+   691→      sound: true,           // short chime on new mail (WebAudio, no assets)
+   692→      autoCopyOtp: false,
+   693→      blur: false,           // privacy blur for senders/previews/address
+   694→      rememberSession: true,
+   695→    };
+   696→
+   697→    const state = {
+   698→      account: null,          // { id, address, password, token }
+   699→      messages: [],
+   700→      seenIds: new Set(),
+   701→      hiddenIds: new Set(),
+   702→      secondsLeft: TIMER_SECONDS,
+   703→      timerInterval: null,
+   704→      expired: false,
+   705→      pollInterval: null,
+   706→      firstLoadDone: false,
+   707→      generating: false,
+   708→      restoring: false,
+   709→      saved: [],              // saved mailboxes [{ id, address, password, savedAt, lastUsedAt }]
+   710→      settings: { ...DEFAULT_SETTINGS },
+   711→      tab: 'mail',
+   712→      prevTab: 'mail',
+   713→      searchQuery: '',
+   714→      currentOtp: null,
+   715→      currentMsgText: null,
+   716→      currentAttachments: [],
+   717→      revealed: false,        // temporary privacy-blur reveal
+   718→    };
+   719→
+   720→    /* ---------------- DOM ---------------- */
+   721→    const $ = (id) => document.getElementById(id);
+   722→    const el = {
+   723→      splash: $('splash'), app: $('app'),
+   724→      themeToggle: $('themeToggle'), themeIcon: $('themeIcon'),
+   725→      changeBtn: $('changeBtn'), deleteBtn: $('deleteBtn'),
+   726→      emailAddress: $('emailAddress'), copyBtn: $('copyBtn'), statusBadge: $('statusBadge'),
+   727→      saveBtn: $('saveBtn'), saveIcon: $('saveIcon'), shareBtn: $('shareBtn'),
+   728→      timerText: $('timerText'), timerBar: $('timerBar'), extendBtn: $('extendBtn'),
+   729→      refreshBtn: $('refreshBtn'), inboxList: $('inboxList'), inboxCount: $('inboxCount'),
+   730→      inboxSearch: $('inboxSearch'),
+   731→      mailScreen: $('mailScreen'), savedScreen: $('savedScreen'), settingsScreen: $('settingsScreen'),
+   732→      savedList: $('savedList'), savedHeaderCount: $('savedHeaderCount'), savedTotal: $('savedTotal'),
+   733→      clearSavedBtn: $('clearSavedBtn'), intervalSeg: $('intervalSeg'),
+   734→      themeSwitch: $('themeSwitch'), rememberSwitch: $('rememberSwitch'),
+   735→      vibrateSwitch: $('vibrateSwitch'), autoCopySwitch: $('autoCopySwitch'),
+   736→      soundSwitch: $('soundSwitch'), blurSwitch: $('blurSwitch'),
+   737→      markAllReadBtn: $('markAllReadBtn'), privacyEyeBtn: $('privacyEyeBtn'),
+   738→      privacyEyeIcon: $('privacyEyeIcon'), ptrIndicator: $('ptrIndicator'),
+   739→      ptrIcon: $('ptrIcon'), ptrText: $('ptrText'),
+   740→      detailScreen: $('detailScreen'), backBtn: $('backBtn'),
+   741→      detailSubject: $('detailSubject'), detailAvatar: $('detailAvatar'),
+   742→      detailFromName: $('detailFromName'), detailFromAddress: $('detailFromAddress'),
+   743→      detailTime: $('detailTime'), detailBody: $('detailBody'), deleteMsgBtn: $('deleteMsgBtn'),
+   744→      detailOtp: $('detailOtp'), detailOtpCode: $('detailOtpCode'), detailOtpCopy: $('detailOtpCopy'),
+   745→      detailAttachments: $('detailAttachments'), attachmentList: $('attachmentList'),
+   746→      attachmentCount: $('attachmentCount'), copyTextBtn: $('copyTextBtn'),
+   747→      confirmSheet: $('confirmSheet'), confirmBackdrop: $('confirmBackdrop'),
+   748→      confirmTitle: $('confirmTitle'), confirmMsg: $('confirmMsg'),
+   749→      confirmCheckWrap: $('confirmCheckWrap'), confirmCheck: $('confirmCheck'),
+   750→      confirmCheckLabel: $('confirmCheckLabel'), confirmCancel: $('confirmCancel'), confirmOk: $('confirmOk'),
+   751→      importSheet: $('importSheet'), importBackdrop: $('importBackdrop'),
+   752→      importText: $('importText'), importCancel: $('importCancel'),
+   753→      importApply: $('importApply'), importClose: $('importClose'),
+   754→      exportSavedBtn: $('exportSavedBtn'), importSavedBtn: $('importSavedBtn'),
+   755→      tipBanner: $('tipBanner'), tipDismiss: $('tipDismiss'),
+   756→      metaThemeColor: $('metaThemeColor'),
+   757→      navMailBadge: $('navMailBadge'), navSavedBadge: $('navSavedBadge'),
+   758→      toast: $('toast'),
+   759→    };
+   760→
+   761→    /* ---------------- Storage helpers ---------------- */
+   762→    function loadJSON(key, fallback) {
+   763→      try {
+   764→        const raw = localStorage.getItem(key);
+   765→        return raw ? JSON.parse(raw) : fallback;
+   766→      } catch (e) { return fallback; }
+   767→    }
+   768→    function saveJSON(key, value) {
+   769→      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* no-op */ }
+   770→    }
+   771→    function removeKey(key) {
+   772→      try { localStorage.removeItem(key); } catch (e) { /* no-op */ }
+   773→    }
+   774→    function loadSaved() {
+   775→      const list = loadJSON(LS_SAVED, []);
+   776→      return Array.isArray(list) ? list : [];
+   777→    }
+   778→    function persistSaved() { saveJSON(LS_SAVED, state.saved); }
+   779→    function loadSettings() {
+   780→      return { ...DEFAULT_SETTINGS, ...loadJSON(LS_SETTINGS, {}) };
+   781→    }
+   782→    function persistSettings() { saveJSON(LS_SETTINGS, state.settings); }
+   783→    function persistActiveSession() {
+   784→      if (!state.account) return;
+   785→      saveJSON(LS_SESSION, {
+   786→        id: state.account.id,
+   787→        address: state.account.address,
+   788→        password: state.account.password,
+   789→        at: Date.now(),
+   790→      });
+   791→    }
+   792→    function loadActiveSession() {
+   793→      const s = loadJSON(LS_SESSION, null);
+   794→      return s && s.address && s.password ? s : null;
+   795→    }
+   796→    function clearActiveSession() { removeKey(LS_SESSION); }
+   797→
+   798→    /* ---------------- Helpers ---------------- */
+   799→    function escapeHTML(str = '') {
+   800→      return String(str)
+   801→        .replace(/&/g, '&amp;')
+   802→        .replace(/</g, '&lt;')
+   803→        .replace(/>/g, '&gt;')
+   804→        .replace(/"/g, '&quot;')
+   805→        .replace(/'/g, '&#39;');
+   806→    }
+   807→
+   808→    function formatDate(iso) {
+   809→      const then = new Date(iso).getTime();
+   810→      if (Number.isNaN(then)) return '';
+   811→      const diff = Math.max(0, Date.now() - then);
+   812→      const s = Math.floor(diff / 1000);
+   813→      if (s < 60) return 'Just now';
+   814→      const m = Math.floor(s / 60);
+   815→      if (m < 60) return m + ' min ago';
+   816→      const h = Math.floor(m / 60);
+   817→      if (h < 24) return h + 'h ago';
+   818→      const d = Math.floor(h / 24);
+   819→      if (d < 7) return d + 'd ago';
+   820→      return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+   821→    }
+   822→
+   823→    function formatBytes(bytes) {
+   824→      const n = Number(bytes);
+   825→      if (!Number.isFinite(n) || n < 0) return '';
+   826→      if (n < 1024) return n + ' B';
+   827→      const kb = n / 1024;
+   828→      if (kb < 1024) return kb.toFixed(kb < 10 ? 1 : 0) + ' KB';
+   829→      const mb = kb / 1024;
+   830→      if (mb < 1024) return mb.toFixed(mb < 10 ? 1 : 0) + ' MB';
+   831→      return (mb / 1024).toFixed(1) + ' GB';
+   832→    }
+   833→
+   834→    function randString(len) {
+   835→      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+   836→      let out = '';
+   837→      for (let i = 0; i < len; i++) out += pickRandom(chars);
+   838→      return out;
+   839→    }
+   840→
+   841→    /** Cryptographically-strong character picker (falls back to Math.random). */
+   842→    function pickRandom(chars) {
+   843→      if (globalThis.crypto && crypto.getRandomValues) {
+   844→        // Rejection sampling keeps the distribution uniform for any charset size
+   845→        const limit = Math.floor(256 / chars.length) * chars.length;
+   846→        const buf = new Uint8Array(1);
+   847→        do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
+   848→        return chars[buf[0] % chars.length];
+   849→      }
+   850→      return chars[Math.floor(Math.random() * chars.length)];
+   851→    }
+   852→
+   853→    function randomLocalPart() {
+   854→      const letters = 'abcdefghijklmnopqrstuvwxyz';
+   855→      const alnum = letters + '0123456789';
+   856→      let out = pickRandom(letters);
+   857→      const n = 7 + Math.floor(Math.random() * 4);
+   858→      for (let i = 0; i < n; i++) out += pickRandom(alnum);
+   859→      return out;
+   860→    }
+   861→
+   862→    function vibrate(pattern) {
+   863→      if (state.settings.vibrate && navigator.vibrate) {
+   864→        try { navigator.vibrate(pattern || 60); } catch (e) { /* no-op */ }
+   865→      }
+   866→    }
+   867→
+   868→    /* ---------------- Sound (WebAudio, no external assets) ---------------- */
+   869→    let audioCtx = null;
+   870→    function playChime() {
+   871→      if (!state.settings.sound) return;
+   872→      try {
+   873→        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+   874→        if (audioCtx.state === 'suspended') { audioCtx.resume().catch(() => {}); }
+   875→        const t = audioCtx.currentTime;
+   876→        const gain = audioCtx.createGain();
+   877→        gain.connect(audioCtx.destination);
+   878→        gain.gain.setValueAtTime(0.0001, t);
+   879→        gain.gain.exponentialRampToValueAtTime(0.07, t + 0.02);
+   880→        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+   881→        [[880, 0], [1318.5, 0.13]].forEach(([freq, offset]) => { // gentle two-tone
+   882→          const osc = audioCtx.createOscillator();
+   883→          osc.type = 'sine';
+   884→          osc.frequency.setValueAtTime(freq, t + offset);
+   885→          osc.connect(gain);
+   886→          osc.start(t + offset);
+   887→          osc.stop(t + offset + 0.35);
+   888→        });
+   889→      } catch (e) { /* audio unavailable — stay silent */ }
+   890→    }
+   891→
+   892→    // Browsers require a user gesture before audio can play — unlock once.
+   893→    document.addEventListener('pointerdown', function unlockAudio() {
+   894→      try {
+   895→        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+   896→        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+   897→      } catch (e) { /* no-op */ }
+   898→    }, { once: true, capture: true });
+   899→
+   900→    /** Heuristic OTP / verification-code extractor. */
+   901→    function extractOtp(...parts) {
+   902→      const hay = parts.filter(Boolean).join(' ').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+   903→      const keyword = /(?:\b(?:code|otp|pin|passcode|password|verification|verify|confirm|token|security|authenticate)\b[^0-9]{0,24}?)(\d{3}[\s-]?\d{3}|\d{4,8})\b/i;
+   904→      let m = hay.match(keyword);
+   905→      if (m) return m[1].replace(/[\s-]/g, '');
+   906→      m = hay.match(/\b(\d{3}[\s-]\d{3})\b/);
+   907→      if (m) return m[1].replace(/[\s-]/g, '');
+   908→      m = hay.match(/\b(\d{6})\b/);
+   909→      if (m) return m[1];
+   910→      m = hay.match(/\b(\d{4,8})\b/);
+   911→      return m ? m[1] : null;
+   912→    }
+   913→
+   914→    /** Safe fetch with timeout error handling. */
+   915→    async function fetchWithTimeout(url, options = {}, timeout = 15000) {
+   916→      const controller = new AbortController();
+   917→      const timer = setTimeout(() => controller.abort(), timeout);
+   918→      try {
+   919→        return await fetch(url, { ...options, signal: controller.signal });
+   920→      } catch (err) {
+   921→        if (err && err.name === 'AbortError') throw new Error('Request timed out. Check your connection.');
+   922→        throw err; // keep raw TypeError so the CORS/network fallback can detect it
+   923→      } finally {
+   924→        clearTimeout(timer);
+   925→      }
+   926→    }
+   927→
+   928→    /**
+   929→     * Small wrapper around the Mail.tm REST API.
+   930→     * - Calls the official API first; if the browser blocks it (CORS / network),
+   931→     *   transparently retries once through the same-origin relay endpoint.
+   932→     * - Auto-retries rate-limited (429) responses with a short backoff.
+   933→     */
+   934→    async function api(path, { method = 'GET', body, auth = false, timeout, contentType } = {}) {
+   935→      const call = (base) => {
+   936→        const headers = { Accept: 'application/json' };
+   937→        if (contentType) headers['Content-Type'] = contentType;
+   938→        else if (body !== undefined) headers['Content-Type'] = 'application/json';
+   939→        if (auth && state.account && state.account.token) headers.Authorization = 'Bearer ' + state.account.token;
+   940→        return fetchWithTimeout(base + path, {
+   941→          method,
+   942→          headers,
+   943→          body: body !== undefined ? JSON.stringify(body) : undefined,
+   944→        }, timeout);
+   945→      };
+   946→
+   947→      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+   948→      let res = null;
+   949→
+   950→      for (let attempt = 0; attempt < 3; attempt++) {
+   951→        try {
+   952→          res = await call(API_BASE);
+   953→        } catch (err) {
+   954→          if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+   955→            console.warn('[AR TEMPMAIL] direct Mail.tm API unreachable — switching to relay endpoint');
+   956→            API_BASE = RELAY_API;
+   957→            showToast('Using secure relay for the Mail.tm API', 'info');
+   958→            continue; // retry immediately through the relay
+   959→          } else if (err instanceof TypeError) {
+   960→            throw new Error('Network error — check your connection.');
+   961→          } else {
+   962→            throw err;
+   963→          }
+   964→        }
+   965→        if (res.status === 429 && attempt < 2) {
+   966→          await sleep(1500 * (attempt + 1)); // rate limited → back off and retry
+   967→          continue;
+   968→        }
+   969→        break;
+   970→      }
+   971→
+   972→      if (res.status === 204) return null;
+   973→
+   974→      let data = null;
+   975→      try { data = await res.json(); } catch (e) { data = null; }
+   976→
+   977→      if (!res.ok) {
+   978→        const err = new Error(
+   979→          (data && (data['hydra:description'] || data.detail || data.message)) ||
+   980→          ('Request failed (' + res.status + ')')
+   981→        );
+   982→        err.status = res.status;
+   983→        throw err;
+   984→      }
+   985→      return data;
+   986→    }
+   987→
+   988→    /**
+   989→     * Authenticated binary fetch (attachment downloads). Follows the same
+   990→     * direct-API-first → relay fallback strategy as api(), but returns a Blob.
+   991→     */
+   992→    async function apiBlob(path) {
+   993→      const attempt = async (base) => {
+   994→        const headers = { Accept: '*/*' };
+   995→        if (state.account && state.account.token) headers.Authorization = 'Bearer ' + state.account.token;
+   996→        return fetchWithTimeout(base + path, { headers });
+   997→      };
+   998→      let res = null;
+   999→      try {
+  1000→        res = await attempt(API_BASE);
+  1001→      } catch (err) {
+  1002→        if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+  1003→          console.warn('[AR TEMPMAIL] direct API unreachable for blob — switching to relay');
+  1004→          API_BASE = RELAY_API;
+  1005→          res = await attempt(API_BASE);
+  1006→        } else {
+  1007→          throw err;
+  1008→        }
+  1009→      }
+  1010→      if (!res.ok) throw new Error('Download failed (' + res.status + ').');
+  1011→      return res.blob();
+  1012→    }
+  1013→
+  1014→    /* ---------------- Toast ---------------- */
+  1015→    const TOAST_STYLE = {
+  1016→      success: { icon: 'check_circle', ring: 'ring-emerald-400/30', iconColor: 'text-emerald-400' },
+  1017→      error:   { icon: 'error',       ring: 'ring-rose-400/30',     iconColor: 'text-rose-400' },
+  1018→      warning: { icon: 'warning',     ring: 'ring-amber-400/30',    iconColor: 'text-amber-400' },
+  1019→      info:    { icon: 'info',        ring: 'ring-violet-400/30',   iconColor: 'text-violet-300' },
+  1020→    };
+  1021→    let toastTimer = null;
+  1022→    let pendingToastAction = null;
+  1023→
+  1024→    function dismissToastNow() {
+  1025→      clearTimeout(toastTimer);
+  1026→      el.toast.classList.remove('toast-in');
+  1027→      el.toast.classList.add('toast-out');
+  1028→      setTimeout(() => {
+  1029→        el.toast.classList.add('hidden');
+  1030→        el.toast.classList.remove('toast-out');
+  1031→      }, 320);
+  1032→    }
+  1033→
+  1034→    function showToast(msg, type = 'info', opts = {}) {
+  1035→      const meta = TOAST_STYLE[type] || TOAST_STYLE.info;
+  1036→      pendingToastAction = (opts.action && typeof opts.action.fn === 'function') ? opts.action.fn : null;
+  1037→      const copyChip = opts.copyValue
+  1038→        ? '<span data-copy="' + escapeHTML(opts.copyValue) + '" class="pointer-events-auto cursor-pointer rounded-md bg-white/10 px-1.5 py-0.5 font-bold tracking-[.15em] underline decoration-white/40 underline-offset-2">' + escapeHTML(opts.copyValue) + '</span>'
+  1039→        : '';
+  1040→      const actionBtn = opts.action
+  1041→        ? '<button type="button" data-toast-action class="pointer-events-auto shrink-0 rounded-lg bg-white/15 px-2.5 py-1 text-xs font-bold text-white transition hover:bg-white/25">' + escapeHTML(opts.action.label || 'View') + '</button>'
+  1042→        : '';
+  1043→      el.toast.innerHTML =
+  1044→        '<div class="flex items-center gap-2.5 rounded-2xl bg-zinc-900/95 px-4 py-3 shadow-2xl ring-1 backdrop-blur dark:bg-zinc-800/95 dark:ring-white/10 ' + meta.ring + '">' +
+  1045→          '<span class="material-symbols-outlined icon-fill !text-[20px] ' + meta.iconColor + '">' + meta.icon + '</span>' +
+  1046→          '<p class="max-w-[60vw] break-words text-sm font-medium text-white">' + escapeHTML(msg) + '</p>' + copyChip + actionBtn +
+  1047→        '</div>';
+  1048→      el.toast.classList.remove('hidden', 'toast-out');
+  1049→      el.toast.classList.add('toast-in');
+  1050→      clearTimeout(toastTimer);
+  1051→      toastTimer = setTimeout(dismissToastNow, opts.action ? 5000 : 3000); // actions need more reading time
+  1052→    }
+  1053→
+  1054→    el.toast.addEventListener('click', (e) => {
+  1055→      const chip = e.target.closest('[data-copy]');
+  1056→      if (chip) { copyText(chip.dataset.copy, 'Code ' + chip.dataset.copy + ' copied!'); return; }
+  1057→      const act = e.target.closest('[data-toast-action]');
+  1058→      if (act) {
+  1059→        const fn = pendingToastAction;
+  1060→        pendingToastAction = null;
+  1061→        dismissToastNow();
+  1062→        if (typeof fn === 'function') fn();
+  1063→      }
+  1064→    });
+  1065→
+  1066→    /* ---------------- Clipboard & share ---------------- */
+  1067→    async function copyText(text, successMsg = 'Copied!') {
+  1068→      if (!text) return false;
+  1069→      let ok = false;
+  1070→      try {
+  1071→        if (navigator.clipboard && window.isSecureContext) {
+  1072→          await navigator.clipboard.writeText(text);
+  1073→          ok = true;
+  1074→        } else {
+  1075→          throw new Error('fallback');
+  1076→        }
+  1077→      } catch (e) {
+  1078→        try {
+  1079→          const ta = document.createElement('textarea');
+  1080→          ta.value = text;
+  1081→          ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  1082→          document.body.appendChild(ta);
+  1083→          ta.focus();
+  1084→          ta.select();
+  1085→          ok = document.execCommand('copy');
+  1086→          ta.remove();
+  1087→        } catch (e2) { ok = false; }
+  1088→      }
+  1089→      showToast(ok ? successMsg : 'Copy failed — select the text manually.', ok ? 'success' : 'error');
+  1090→      return ok;
+  1091→    }
+  1092→
+  1093→    function copyToClipboard() {
+  1094→      const address = state.account && state.account.address;
+  1095→      if (!address) { showToast('No email address to copy yet.', 'warning'); return; }
+  1096→      copyText(address, 'Copied!');
+  1097→    }
+  1098→
+  1099→    async function shareCurrent() {
+  1100→      const address = state.account && state.account.address;
+  1101→      if (!address) { showToast('No email address to share yet.', 'warning'); return; }
+  1102→      if (navigator.share) {
+  1103→        try {
+  1104→          await navigator.share({ title: 'AR TEMPMAIL', text: 'My temporary email address: ' + address });
+  1105→          return;
+  1106→        } catch (e) {
+  1107→          if (e && e.name === 'AbortError') return; // user closed the share sheet
+  1108→          // fall through to copy
+  1109→        }
+  1110→      }
+  1111→      copyText(address, 'Address copied — ready to paste!');
+  1112→    }
+  1113→
+  1114→    /* ---------------- Button spinners ---------------- */
+  1115→    function showSpinner(button) {
+  1116→      if (!button || button.dataset.loading === '1') return;
+  1117→      button.dataset.loading = '1';
+  1118→      button.disabled = true;
+  1119→      button.classList.add('btn-spinner', 'cursor-wait');
+  1120→      const s = document.createElement('span');
+  1121→      s.className = 'spinner';
+  1122→      s.setAttribute('aria-hidden', 'true');
+  1123→      button.prepend(s);
+  1124→    }
+  1125→
+  1126→    function hideSpinner(button) {
+  1127→      if (!button) return;
+  1128→      button.querySelectorAll('.spinner').forEach((n) => n.remove());
+  1129→      button.classList.remove('btn-spinner', 'cursor-wait');
+  1130→      button.disabled = false;
+  1131→      delete button.dataset.loading;
+  1132→    }
+  1133→
+  1134→    /* ---------------- Theme ---------------- */
+  1135→    function applyTheme(dark, announce = false) {
+  1136→      document.documentElement.classList.toggle('dark', dark);
+  1137→      el.themeIcon.textContent = dark ? 'light_mode' : 'dark_mode';
+  1138→      if (el.metaThemeColor) el.metaThemeColor.setAttribute('content', dark ? '#09090b' : '#7c3aed');
+  1139→      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* no-op */ }
+  1140→      updateSettingsUI();
+  1141→      if (announce) showToast(dark ? 'Dark mode enabled' : 'Light mode enabled', 'info');
+  1142→    }
+  1143→
+  1144→    function initTheme() {
+  1145→      let theme = 'light';
+  1146→      try { theme = localStorage.getItem('theme') || 'light'; } catch (e) { /* no-op */ }
+  1147→      document.documentElement.classList.toggle('dark', theme === 'dark');
+  1148→      el.themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+  1149→    }
+  1150→
+  1151→    el.themeToggle.addEventListener('click', () => {
+  1152→      applyTheme(!document.documentElement.classList.contains('dark'), true);
+  1153→    });
+  1154→
+  1155→    /* ---------------- Timer ---------------- */
+  1156→    function renderTimer() {
+  1157→      const m = Math.floor(state.secondsLeft / 60);
+  1158→      const s = state.secondsLeft % 60;
+  1159→      el.timerText.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  1160→      const pct = Math.max(0, Math.min(100, (state.secondsLeft / TIMER_SECONDS) * 100));
+  1161→      el.timerBar.style.width = pct + '%';
+  1162→      const danger = state.expired || state.secondsLeft <= 60;
+  1163→      el.timerText.classList.toggle('text-rose-500', danger);
+  1164→      el.timerText.classList.toggle('dark:text-rose-400', danger);
+  1165→    }
+  1166→
+  1167→    function stopTimer() {
+  1168→      if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  1169→    }
+  1170→
+  1171→    function startTimer(seconds = TIMER_SECONDS) {
+  1172→      stopTimer();
+  1173→      state.secondsLeft = seconds;
+  1174→      state.expired = false;
+  1175→      renderTimer();
+  1176→      state.timerInterval = setInterval(() => {
+  1177→        if (state.secondsLeft > 0) state.secondsLeft--;
+  1178→        if (state.secondsLeft <= 0 && !state.expired) {
+  1179→          state.expired = true;
+  1180→          renderTimer();
+  1181→          showToast('Timer expired! Extend or get new email.', 'warning');
+  1182→          return;
+  1183→        }
+  1184→        renderTimer();
+  1185→      }, 1000);
+  1186→    }
+  1187→
+  1188→    function extendTimer() {
+  1189→      startTimer(TIMER_SECONDS);
+  1190→      showToast('Timer extended — 10 more minutes', 'success');
+  1191→    }
+  1192→
+  1193→    /* ---------------- Polling ---------------- */
+  1194→    function stopPolling() {
+  1195→      if (state.pollInterval) { clearInterval(state.pollInterval); state.pollInterval = null; }
+  1196→    }
+  1197→
+  1198→    function startPolling() {
+  1199→      stopPolling();
+  1200→      const ms = Math.max(5, Number(state.settings.autoRefresh) || 10) * 1000;
+  1201→      state.pollInterval = setInterval(() => checkInbox(false), ms);
+  1202→    }
+  1203→
+  1204→    /* ---------------- Status / address card ---------------- */
+  1205→    function setStatusBadge(text, tone) {
+  1206→      const tones = {
+  1207→        active:  'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+  1208→        loading: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+  1209→        error:   'bg-rose-500/10 text-rose-600 dark:text-rose-400',
+  1210→      };
+  1211→      el.statusBadge.className = 'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold ' + (tones[tone] || tones.active);
+  1212→      el.statusBadge.innerHTML = '<span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>' + escapeHTML(text);
+  1213→    }
+  1214→
+  1215→    function setEmailLoading(loading) {
+  1216→      if (loading) {
+  1217→        el.emailAddress.innerHTML =
+  1218→          '<span class="spinner text-violet-500"></span><span class="ml-2 text-base font-medium text-zinc-400 dark:text-zinc-500">Generating secure mailbox…</span>';
+  1219→      } else if (state.account) {
+  1220→        el.emailAddress.textContent = state.account.address;
+  1221→      } else {
+  1222→        el.emailAddress.textContent = '—';
+  1223→      }
+  1224→    }
+  1225→
+  1226→    function setEmailError(msg) {
+  1227→      el.emailAddress.innerHTML =
+  1228→        '<span class="text-base font-semibold text-rose-500 dark:text-rose-400">' + escapeHTML(msg) + '</span>';
+  1229→    }
+  1230→
+  1231→    /* ---------------- Saved mailboxes ---------------- */
+  1232→    function isCurrentSaved() {
+  1233→      return !!(state.account && state.saved.some((s) => s.address === state.account.address));
+  1234→    }
+  1235→
+  1236→    function updateSaveBtn() {
+  1237→      const saved = isCurrentSaved();
+  1238→      el.saveBtn.setAttribute('aria-pressed', saved ? 'true' : 'false');
+  1239→      el.saveIcon.textContent = saved ? 'bookmark_added' : 'bookmark';
+  1240→      el.saveIcon.classList.toggle('icon-fill', saved);
+  1241→      el.saveBtn.classList.toggle('border-violet-400', saved);
+  1242→      el.saveBtn.classList.toggle('text-violet-600', saved);
+  1243→      el.saveBtn.classList.toggle('dark:text-violet-400', saved);
+  1244→      el.saveBtn.classList.toggle('bg-violet-500/10', saved);
+  1245→    }
+  1246→
+  1247→    function toggleSaveCurrent() {
+  1248→      if (!state.account) { showToast('Generate a mailbox first.', 'warning'); return; }
+  1249→      if (isCurrentSaved()) {
+  1250→        state.saved = state.saved.filter((s) => s.address !== state.account.address);
+  1251→        persistSaved();
+  1252→        updateSaveBtn();
+  1253→        renderSavedList();
+  1254→        showToast('Removed from Saved', 'info');
+  1255→      } else {
+  1256→        state.saved.unshift({
+  1257→          id: state.account.id,
+  1258→          address: state.account.address,
+  1259→          password: state.account.password,
+  1260→          savedAt: Date.now(),
+  1261→          lastUsedAt: Date.now(),
+  1262→        });
+  1263→        persistSaved();
+  1264→        updateSaveBtn();
+  1265→        renderSavedList();
+  1266→        vibrate(40);
+  1267→        showToast('Mailbox saved — it stays alive in the Saved tab', 'success');
+  1268→      }
+  1269→      updateBadges();
+  1270→    }
+  1271→
+  1272→    async function restoreMailbox(entry, { silent = false, fallbackNew = false } = {}) {
+  1273→      if (state.restoring || !entry || !entry.address || !entry.password) return;
+  1274→      state.restoring = true;
+  1275→      stopPolling();
+  1276→      stopTimer();
+  1277→      setStatusBadge('RESTORING', 'loading');
+  1278→      try {
+  1279→        const tokenData = await api('/token', {
+  1280→          method: 'POST',
+  1281→          body: { address: entry.address, password: entry.password },
+  1282→        });
+  1283→        state.account = {
+  1284→          id: tokenData.id || entry.id || '',
+  1285→          address: entry.address,
+  1286→          password: entry.password,
+  1287→          token: tokenData.token,
+  1288→        };
+  1289→        state.messages = [];
+  1290→        state.seenIds = new Set();
+  1291→        state.hiddenIds = new Set();
+  1292→        state.firstLoadDone = false;
+  1293→        state.searchQuery = '';
+  1294→        el.inboxSearch.value = '';
+  1295→        state.generating = false;
+  1296→
+  1297→        persistActiveSession();
+  1298→        setEmailLoading(false);
+  1299→        setStatusBadge('ACTIVE', 'active');
+  1300→        renderInbox();
+  1301→        updateSaveBtn();
+  1302→        startTimer(TIMER_SECONDS);
+  1303→        startPolling();
+  1304→        checkInbox(false);
+  1305→
+  1306→        const e = state.saved.find((s) => s.address === entry.address);
+  1307→        if (e) { e.lastUsedAt = Date.now(); persistSaved(); }
+  1308→
+  1309→        if (!silent) {
+  1310→          switchTab('mail'); // take the user straight to their inbox
+  1311→          showToast('Mailbox restored — ' + entry.address, 'success');
+  1312→          vibrate(40);
+  1313→        } else {
+  1314→          showToast('Welcome back! Your mailbox was restored.', 'success');
+  1315→        }
+  1316→      } catch (err) {
+  1317→        console.error('[AR TEMPMAIL] restore failed:', err);
+  1318→        if (fallbackNew) {
+  1319→          showToast('Previous mailbox unavailable — created a new one.', 'info');
+  1320→          await getNewEmail();
+  1321→        } else {
+  1322→          setStatusBadge('OFFLINE', 'error');
+  1323→          showToast('Could not restore this mailbox — it may no longer exist.', 'error');
+  1324→        }
+  1325→      } finally {
+  1326→        state.restoring = false;
+  1327→        renderSavedList();
+  1328→      }
+  1329→    }
+  1330→
+  1331→    function removeSaved(address) {
+  1332→      const index = state.saved.findIndex((s) => s.address === address);
+  1333→      if (index === -1) return;
+  1334→      const removed = state.saved[index];
+  1335→      state.saved.splice(index, 1);
+  1336→      persistSaved();
+  1337→      renderSavedList();
+  1338→      updateSaveBtn();
+  1339→      updateBadges();
+  1340→      // Reversible removal — offer a 5-second UNDO instead of a confirm dialog
+  1341→      showToast('Removed from Saved', 'info', {
+  1342→        action: {
+  1343→          label: 'Undo',
+  1344→          fn: () => {
+  1345→            state.saved.splice(Math.min(index, state.saved.length), 0, removed);
+  1346→            persistSaved();
+  1347→            renderSavedList();
+  1348→            updateSaveBtn();
+  1349→            updateBadges();
+  1350→            showToast('Restored to Saved', 'success');
+  1351→          },
+  1352→        },
+  1353→      });
+  1354→    }
+  1355→
+  1356→    function clearAllSaved() {
+  1357→      state.saved = [];
+  1358→      persistSaved();
+  1359→      renderSavedList();
+  1360→      updateSaveBtn();
+  1361→      updateBadges();
+  1362→      showToast('All saved mailboxes cleared', 'info');
+  1363→    }
+  1364→
+  1365→    const SAVED_EMPTY_HTML =
+  1366→      '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-12 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+  1367→        '<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-500 dark:text-violet-400">' +
+  1368→          '<span class="material-symbols-outlined icon-fill pulse-soft !text-[32px]">bookmark</span>' +
+  1369→        '</div>' +
+  1370→        '<p class="mt-4 text-sm font-semibold">No saved mailboxes yet</p>' +
+  1371→        '<p class="mt-1 max-w-[260px] text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Tap the bookmark icon on your email card to keep an address for future OTPs and verifications.</p>' +
+  1372→      '</div>';
+  1373→
+  1374→    function renderSavedList() {
+  1375→      el.savedHeaderCount.textContent = String(state.saved.length);
+  1376→      el.savedTotal.textContent = String(state.saved.length);
+  1377→      updateBadges();
+  1378→
+  1379→      if (!state.saved.length) {
+  1380→        el.savedList.innerHTML = SAVED_EMPTY_HTML;
+  1381→        return;
+  1382→      }
+  1383→
+  1384→      el.savedList.innerHTML = state.saved.map((s, i) => {
+  1385→        const initial = escapeHTML((s.address[0] || '?').toUpperCase());
+  1386→        const isActive = state.account && state.account.address === s.address;
+  1387→        const lastUsed = s.lastUsedAt ? ' · used ' + formatDate(s.lastUsedAt) : '';
+  1388→        return (
+  1389→          '<div class="rounded-2xl border ' + (isActive ? 'border-violet-400 dark:border-violet-500/60' : 'border-zinc-200 dark:border-zinc-800') +
+  1390→            ' bg-white p-4 shadow-sm fade-up dark:bg-zinc-900" style="animation-delay:' + Math.min(i * 40, 200) + 'ms">' +
+  1391→            '<div class="flex items-start gap-3">' +
+  1392→              '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
+  1393→              '<div class="min-w-0 flex-1">' +
+  1394→                '<p class="truncate text-sm font-bold blur-target">' + escapeHTML(s.address) + '</p>' +
+  1395→                '<p class="mt-0.5 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">Saved ' + formatDate(s.savedAt) + lastUsed + '</p>' +
+  1396→                (isActive ? '<span class="mt-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"><span class="material-symbols-outlined !text-[11px]">check_circle</span>ACTIVE NOW</span>' : '') +
+  1397→              '</div>' +
+  1398→              '<div class="flex shrink-0 items-center gap-1.5">' +
+  1399→                '<button type="button" data-copy-saved="' + escapeHTML(s.address) + '" aria-label="Copy address" class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:text-zinc-400">' +
+  1400→                  '<span class="material-symbols-outlined !text-[16px]">content_copy</span></button>' +
+  1401→                '<button type="button" data-remove="' + escapeHTML(s.address) + '" aria-label="Remove saved mailbox" class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:border-rose-300 hover:text-rose-500 active:scale-95 dark:border-zinc-700 dark:text-zinc-400">' +
+  1402→                  '<span class="material-symbols-outlined !text-[16px]">delete</span></button>' +
+  1403→              '</div>' +
+  1404→            '</div>' +
+  1405→            '<button type="button" data-restore="' + escapeHTML(s.address) + '"' + (isActive ? ' disabled' : '') +
+  1406→              ' class="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold transition active:scale-[.98] ' +
+  1407→              (isActive
+  1408→                ? 'cursor-default bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+  1409→                : 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/25 hover:opacity-95') +
+  1410→              '"><span class="material-symbols-outlined !text-[18px]">' + (isActive ? 'check_circle' : 'login') + '</span>' +
+  1411→              (isActive ? 'Active now' : 'Open mailbox') + '</button>' +
+  1412→          '</div>'
+  1413→        );
+  1414→      }).join('');
+  1415→    }
+  1416→
+  1417→    el.savedList.addEventListener('click', (e) => {
+  1418→      const copyBtn = e.target.closest('[data-copy-saved]');
+  1419→      if (copyBtn) { copyText(copyBtn.dataset.copySaved, 'Address copied!'); return; }
+  1420→      const removeBtn = e.target.closest('[data-remove]');
+  1421→      if (removeBtn) { removeSaved(removeBtn.dataset.remove); return; }
+  1422→      const restoreBtn = e.target.closest('[data-restore]');
+  1423→      if (restoreBtn && !restoreBtn.disabled) {
+  1424→        const entry = state.saved.find((s) => s.address === restoreBtn.dataset.restore);
+  1425→        if (entry) restoreMailbox(entry);
+  1426→      }
+  1427→    });
+  1428→
+  1429→    /* ---------------- Core: generate a new temp email ---------------- */
+  1430→    async function getNewEmail(triggerBtn = null) {
+  1431→      if (state.generating) return;
+  1432→      state.generating = true;
+  1433→      if (triggerBtn) showSpinner(triggerBtn);
+  1434→      stopPolling();
+  1435→      stopTimer();
+  1436→      setEmailLoading(true);
+  1437→      setStatusBadge('GENERATING', 'loading');
+  1438→
+  1439→      try {
+  1440→        /* 1) Fetch available public domain */
+  1441→        const domainsData = await api('/domains?page=1');
+  1442→        const domains = ((domainsData && domainsData['hydra:member']) || domainsData || [])
+  1443→          .filter((d) => d && d.isActive && !d.isPrivate && d.domain)
+  1444→          .map((d) => d.domain);
+  1445→        if (!domains.length) throw new Error('No mail domains available right now.');
+  1446→        const domain = domains[Math.floor(Math.random() * domains.length)];
+  1447→
+  1448→        /* 2) Create account (retry on address collision) */
+  1449→        let account = null;
+  1450→        for (let attempt = 0; attempt < 4 && !account; attempt++) {
+  1451→          const address = (randomLocalPart() + '@' + domain).toLowerCase();
+  1452→          const password = randString(16);
+  1453→          try {
+  1454→            const created = await api('/accounts', { method: 'POST', body: { address, password } });
+  1455→            account = { id: created.id, address: created.address || address, password };
+  1456→          } catch (err) {
+  1457→            if (err.status === 422 || err.status === 400) continue; // address taken → retry
+  1458→            throw err;
+  1459→          }
+  1460→        }
+  1461→        if (!account) throw new Error('Could not create a mailbox. Please try again.');
+  1462→
+  1463→        /* 3) Get auth token */
+  1464→        const tokenData = await api('/token', {
+  1465→          method: 'POST',
+  1466→          body: { address: account.address, password: account.password },
+  1467→        });
+  1468→        account.token = tokenData.token;
+  1469→
+  1470→        /* 4) Switch session */
+  1471→        state.account = account;
+  1472→        state.messages = [];
+  1473→        state.seenIds = new Set();
+  1474→        state.hiddenIds = new Set();
+  1475→        state.firstLoadDone = false;
+  1476→        state.searchQuery = '';
+  1477→        el.inboxSearch.value = '';
+  1478→        state.generating = false;
+  1479→
+  1480→        persistActiveSession();
+  1481→        setEmailLoading(false);
+  1482→        setStatusBadge('ACTIVE', 'active');
+  1483→        renderInbox();
+  1484→        updateSaveBtn();
+  1485→        startTimer(TIMER_SECONDS);
+  1486→        startPolling();
+  1487→        checkInbox(false);
+  1488→        showToast('New email generated!', 'success');
+  1489→      } catch (err) {
+  1490→        state.generating = false;
+  1491→        console.error('[AR TEMPMAIL] getNewEmail failed:', err);
+  1492→        setStatusBadge('OFFLINE', 'error');
+  1493→        setEmailError(err.message || 'Failed to generate email.');
+  1494→        showToast(err.message || 'Failed to generate email.', 'error');
+  1495→      } finally {
+  1496→        state.generating = false;
+  1497→        if (triggerBtn) hideSpinner(triggerBtn);
+  1498→      }
+  1499→    }
+  1500→
+  1501→    /* ---------------- Core: delete current account, then regenerate ---------------- */
+  1502→    async function deleteMail() {
+  1503→      if (!state.account) { showToast('Generate a mailbox first.', 'warning'); return; }
+  1504→      const isSaved = isCurrentSaved();
+  1505→      const ok = await confirmDialog({
+  1506→        title: 'Delete this mailbox?',
+  1507→        message: '“' + state.account.address + '” will be permanently removed from Mail.tm, together with every message in it. A fresh mailbox is generated afterwards.' + (isSaved ? ' Its Saved entry is removed too.' : ''),
+  1508→        okText: 'Delete forever',
+  1509→      });
+  1510→      if (!ok) return;
+  1511→
+  1512→      showSpinner(el.deleteBtn);
+  1513→      const acc = state.account;
+  1514→      if (acc) {
+  1515→        try {
+  1516→          await api('/accounts/' + encodeURIComponent(acc.id), { method: 'DELETE', auth: true });
+  1517→          state.saved = state.saved.filter((s) => s.address !== acc.address);
+  1518→          persistSaved();
+  1519→          renderSavedList();
+  1520→          updateBadges();
+  1521→        } catch (err) {
+  1522→          console.warn('[AR TEMPMAIL] account delete failed (regenerating anyway):', err);
+  1523→        }
+  1524→        clearActiveSession();
+  1525→      }
+  1526→      await getNewEmail(el.deleteBtn); // spinner is kept & cleared inside
+  1527→    }
+  1528→
+  1529→    /* ---------------- Confirm dialog (promise-based, accessible) ---------------- */
+  1530→    function confirmDialog({ title = 'Are you sure?', message = '', okText = 'Delete', check = null } = {}) {
+  1531→      return new Promise((resolve) => {
+  1532→        el.confirmTitle.textContent = title;
+  1533→        el.confirmMsg.textContent = message;
+  1534→        el.confirmOk.textContent = okText;
+  1535→        if (check) {
+  1536→          el.confirmCheckLabel.textContent = check.label;
+  1537→          el.confirmCheck.checked = !!check.defaultChecked;
+  1538→          el.confirmCheckWrap.classList.remove('hidden');
+  1539→          el.confirmCheckWrap.classList.add('flex');
+  1540→        } else {
+  1541→          el.confirmCheckWrap.classList.add('hidden');
+  1542→          el.confirmCheckWrap.classList.remove('flex');
+  1543→        }
+  1544→        el.confirmSheet.classList.remove('hidden');
+  1545→        el.confirmOk.focus();
+  1546→
+  1547→        const done = (result) => {
+  1548→          el.confirmSheet.classList.add('hidden');
+  1549→          el.confirmOk.removeEventListener('click', onOk);
+  1550→          el.confirmCancel.removeEventListener('click', onCancel);
+  1551→          el.confirmBackdrop.removeEventListener('click', onCancel);
+  1552→          document.removeEventListener('keydown', onKey);
+  1553→          resolve(result);
+  1554→        };
+  1555→        const onOk = () => {
+  1556→          if (check && el.confirmCheck.checked && typeof check.onConfirm === 'function') check.onConfirm();
+  1557→          done(true);
+  1558→        };
+  1559→        const onCancel = () => done(false);
+  1560→        const onKey = (e) => { if (e.key === 'Escape') onCancel(); };
+  1561→        el.confirmOk.addEventListener('click', onOk);
+  1562→        el.confirmCancel.addEventListener('click', onCancel);
+  1563→        el.confirmBackdrop.addEventListener('click', onCancel);
+  1564→        document.addEventListener('keydown', onKey);
+  1565→      });
+  1566→    }
+  1567→
+  1568→    /* ---------------- Session recovery (401 → re-login) ---------------- */
+  1569→    async function recoverSession() {
+  1570→      const acc = state.account;
+  1571→      if (!acc || !acc.password) return false;
+  1572→      try {
+  1573→        const t = await api('/token', { method: 'POST', body: { address: acc.address, password: acc.password } });
+  1574→        state.account.token = t.token;
+  1575→        persistActiveSession();
+  1576→        return true;
+  1577→      } catch (e) {
+  1578→        return false;
+  1579→      }
+  1580→    }
+  1581→
+  1582→    /* ---------------- Inbox ---------------- */
+  1583→    function fromName(m) {
+  1584→      return ((m.from && (m.from.name || m.from.address)) || 'Unknown sender').trim();
+  1585→    }
+  1586→
+  1587→    function otpChipHTML(code) {
+  1588→      return '<span role="button" tabindex="-1" data-copy-otp="' + escapeHTML(code) + '" class="otp-chip mt-1.5 cursor-pointer transition hover:opacity-80" title="Tap to copy the code">' +
+  1589→        '<span class="material-symbols-outlined !text-[13px]">key</span>' + escapeHTML(code) + '</span>';
+  1590→    }
+  1591→
+  1592→    function renderInbox() {
+  1593→      const q = state.searchQuery.trim().toLowerCase();
+  1594→      const all = state.messages.filter((m) => !state.hiddenIds.has(m.id));
+  1595→      const visible = q
+  1596→        ? all.filter((m) =>
+  1597→            (fromName(m) + ' ' + (m.subject || '') + ' ' + (m.intro || '')).toLowerCase().includes(q))
+  1598→        : all;
+  1599→
+  1600→      const unread = all.filter((m) => !state.seenIds.has(m.id) && !m.seen).length;
+  1601→      el.inboxCount.textContent = String(all.length);
+  1602→      el.markAllReadBtn.classList.toggle('hidden', unread === 0);
+  1603→      updateBadges(unread);
+  1604→
+  1605→      if (!all.length) {
+  1606→        el.inboxList.innerHTML =
+  1607→          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+  1608→            '<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-500 dark:text-violet-400">' +
+  1609→              '<span class="material-symbols-outlined icon-fill pulse-soft !text-[32px]">inbox</span>' +
+  1610→            '</div>' +
+  1611→            '<p class="mt-4 text-sm font-semibold">Your inbox is empty</p>' +
+  1612→            '<p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Waiting for incoming emails…<br/>Auto-refreshes every ' + (state.settings.autoRefresh) + ' seconds.</p>' +
+  1613→          '</div>';
+  1614→        return;
+  1615→      }
+  1616→
+  1617→      if (!visible.length) {
+  1618→        el.inboxList.innerHTML =
+  1619→          '<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white/50 px-6 py-8 text-center dark:border-zinc-700 dark:bg-zinc-900/50">' +
+  1620→            '<span class="material-symbols-outlined !text-[28px] text-zinc-400">search_off</span>' +
+  1621→            '<p class="mt-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">No emails match your search</p>' +
+  1622→          '</div>';
+  1623→        return;
+  1624→      }
+  1625→
+  1626→      el.inboxList.innerHTML = visible.map((m, i) => {
+  1627→        const name = fromName(m);
+  1628→        const initial = escapeHTML((name[0] || '?').toUpperCase());
+  1629→        const subject = escapeHTML(m.subject || '(No subject)');
+  1630→        const intro = escapeHTML(m.intro || 'No preview available');
+  1631→        const unreadMsg = !state.seenIds.has(m.id) && !m.seen;
+  1632→        const code = extractOtp(m.subject, m.intro);
+  1633→        const attach = m.hasAttachments
+  1634→          ? '<span class="material-symbols-outlined !text-[13px] text-zinc-400 dark:text-zinc-500" role="img" aria-label="Has attachment">attach_file</span>'
+  1635→          : '';
+  1636→        const delay = ' style="animation-delay:' + Math.min(i * 40, 200) + 'ms"';
+  1637→        return (
+  1638→          '<button type="button" data-id="' + escapeHTML(m.id) + '"' + delay +
+  1639→            ' class="mail-item group w-full rounded-2xl border border-zinc-200 bg-white p-3.5 text-left transition hover:border-violet-300 hover:shadow-md hover:shadow-violet-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-500/40 fade-up">' +
+  1640→            '<span class="flex items-start gap-3">' +
+  1641→              '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
+  1642→              '<span class="min-w-0 flex-1">' +
+  1643→                '<span class="flex items-center justify-between gap-2">' +
+  1644→                  '<span class="truncate text-sm font-semibold blur-target ' + (unreadMsg ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-300') + '">' + escapeHTML(name) + '</span>' +
+  1645→                  '<span class="flex shrink-0 items-center gap-1 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">' + attach + escapeHTML(formatDate(m.createdAt)) + '</span>' +
+  1646→                '</span>' +
+  1647→                '<span class="mt-0.5 block truncate text-[13px] font-medium blur-target ' + (unreadMsg ? 'text-violet-600 dark:text-violet-400' : 'text-zinc-500 dark:text-zinc-400') + '">' + subject + '</span>' +
+  1648→                '<span class="mt-0.5 block truncate text-xs blur-target text-zinc-400 dark:text-zinc-500">' + intro + '</span>' +
+  1649→                (code ? otpChipHTML(code) : '') +
+  1650→              '</span>' +
+  1651→              (unreadMsg ? '<span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-violet-500"></span>' : '') +
+  1652→            '</span>' +
+  1653→          '</button>'
+  1654→        );
+  1655→      }).join('');
+  1656→    }
+  1657→
+  1658→    async function checkInbox(manual) {
+  1659→      if (state.generating || state.restoring || !state.account || !state.account.token) {
+  1660→        if (manual) showToast('No active mailbox yet.', 'warning');
+  1661→        return;
+  1662→      }
+  1663→      if (manual) el.refreshBtn.classList.add('refreshing');
+  1664→      try {
+  1665→        const data = await api('/messages?page=1', { auth: true });
+  1666→        const list = (data && data['hydra:member']) || data || [];
+  1667→        list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // newest first
+  1668→
+  1669→        const prevIds = new Set(state.messages.map((m) => m.id));
+  1670→        const fresh = state.firstLoadDone
+  1671→          ? list.filter((m) => !prevIds.has(m.id) && !state.hiddenIds.has(m.id))
+  1672→          : [];
+  1673→
+  1674→        state.messages = list;
+  1675→        state.firstLoadDone = true;
+  1676→        renderInbox();
+  1677→
+  1678→        if (fresh.length) {
+  1679→          vibrate([80, 40, 80]);
+  1680→          playChime();
+  1681→          const withCode = fresh.find((m) => extractOtp(m.subject, m.intro));
+  1682→          if (withCode) {
+  1683→            const code = extractOtp(withCode.subject, withCode.intro);
+  1684→            showToast('New email — verification code:', 'success', {
+  1685→              copyValue: code,
+  1686→              action: { label: 'View', fn: () => openEmail(withCode.id) },
+  1687→            });
+  1688→            if (state.settings.autoCopyOtp) copyText(code, 'Code ' + code + ' copied!');
+  1689→          } else {
+  1690→            showToast(fresh.length + ' new email' + (fresh.length > 1 ? 's' : '') + ' received!', 'success', {
+  1691→              action: { label: 'View', fn: () => openEmail(fresh[0].id) },
+  1692→            });
+  1693→          }
+  1694→        }
+  1695→      } catch (err) {
+  1696→        if (err.status === 401) {
+  1697→          if (!state.generating && !state.restoring) {
+  1698→            const recovered = await recoverSession();
+  1699→            if (recovered) { checkInbox(false); return; }
+  1700→            stopPolling();
+  1701→            showToast('Session expired — generating a new email…', 'warning');
+  1702→            await getNewEmail();
+  1703→          }
+  1704→          return;
+  1705→        }
+  1706→        console.error('[AR TEMPMAIL] checkInbox failed:', err);
+  1707→        if (manual) showToast(err.message || 'Could not refresh inbox.', 'error');
+  1708→      } finally {
+  1709→        el.refreshBtn.classList.remove('refreshing');
+  1710→      }
+  1711→    }
+  1712→
+  1713→    /* ---------------- Mark all as read ---------------- */
+  1714→    async function markAllRead() {
+  1715→      const unseen = state.messages.filter((m) => !state.hiddenIds.has(m.id) && !state.seenIds.has(m.id) && !m.seen);
+  1716→      if (!unseen.length) { showToast('All caught up!', 'info'); return; }
+  1717→      unseen.forEach((m) => state.seenIds.add(m.id));
+  1718→      renderInbox();
+  1719→      showToast(unseen.length + ' message' + (unseen.length > 1 ? 's' : '') + ' marked as read', 'success');
+  1720→      // Best-effort server sync so unread state survives a reload
+  1721→      await Promise.allSettled(unseen.map((m) =>
+  1722→        api('/messages/' + encodeURIComponent(m.id), {
+  1723→          method: 'PATCH', auth: true, body: { seen: true }, contentType: 'application/merge-patch+json',
+  1724→        }).catch(() => {})
+  1725→      ));
+  1726→    }
+  1727→
+  1728→    /* ---------------- Privacy blur ---------------- */
+  1729→    function applyBlur() {
+  1730→      document.body.classList.toggle('privacy-blur', !!state.settings.blur);
+  1731→      state.revealed = false;
+  1732→      document.body.classList.remove('revealed');
+  1733→      el.privacyEyeBtn.classList.toggle('hidden', !state.settings.blur);
+  1734→      el.privacyEyeIcon.textContent = 'visibility';
+  1735→      el.privacyEyeBtn.setAttribute('aria-label', 'Temporarily reveal private content');
+  1736→    }
+  1737→
+  1738→    function toggleReveal() {
+  1739→      if (!state.settings.blur) return;
+  1740→      state.revealed = !state.revealed;
+  1741→      document.body.classList.toggle('revealed', state.revealed);
+  1742→      el.privacyEyeIcon.textContent = state.revealed ? 'visibility_off' : 'visibility';
+  1743→      el.privacyEyeBtn.setAttribute('aria-label', state.revealed ? 'Hide private content again' : 'Temporarily reveal private content');
+  1744→      showToast(state.revealed ? 'Content revealed — tap again to hide' : 'Content hidden again', 'info');
+  1745→    }
+  1746→
+  1747→    /* ---------------- Attachments ---------------- */
+  1748→    function attachmentIcon(contentType) {
+  1749→      const ct = (contentType || '').toLowerCase();
+  1750→      if (ct.startsWith('image/')) return 'image';
+  1751→      if (ct.includes('pdf')) return 'picture_as_pdf';
+  1752→      if (ct.startsWith('audio/')) return 'music_note';
+  1753→      if (ct.startsWith('video/')) return 'movie';
+  1754→      if (ct.includes('zip') || ct.includes('compressed') || ct.includes('tar')) return 'folder_zip';
+  1755→      if (ct.startsWith('text/')) return 'description';
+  1756→      return 'draft';
+  1757→    }
+  1758→
+  1759→    function renderAttachments(msg) {
+  1760→      const list = Array.isArray(msg.attachments) ? msg.attachments : [];
+  1761→      state.currentAttachments = list;
+  1762→      el.detailAttachments.classList.toggle('hidden', !list.length);
+  1763→      el.attachmentCount.textContent = list.length ? 'Attachments (' + list.length + ')' : 'Attachments';
+  1764→      el.attachmentList.innerHTML = list.map((a, i) => {
+  1765→        const name = escapeHTML(a.filename || ('file-' + (i + 1)));
+  1766→        const size = a.size ? '<span class="font-medium">· ' + escapeHTML(formatBytes(a.size)) + '</span>' : '';
+  1767→        return (
+  1768→          '<div class="att-chip flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-800/60">' +
+  1769→            '<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400">' +
+  1770→              '<span class="material-symbols-outlined !text-[20px]">' + attachmentIcon(a.contentType) + '</span>' +
+  1771→            '</span>' +
+  1772→            '<span class="min-w-0 flex-1">' +
+  1773→              '<span class="block truncate text-xs font-bold">' + name + '</span>' +
+  1774→              '<span class="block truncate text-[10px] text-zinc-400 dark:text-zinc-500">' + escapeHTML(a.contentType || 'file') + ' ' + size + '</span>' +
+  1775→            '</span>' +
+  1776→            '<button type="button" data-att-index="' + i + '" aria-label="Download ' + name + '"' +
+  1777→              ' class="flex h-9 shrink-0 items-center gap-1 rounded-lg bg-zinc-900 px-2.5 text-[11px] font-bold text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">' +
+  1778→              '<span class="material-symbols-outlined !text-[15px]">download</span> Get</button>' +
+  1779→          '</div>'
+  1780→        );
+  1781→      }).join('');
+  1782→    }
+  1783→
+  1784→    async function downloadAttachment(index) {
+  1785→      const att = state.currentAttachments[index];
+  1786→      if (!att || !att.downloadUrl) { showToast('Attachment unavailable.', 'error'); return; }
+  1787→      const btn = el.attachmentList.querySelector('[data-att-index="' + index + '"]');
+  1788→      if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+  1789→      try {
+  1790→        const blob = await apiBlob(att.downloadUrl);
+  1791→        const url = URL.createObjectURL(blob);
+  1792→        const a = document.createElement('a');
+  1793→        a.href = url;
+  1794→        a.download = att.filename || 'attachment';
+  1795→        document.body.appendChild(a);
+  1796→        a.click();
+  1797→        a.remove();
+  1798→        setTimeout(() => URL.revokeObjectURL(url), 10000);
+  1799→        showToast('Attachment downloaded', 'success');
+  1800→      } catch (err) {
+  1801→        console.error('[AR TEMPMAIL] attachment download failed:', err);
+  1802→        showToast(err.message || 'Could not download attachment.', 'error');
+  1803→      } finally {
+  1804→        if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+  1805→      }
+  1806→    }
+  1807→
+  1808→    function copyCurrentText() {
+  1809→      if (!state.currentMsgText) return;
+  1810→      copyText(state.currentMsgText, 'Message text copied!');
+  1811→    }
+  1812→
+  1813→    /* ---------------- Backup export / import (device-local by design) ---------------- */
+  1814→    function exportSavedBackup() {
+  1815→      if (!state.saved.length) { showToast('No saved mailboxes to back up yet.', 'info'); return; }
+  1816→      const payload = {
+  1817→        app: 'ar-tempmail',
+  1818→        version: 1,
+  1819→        exportedAt: new Date().toISOString(),
+  1820→        mailboxes: state.saved.map((s) => ({
+  1821→          id: s.id, address: s.address, password: s.password,
+  1822→          savedAt: s.savedAt, lastUsedAt: s.lastUsedAt,
+  1823→        })),
+  1824→      };
+  1825→      copyText(JSON.stringify(payload, null, 2), 'Backup copied — store it somewhere safe!');
+  1826→    }
+  1827→
+  1828→    function openImportSheet() {
+  1829→      el.importText.value = '';
+  1830→      el.importSheet.classList.remove('hidden');
+  1831→      el.importText.focus();
+  1832→    }
+  1833→
+  1834→    function closeImportSheet() { el.importSheet.classList.add('hidden'); }
+  1835→
+  1836→    function importSavedPayload() {
+  1837→      let parsed;
+  1838→      try { parsed = JSON.parse(el.importText.value); } catch (e) {
+  1839→        showToast('Invalid backup — not valid JSON.', 'error'); return;
+  1840→      }
+  1841→      const list = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.mailboxes) ? parsed.mailboxes : null);
+  1842→      if (!list) { showToast('Invalid backup — "mailboxes" array not found.', 'error'); return; }
+  1843→      const known = new Set(state.saved.map((s) => s.address.toLowerCase()));
+  1844→      let added = 0, skipped = 0;
+  1845→      for (const item of list) {
+  1846→        if (!item || typeof item.address !== 'string' || typeof item.password !== 'string' || !item.address.includes('@')) { skipped++; continue; }
+  1847→        const address = item.address.toLowerCase();
+  1848→        if (known.has(address)) { skipped++; continue; }
+  1849→        state.saved.push({
+  1850→          id: typeof item.id === 'string' ? item.id : '',
+  1851→          address,
+  1852→          password: item.password,
+  1853→          savedAt: Number.isFinite(item.savedAt) ? item.savedAt : Date.now(),
+  1854→          lastUsedAt: Number.isFinite(item.lastUsedAt) ? item.lastUsedAt : undefined,
+  1855→        });
+  1856→        known.add(address);
+  1857→        added++;
+  1858→      }
+  1859→      if (added) { persistSaved(); renderSavedList(); updateSaveBtn(); }
+  1860→      closeImportSheet();
+  1861→      showToast(
+  1862→        added ? 'Imported ' + added + ' mailbox' + (added > 1 ? 'es' : '') + (skipped ? ' · ' + skipped + ' skipped' : '')
+  1863→              : 'Nothing imported — all entries were invalid or duplicates.',
+  1864→        added ? 'success' : 'warning'
+  1865→      );
+  1866→    }
+  1867→
+  1868→    /* ---------------- Pull-to-refresh (touch) ---------------- */
+  1869→    const PTR_THRESHOLD = 72;
+  1870→    let ptrStartY = null, ptrArmed = false, ptrTracking = false;
+  1871→
+  1872→    function resetPTR() {
+  1873→      ptrTracking = false; ptrStartY = null; ptrArmed = false;
+  1874→      el.ptrIndicator.style.height = '0px';
+  1875→      el.ptrText.textContent = 'Pull to refresh';
+  1876→      el.ptrIcon.style.transform = '';
+  1877→    }
+  1878→
+  1879→    el.mailScreen.addEventListener('touchstart', (e) => {
+  1880→      if (e.touches.length !== 1 || window.scrollY > 0 || el.inboxList.scrollTop > 0) return;
+  1881→      ptrStartY = e.touches[0].clientY;
+  1882→      ptrTracking = true;
+  1883→      ptrArmed = false;
+  1884→    }, { passive: true });
+  1885→
+  1886→    el.mailScreen.addEventListener('touchmove', (e) => {
+  1887→      if (!ptrTracking || ptrStartY === null) return;
+  1888→      const dy = e.touches[0].clientY - ptrStartY;
+  1889→      if (dy <= 0 || window.scrollY > 0) { resetPTR(); return; }
+  1890→      if (dy > 8) e.preventDefault(); // own the gesture while pulling down
+  1891→      const clamped = Math.min(dy * 0.4, PTR_THRESHOLD + 20);
+  1892→      el.ptrIndicator.style.height = Math.min(clamped, 44) + 'px';
+  1893→      ptrArmed = dy >= PTR_THRESHOLD;
+  1894→      el.ptrText.textContent = ptrArmed ? 'Release to refresh' : 'Pull to refresh';
+  1895→      el.ptrIcon.style.transform = ptrArmed ? 'rotate(180deg)' : '';
+  1896→    }, { passive: false });
+  1897→
+  1898→    el.mailScreen.addEventListener('touchend', () => {
+  1899→      if (!ptrTracking) return;
+  1900→      const wasArmed = ptrArmed;
+  1901→      resetPTR();
+  1902→      if (wasArmed) {
+  1903→        vibrate(30);
+  1904→        checkInbox(true);
+  1905→      }
+  1906→    });
+  1907→
+  1908→    el.mailScreen.addEventListener('touchcancel', resetPTR);
+  1909→
+  1910→    /* ---------------- Navigation ---------------- */
+  1911→    const TAB_SCREENS = { mail: 'mailScreen', saved: 'savedScreen', settings: 'settingsScreen' };
+  1912→
+  1913→    function updateTabUI() {
+  1914→      const activeTab = state.tab === 'detail' ? state.prevTab : state.tab;
+  1915→      document.querySelectorAll('.tab-btn').forEach((btn) => {
+  1916→        const isActive = btn.dataset.tab === activeTab;
+  1917→        const icon = btn.querySelector('.material-symbols-outlined');
+  1918→        btn.classList.toggle('text-violet-600', isActive);
+  1919→        btn.classList.toggle('dark:text-violet-400', isActive);
+  1920→        btn.classList.toggle('text-zinc-400', !isActive);
+  1921→        btn.classList.toggle('dark:text-zinc-500', !isActive);
+  1922→        icon.classList.toggle('icon-fill', isActive);
+  1923→      });
+  1924→    }
+  1925→
+  1926→    function switchTab(name) {
+  1927→      if (name !== 'detail') state.prevTab = name;
+  1928→      state.tab = name;
+  1929→      Object.entries(TAB_SCREENS).forEach(([tab, id]) => {
+  1930→        const node = $(id);
+  1931→        const show = tab === name;
+  1932→        node.classList.toggle('hidden', !show);
+  1933→        if (show) {
+  1934→          node.classList.remove('screen-anim');
+  1935→          void node.offsetWidth;
+  1936→          node.classList.add('screen-anim');
+  1937→        }
+  1938→      });
+  1939→      el.detailScreen.classList.toggle('hidden', name !== 'detail');
+  1940→      if (name === 'saved') renderSavedList();
+  1941→      updateTabUI();
+  1942→      window.scrollTo(0, 0);
+  1943→    }
+  1944→
+  1945→    function updateBadges(unreadCount) {
+  1946→      const unread = typeof unreadCount === 'number'
+  1947→        ? unreadCount
+  1948→        : state.messages.filter((m) => !state.hiddenIds.has(m.id) && !state.seenIds.has(m.id) && !m.seen).length;
+  1949→      if (unread > 0) {
+  1950→        el.navMailBadge.textContent = unread > 9 ? '9+' : String(unread);
+  1951→        el.navMailBadge.classList.remove('hidden');
+  1952→      } else {
+  1953→        el.navMailBadge.classList.add('hidden');
+  1954→      }
+  1955→      if (state.saved.length > 0) {
+  1956→        el.navSavedBadge.textContent = String(state.saved.length);
+  1957→        el.navSavedBadge.classList.remove('hidden');
+  1958→      } else {
+  1959→        el.navSavedBadge.classList.add('hidden');
+  1960→      }
+  1961→    }
+  1962→
+  1963→    document.querySelectorAll('.tab-btn').forEach((btn) => {
+  1964→      btn.addEventListener('click', () => {
+  1965→        const tab = btn.dataset.tab;
+  1966→        if (tab === state.tab && tab === 'mail') { // tapping active Mail tab refreshes
+  1967→          window.scrollTo({ top: 0, behavior: 'smooth' });
+  1968→          checkInbox(true);
+  1969→          return;
+  1970→        }
+  1971→        switchTab(tab);
+  1972→      });
+  1973→    });
+  1974→
+  1975→    /* ---------------- Message detail ---------------- */
+  1976→    function sanitizeHTML(dirty = '') {
+  1977→      const doc = new DOMParser().parseFromString(dirty, 'text/html');
+  1978→      doc.querySelectorAll('script, style, iframe, frame, frameset, object, embed, link, meta, base, form, input, button, textarea, select')
+  1979→        .forEach((n) => n.remove());
+  1980→      doc.querySelectorAll('*').forEach((node) => {
+  1981→        for (const attr of Array.from(node.attributes || [])) {
+  1982→          const name = attr.name.toLowerCase();
+  1983→          if (name.startsWith('on')) { node.removeAttribute(attr.name); continue; }
+  1984→          if ((name === 'href' || name === 'src' || name === 'xlink:href' || name === 'srcset' || name === 'action' ||
+  1985→               name === 'formaction' || name === 'background' || name === 'poster') &&
+  1986→              /^\s*(javascript|vbscript|data:text\/html)/i.test(attr.value)) {
+  1987→            node.removeAttribute(attr.name);
+  1988→          }
+  1989→        }
+  1990→        // Anti-phishing: emails must not overlay the app UI with fixed/sticky layers
+  1991→        const style = node.getAttribute('style');
+  1992→        if (style && /position\s*:\s*(fixed|sticky)/i.test(style)) node.removeAttribute('style');
+  1993→        if (node.tagName === 'A') {
+  1994→          node.setAttribute('target', '_blank');
+  1995→          node.setAttribute('rel', 'noopener noreferrer nofollow');
+  1996→          node.setAttribute('referrerpolicy', 'no-referrer');
+  1997→        }
+  1998→      });
+  1999→      return (doc.body && doc.body.innerHTML) || '';
+  2000→    }
+
+[showing lines 1-2000 of 2278; use offset=2001 with limit to continue reading]
