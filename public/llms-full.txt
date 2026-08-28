@@ -1,21 +1,21 @@
-# AR TEMPMAIL — Full Documentation
+# Hi Temp Mail — Full Documentation
 
-> > AR TEMPMAIL is a free, privacy-first disposable email web app. It generates a working temporary
+> > Hi Temp Mail is a free, privacy-first disposable email web app. It generates a working temporary
 > email address instantly (no login, no signup), auto-detects OTP/verification codes as one-tap
 > copyable chips, and lets users save mailboxes locally (browser localStorage) and restore them days
 > later to keep receiving mail. Receive-only; mailboxes are provisioned by the Mail.tm API via a
 > technical relay. No analytics, no ads, no tracking; the app has no server-side database.
 
-- App (open and use it here): https://artempmail.app/
-- About page: https://artempmail.app/about.html
-- FAQ page: https://artempmail.app/faq.html
-- Privacy Policy page: https://artempmail.app/privacy.html
-- Disclaimer page: https://artempmail.app/disclaimer.html
-- Sitemap: https://artempmail.app/sitemap.xml
-- Short agent index: https://artempmail.app/llms.txt
+- App (open and use it here): https://hitempmail.app/
+- About page: https://hitempmail.app/about.html
+- FAQ page: https://hitempmail.app/faq.html
+- Privacy Policy page: https://hitempmail.app/privacy.html
+- Disclaimer page: https://hitempmail.app/disclaimer.html
+- Sitemap: https://hitempmail.app/sitemap.xml
+- Short agent index: https://hitempmail.app/llms.txt
 - Last updated: 2026-08-28
 
-This file (llms-full.txt) is the complete documentation of AR TEMPMAIL in a single plain-text
+This file (llms-full.txt) is the complete documentation of Hi Temp Mail in a single plain-text
 markdown document, intended for AI assistants, agents and search crawlers. It contains the full
 verbatim content of the About, FAQ, Privacy Policy and Disclaimer pages, followed by a feature
 reference, the exact browser storage keys the app uses, and contact guidance.
@@ -23,11 +23,11 @@ reference, the exact browser storage keys the app uses, and contact guidance.
 ## About
 
 What the app is, who it is for, how it works, features and technology.
-Source: https://artempmail.app/about.html
+Source: https://hitempmail.app/about.html
 
-## What is AR TEMPMAIL?
+## What is Hi Temp Mail?
 
-AR TEMPMAIL is a free, privacy-first disposable email service that gives you a working temporary
+Hi Temp Mail is a free, privacy-first disposable email service that gives you a working temporary
 email address the moment you open the app — no account, no signup, no personal details. Use it to
 receive verification emails, one-time passwords (OTPs), download links and newsletters without ever
 exposing your real inbox.
@@ -59,9 +59,9 @@ a temporary one.
 
 ## Technology
 
-AR TEMPMAIL is a single-page web app that talks to the Mail.tm REST API through a lightweight
+Hi Temp Mail is a single-page web app that talks to the Mail.tm REST API through a lightweight
 technical relay (Mail.tm's API does not allow direct browser access from third-party sites). Your
-mailbox credentials live only in your browser's local storage. AR TEMPMAIL is an independent project
+mailbox credentials live only in your browser's local storage. Hi Temp Mail is an independent project
 and is not affiliated with Mail.tm.
 
 ## Status
@@ -71,7 +71,7 @@ Version 5.0 · Free forever · Private by design.
 ## FAQ
 
 Ten answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
-Source: https://artempmail.app/faq.html
+Source: https://hitempmail.app/faq.html
 
 ## Q1: What is a temporary email address?
 
@@ -87,7 +87,7 @@ and keep receiving mail, including verification codes.
 
 ## Q3: Can I receive OTP and verification codes?
 
-Yes. AR TEMPMAIL automatically detects 4–8 digit codes in incoming mail and shows them as a
+Yes. Hi Temp Mail automatically detects 4–8 digit codes in incoming mail and shows them as a
 highlighted chip in the inbox list and a large copy button in the message view. There is also an
 optional setting that copies the code to your clipboard the instant it arrives.
 
@@ -103,13 +103,13 @@ No. The app runs entirely in your browser and has no server database. Messages a
 stored by the Mail.tm service when the app requests them on your behalf. There are no analytics
 scripts, no advertising and no tracking of any kind.
 
-## Q6: Is AR TEMPMAIL free?
+## Q6: Is Hi Temp Mail free?
 
 Yes — every feature is free, and there is no account, subscription or ad in the app.
 
 ## Q7: Can I send email or attachments?
 
-AR TEMPMAIL is receive-only. You can view and download attachments that arrive in your mailbox, but
+Hi Temp Mail is receive-only. You can view and download attachments that arrive in your mailbox, but
 sending email is not supported — which also means the app cannot be used for outbound spam.
 
 ## Q8: Why did my email stop working?
@@ -134,11 +134,11 @@ is everything — there is nothing stored anywhere else.
 
 What is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel
 blocking. Last updated: 2025.
-Source: https://artempmail.app/privacy.html
+Source: https://hitempmail.app/privacy.html
 
 ## Overview
 
-AR TEMPMAIL is private by architecture, not just by policy. The app has no user accounts, no
+Hi Temp Mail is private by architecture, not just by policy. The app has no user accounts, no
 server-side database of its own, no analytics and no advertising. This page explains exactly what
 data exists and where.
 
@@ -194,7 +194,7 @@ rendered through a strict sanitizer.
 
 ## Children
 
-AR TEMPMAIL is not directed at children under 13, and we do not knowingly collect any personal
+Hi Temp Mail is not directed at children under 13, and we do not knowingly collect any personal
 information from anyone — there is simply nothing to collect.
 
 ## Changes to this policy
@@ -205,17 +205,17 @@ will be summarized at the top.
 ## Disclaimer
 
 As-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
-Source: https://artempmail.app/disclaimer.html
+Source: https://hitempmail.app/disclaimer.html
 
 ## General — provided as is
 
-AR TEMPMAIL is provided free of charge, 'as is' and 'as available', without warranties of any kind,
+Hi Temp Mail is provided free of charge, 'as is' and 'as available', without warranties of any kind,
 express or implied — including but not limited to fitness for a particular purpose, accuracy and
 availability. Use it at your own risk.
 
 ## Not affiliated with Mail.tm
 
-AR TEMPMAIL is an independent tool that uses the public Mail.tm API through a technical relay.
+Hi Temp Mail is an independent tool that uses the public Mail.tm API through a technical relay.
 Mail.tm is a service of its respective owner, and mailbox availability, retention and deliverability
 depend entirely on that third party. We cannot guarantee that any particular mailbox or message will
 work at any time.
@@ -229,7 +229,7 @@ low-risk, non-critical signups.
 
 ## Lawful use only
 
-You may use AR TEMPMAIL only in compliance with all applicable laws and with the terms of service of
+You may use Hi Temp Mail only in compliance with all applicable laws and with the terms of service of
 any site you use it on. You are solely responsible for your use — the app must not be used for
 fraud, harassment, evading bans or any unlawful activity. The app is receive-only and cannot send
 email.
@@ -237,12 +237,12 @@ email.
 ## Availability and data loss
 
 Mailboxes may expire, be rate-limited or become unreachable without notice, and messages may fail to
-arrive. Do not rely on AR TEMPMAIL for anything important, and never save anything valuable in a
+arrive. Do not rely on Hi Temp Mail for anything important, and never save anything valuable in a
 temporary inbox. We are not responsible for lost codes, lost accounts or missed emails.
 
 ## Limitation of liability
 
-To the maximum extent permitted by law, the AR TEMPMAIL authors shall not be liable for any direct,
+To the maximum extent permitted by law, the Hi Temp Mail authors shall not be liable for any direct,
 indirect, incidental, consequential or punitive damages — including lost data, lost accounts or lost
 profits — arising from or related to your use of, or inability to use, the app.
 
@@ -296,5 +296,5 @@ server-side database.
 
 Support is self-serve: there is no support email, ticket system or account service, because the app
 stores nothing about its users. For answers about mailbox lifetime, OTP codes, saved mailboxes,
-privacy and safety, see the FAQ at https://artempmail.app/faq.html. Agent indexes:
-https://artempmail.app/llms.txt (short) and https://artempmail.app/llms-full.txt (this file).
+privacy and safety, see the FAQ at https://hitempmail.app/faq.html. Agent indexes:
+https://hitempmail.app/llms.txt (short) and https://hitempmail.app/llms-full.txt (this file).

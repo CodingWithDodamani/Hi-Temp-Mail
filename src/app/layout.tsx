@@ -14,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 /* ---------------------------------------------------------------------------
- * AR TEMPMAIL — site metadata (SEO / agentic SEO / LLM-friendly)
+ * Hi Temp Mail — site metadata (SEO / agentic SEO / LLM-friendly)
  * Site URL is overridable via NEXT_PUBLIC_SITE_URL; the placeholder domain is
  * used consistently across canonical/OG tags, sitemap.xml and llms.txt.
  * ------------------------------------------------------------------------- */
-export const SITE_NAME = "AR TEMPMAIL";
+export const SITE_NAME = "Hi Temp Mail";
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://artempmail.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://hitempmail.app";
 export const SITE_DESCRIPTION =
   "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.";
 
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AR TEMPMAIL — free temporary email app with OTP auto-detection",
+        alt: "Hi Temp Mail — free temporary email app with OTP auto-detection",
       },
     ],
   },

@@ -1,0 +1,1044 @@
+     1→<!DOCTYPE html>
+     2→<html lang="en">
+     3→<head>
+     4→  <meta charset="utf-8" />
+     5→  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+     6→  <title>AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox</title>
+     7→  <meta name="description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
+     8→  <link rel="canonical" href="https://artempmail.app/" />
+     9→  <meta property="og:type" content="website" />
+    10→  <meta property="og:site_name" content="AR TEMPMAIL" />
+    11→  <meta property="og:title" content="AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox" />
+    12→  <meta property="og:description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
+    13→  <meta property="og:url" content="https://artempmail.app/" />
+    14→  <meta property="og:image" content="https://artempmail.app/og-image.png" />
+    15→  <meta property="og:image:width" content="1200" />
+    16→  <meta property="og:image:height" content="630" />
+    17→  <meta name="twitter:card" content="summary_large_image" />
+    18→  <meta name="twitter:title" content="AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox" />
+    19→  <meta name="twitter:description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
+    20→  <meta name="twitter:image" content="https://artempmail.app/og-image.png" />
+    21→  <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}</script>
+    22→  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    23→  <link rel="manifest" href="/manifest.webmanifest" />
+    24→  <meta name="theme-color" content="#f5f3fb" media="(prefers-color-scheme: light)" />
+    25→  <meta name="theme-color" content="#0b0912" media="(prefers-color-scheme: dark)" />
+    26→  <link rel="preconnect" href="https://fonts.googleapis.com" />
+    27→  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    28→  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    29→  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+    30→  <script src="https://cdn.tailwindcss.com"></script>
+    31→  <script>
+    32→    tailwind.config = { darkMode: 'class', theme: { extend: {
+    33→      fontFamily: {
+    34→        sans: ['Inter','ui-sans-serif','system-ui','sans-serif'],
+    35→        display: ['"Space Grotesk"','Inter','sans-serif'],
+    36→        mono: ['"JetBrains Mono"','ui-monospace','monospace'],
+    37→      },
+    38→      colors: { paper:{light:'#f5f3fb',dark:'#0b0912'}, card:{light:'#ffffff',dark:'#16131f'}, line:{light:'#e8e4f2',dark:'#262133'} },
+    39→      boxShadow: { card:'0 1px 2px rgb(24 16 48 / .05), 0 10px 30px -14px rgb(24 16 48 / .14)' },
+    40→    }}};
+    41→  </script>
+    42→  <style>
+    43→    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+    44→    .ms-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+    45→    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+    46→
+    47→    /* ---------- ambient background ---------- */
+    48→    .orb { position: absolute; border-radius: 9999px; filter: blur(70px); will-change: transform; }
+    49→    .orb-a { width: 44rem; height: 44rem; left: -14rem; top: -16rem; background: radial-gradient(circle at 35% 35%, rgba(244,63,94,.28), transparent 66%); animation: drift1 26s ease-in-out infinite alternate; }
+    50→    .orb-b { width: 40rem; height: 40rem; right: -12rem; top: 22vh; background: radial-gradient(circle at 60% 40%, rgba(59,130,246,.22), transparent 66%); animation: drift2 32s ease-in-out infinite alternate; }
+    51→    .orb-c { width: 34rem; height: 34rem; left: 22%; bottom: -18rem; background: radial-gradient(circle at 50% 50%, rgba(236,72,153,.2), transparent 62%); animation: drift3 38s ease-in-out infinite alternate; }
+    52→    .dark .orb-a { background: radial-gradient(circle at 35% 35%, rgba(244,63,94,.32), transparent 66%); }
+    53→    .dark .orb-b { background: radial-gradient(circle at 60% 40%, rgba(59,130,246,.26), transparent 66%); }
+    54→    @keyframes drift1 { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(5rem,3rem,0) scale(1.14); } }
+    55→    @keyframes drift2 { from { transform: translate3d(0,0,0) scale(1.06); } to { transform: translate3d(-6rem,-2.5rem,0) scale(.94); } }
+    56→    @keyframes drift3 { from { transform: translate3d(0,0,0); } to { transform: translate3d(4rem,-3rem,0) scale(1.1); } }
+    57→    .bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(24,16,48,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(24,16,48,.05) 1px, transparent 1px); background-size: 54px 54px; -webkit-mask-image: radial-gradient(ellipse 92% 62% at 50% 0%, #000 30%, transparent 78%); mask-image: radial-gradient(ellipse 92% 62% at 50% 0%, #000 30%, transparent 78%); }
+    58→    .dark .bg-grid { background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); }
+    59→    .noise { position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.4'/></svg>"); }
+    60→    #spotlight { position: fixed; inset: 0; z-index: 5; pointer-events: none; display: none; }
+    61→    @media (pointer: fine) { #spotlight { display: block; } }
+    62→
+    63→    /* ---------- preloader ---------- */
+    64→    #preloader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #f5f3fb; transition: opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1), visibility .65s; }
+    65→    .dark #preloader { background: #0b0912; }
+    66→    #preloader.done { opacity: 0; visibility: hidden; transform: scale(1.05); }
+    67→    .pre-letter { display: inline-block; opacity: 0; animation: letterIn .7s cubic-bezier(.22,1,.36,1) forwards; animation-delay: calc(var(--i) * 55ms + 120ms); }
+    68→    @keyframes letterIn { from { opacity: 0; transform: translateY(16px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+    69→    .pre-logo { animation: prePulse 1.6s ease-in-out infinite; }
+    70→    @keyframes prePulse { 0%, 100% { transform: scale(1); box-shadow: 0 14px 44px -12px rgba(236,72,153,.55); } 50% { transform: scale(1.06); box-shadow: 0 18px 56px -12px rgba(236,72,153,.55); } }
+    71→    .pre-bar-track { position: relative; overflow: hidden; }
+    72→    .pre-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 40%; border-radius: 9999px; background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6); animation: preSlide 1.05s cubic-bezier(.45,0,.55,1) infinite; }
+    73→    @keyframes preSlide { from { transform: translateX(-110%); } to { transform: translateX(360%); } }
+    74→
+    75→    /* ---------- hero entrance ---------- */
+    76→    .hero-fade { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); }
+    77→    body.ready .hero-fade { opacity: 1; transform: none; }
+    78→    .h-line { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .09em; margin-bottom: -.09em; }
+    79→    .h-word { display: inline-block; opacity: 0; transform: translateY(112%); animation: wordIn .85s cubic-bezier(.22,1,.36,1) forwards; animation-play-state: paused; animation-delay: calc(var(--i) * 80ms + .2s); }
+    80→    body.ready .h-word { animation-play-state: running; }
+    81→    @keyframes wordIn { to { opacity: 1; transform: none; } }
+    82→    .grad-text { background-image: linear-gradient(100deg, #f43f5e, #ec4899, #3b82f6); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    83→    body.ready .grad-anim { animation: gradShift 6s ease-in-out infinite; }
+    84→    @keyframes gradShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    85→
+    86→    .live-dot { position: relative; width: .5rem; height: .5rem; border-radius: 9999px; background: #10b981; flex-shrink: 0; }
+    87→    .live-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 9999px; border: 2px solid rgba(16,185,129,.5); animation: ping 1.6s cubic-bezier(0,0,.2,1) infinite; }
+    88→    @keyframes ping { 0% { transform: scale(.55); opacity: 1; } 80%, 100% { transform: scale(1.8); opacity: 0; } }
+    89→
+    90→    /* ---------- buttons ---------- */
+    91→    .btn-shine { position: relative; overflow: hidden; }
+    92→    .btn-shine::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.35) 50%, transparent 58%); transform: translateX(-130%); transition: transform .8s cubic-bezier(.22,1,.36,1); pointer-events: none; }
+    93→    .btn-shine:hover::after { transform: translateX(130%); }
+    94→    .nav-link { padding: .5rem .85rem; border-radius: .75rem; font-size: .8rem; font-weight: 600; color: #52525b; transition: color .2s, background .2s; }
+    95→    .nav-link:hover { color: #db2777; background: rgba(219,39,119,.08); }
+    96→    .dark .nav-link { color: #a1a1aa; }
+    97→    .dark .nav-link:hover { color: #f9a8d4; background: rgba(236,72,153,.14); }
+    98→    #nav.scrolled { box-shadow: 0 10px 34px -20px rgba(24,16,48,.28); }
+    99→    #mobileMenu { display: none; }
+   100→    #mobileMenu.open { display: block; animation: menuIn .3s cubic-bezier(.22,1,.36,1); }
+   101→    @keyframes menuIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+   102→
+   103→    /* ---------- scroll reveal ---------- */
+   104→    .reveal { opacity: 0; transform: translateY(30px) scale(.985); transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); }
+   105→    .reveal.in { opacity: 1; transform: none; }
+   106→
+   107→    /* ---------- marquee ---------- */
+   108→    .marquee { display: flex; width: max-content; animation: marquee 36s linear infinite; }
+   109→    .marquee:hover { animation-play-state: paused; }
+   110→    @keyframes marquee { to { transform: translateX(-50%); } }
+   111→    .marquee-mask { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+   112→    .mq-group { display: flex; align-items: center; gap: 2.5rem; padding-right: 2.5rem; }
+   113→
+   114→    /* ---------- feature cards ---------- */
+   115→    .fcard { position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s; }
+   116→    .fcard::after { content: ''; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .35s; background: radial-gradient(320px circle at var(--gx,50%) var(--gy,50%), rgba(236,72,153,.10), transparent 62%); pointer-events: none; }
+   117→    .fcard:hover::after { opacity: 1; }
+   118→    .fcard:hover { transform: translateY(-4px); box-shadow: 0 18px 44px -18px rgba(219,39,119,.28); }
+   119→    .dark .fcard::after { background: radial-gradient(320px circle at var(--gx,50%) var(--gy,50%), rgba(59,130,246,.12), transparent 62%); }
+   120→    .fcard:hover { border-color: rgba(249,168,212,.9); }
+   121→    .dark .fcard:hover { border-color: rgba(236,72,153,.5); }
+   122→
+   123→    /* ---------- how-it-works connector ---------- */
+   124→    .steps-line { background-image: linear-gradient(90deg, rgba(236,72,153,.55) 50%, transparent 50%); background-size: 14px 2px; background-repeat: repeat-x; height: 2px; animation: dash 1.1s linear infinite; }
+   125→    @keyframes dash { to { background-position: 14px 0; } }
+   126→
+   127→    /* ---------- timer ring ---------- */
+   128→    .ring-arc { stroke-dasharray: 163.36; animation: ringDrain 10s linear infinite; }
+   129→    @keyframes ringDrain { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 163.36; } }
+   130→
+   131→    /* ---------- hero app mock ---------- */
+   132→    .mock-shimmer { position: relative; overflow: hidden; transition: opacity .4s ease; }
+   133→    .mock-shimmer::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(219,39,119,.09), transparent); animation: shimmer 1.5s infinite; }
+   134→    @keyframes shimmer { to { transform: translateX(100%); } }
+   135→    .mock-shimmer.mock-hide { opacity: 0; }
+   136→    .mock-mail { opacity: 0; transform: translateY(-10px) scale(.98); transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+   137→    .mock-mail.in { opacity: 1; transform: none; }
+   138→    .mock-mail.leaving { opacity: 0; transform: translateY(8px) scale(.98); }
+   139→    .otp-settle { animation: otpGlow 1s ease-out; }
+   140→    @keyframes otpGlow { 0% { box-shadow: 0 0 0 0 rgba(236,72,153,.45); } 100% { box-shadow: 0 0 0 14px rgba(236,72,153,0); } }
+   141→    .copy-pulse { animation: copyPulse .9s ease-out; }
+   142→    @keyframes copyPulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.5); } 100% { box-shadow: 0 0 0 12px rgba(16,185,129,0); } }
+   143→    .mock-toast { opacity: 0; transform: translateY(10px) scale(.96); transition: opacity .4s cubic-bezier(.22,1,.36,1), transform .4s cubic-bezier(.22,1,.36,1); }
+   144→    .mock-toast.show { opacity: 1; transform: none; }
+   145→
+   146→    /* ---------- floating chips ---------- */
+   147→    .fchip { position: absolute; display: flex; align-items: center; gap: .5rem; border-radius: 9999px; border: 1px solid rgba(232,228,242,.9); background: rgba(255,255,255,.85); backdrop-filter: blur(12px); padding: .5rem .875rem; font-size: .72rem; font-weight: 600; color: #3f3f46; box-shadow: 0 10px 30px -12px rgba(24,16,48,.25); animation: floatY 5.2s ease-in-out infinite; white-space: nowrap; }
+   148→    .dark .fchip { border-color: rgba(38,33,51,.9); background: rgba(22,19,31,.82); color: #d4d4d8; box-shadow: 0 10px 30px -12px rgba(0,0,0,.6); }
+   149→    .fchip-a { top: -1rem; right: -.75rem; animation-delay: 0s; }
+   150→    .fchip-b { bottom: 2.75rem; left: -.75rem; animation-delay: 1.2s; }
+   151→    .fchip-c { top: 36%; right: -1.25rem; animation-delay: 2.1s; }
+   152→    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+   153→
+   154→    /* ---------- rotating word ---------- */
+   155→    #rotator { display: inline-flex; overflow: hidden; vertical-align: bottom; white-space: nowrap; transition: width .45s cubic-bezier(.22,1,.36,1); }
+   156→    #rotWord { display: inline-block; transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s; }
+   157→    #rotWord.rot-out { transform: translateY(-110%); opacity: 0; }
+   158→    #rotWord.rot-in { animation: rotIn .34s cubic-bezier(.22,1,.36,1); }
+   159→    @keyframes rotIn { from { transform: translateY(110%); opacity: 0; } to { transform: none; opacity: 1; } }
+   160→
+   161→    /* ---------- FAQ accordion ---------- */
+   162→    .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.22,1,.36,1); }
+   163→    .faq-item.open .faq-a { grid-template-rows: 1fr; }
+   164→    .faq-a > div { overflow: hidden; }
+   165→    .faq-icon { transition: transform .4s cubic-bezier(.22,1,.36,1); }
+   166→    .faq-item.open .faq-icon { transform: rotate(180deg); }
+   167→
+   168→    /* ---------- conic border CTA ---------- */
+   169→    @property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+   170→    .conic-frame { position: relative; }
+   171→    .conic-frame::before { content: ''; position: absolute; inset: -1.5px; border-radius: 1.6rem; padding: 1.5px; background: conic-gradient(from var(--ang), transparent 0deg, rgba(236,72,153,0) 40deg, #f43f5e 80deg, #ec4899 125deg, #3b82f6 170deg, transparent 190deg, transparent 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: spinBorder 5.5s linear infinite; pointer-events: none; }
+   172→    @keyframes spinBorder { to { --ang: 360deg; } }
+   173→
+   174→    /* ---------- scroll cue ---------- */
+   175→    .mouse-dot { animation: cueDrop 1.8s ease-in-out infinite; }
+   176→    @keyframes cueDrop { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+   177→
+   178→    /* ---------- scrollbar + focus ---------- */
+   179→    ::-webkit-scrollbar { width: 10px; height: 10px; }
+   180→    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(244,63,94,.45), rgba(59,130,246,.45)); border-radius: 9999px; border: 2px solid transparent; background-clip: padding-box; }
+   181→    ::-webkit-scrollbar-track { background: transparent; }
+   182→    :focus-visible { outline: 2px solid #ec4899; outline-offset: 2px; }
+   183→
+   184→    /* ---------- reduced motion ---------- */
+   185→    @media (prefers-reduced-motion: reduce) {
+   186→      html { scroll-behavior: auto; }
+   187→      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+   188→      .hero-fade, .h-word, .reveal, .pre-letter { opacity: 1 !important; transform: none !important; }
+   189→      #spotlight { display: none !important; }
+   190→    }
+   191→  </style>
+   192→  <script type="application/ld+json">
+   193→  {
+   194→    "@context": "https://schema.org",
+   195→    "@graph": [
+   196→      {
+   197→        "@type": "WebPage",
+   198→        "@id": "https://artempmail.app/landing.html#webpage",
+   199→        "url": "https://artempmail.app/landing.html",
+   200→        "name": "AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox",
+   201→        "description": "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.",
+   202→        "isPartOf": { "@id": "https://artempmail.app/#website" },
+   203→        "inLanguage": "en"
+   204→      }
+   205→    ]
+   206→  }
+   207→  </script>
+   208→</head>
+   209→<body class="bg-paper-light font-sans text-zinc-900 antialiased dark:bg-paper-dark dark:text-zinc-100">
+   210→
+   211→  <!-- ======================= PRELOADER ======================= -->
+   212→  <div id="preloader" aria-hidden="true">
+   213→    <div class="flex flex-col items-center gap-6">
+   214→      <div class="pre-logo flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500">
+   215→        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="30" height="30" aria-hidden="true" focusable="false">
+   216→          <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+   217→          <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+   218→        </svg>
+   219→      </div>
+   220→      <p class="font-display text-base font-bold tracking-[0.3em] text-zinc-800 dark:text-zinc-100" role="presentation">
+   221→        <span class="pre-letter" style="--i:0">A</span><span class="pre-letter" style="--i:1">R</span><span class="pre-letter" style="--i:2">&nbsp;</span><span class="pre-letter" style="--i:3">T</span><span class="pre-letter" style="--i:4">E</span><span class="pre-letter" style="--i:5">M</span><span class="pre-letter" style="--i:6">P</span><span class="pre-letter" style="--i:7">M</span><span class="pre-letter" style="--i:8">A</span><span class="pre-letter" style="--i:9">I</span><span class="pre-letter" style="--i:10">L</span>
+   222→      </p>
+   223→      <div class="pre-bar-track h-[3px] w-44 rounded-full bg-zinc-200/80 dark:bg-zinc-800">
+   224→        <div class="pre-bar"></div>
+   225→      </div>
+   226→    </div>
+   227→  </div>
+   228→
+   229→  <!-- ======================= AMBIENT BACKGROUND ======================= -->
+   230→  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+   231→    <div class="orb orb-a"></div>
+   232→    <div class="orb orb-b"></div>
+   233→    <div class="orb orb-c"></div>
+   234→    <div class="bg-grid"></div>
+   235→    <div class="noise"></div>
+   236→  </div>
+   237→  <div id="spotlight" aria-hidden="true"></div>
+   238→
+   239→  <div class="relative z-10 flex min-h-screen flex-col">
+   240→
+   241→    <!-- ======================= HEADER ======================= -->
+   242→    <header id="nav" class="sticky top-0 z-40 border-b border-line-light/70 bg-card-light/80 backdrop-blur-xl dark:border-line-dark/70 dark:bg-card-dark/80">
+   243→      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+   244→        <a href="#hero" aria-label="AR TEMPMAIL — back to top" class="flex items-center gap-2.5 rounded-xl">
+   245→          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
+   246→            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false">
+   247→              <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+   248→              <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+   249→            </svg>
+   250→          </span>
+   251→          <span class="font-display text-lg font-bold tracking-tight">AR&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">TEMPMAIL</span></span>
+   252→        </a>
+   253→        <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+   254→          <a href="#features" class="nav-link">Features</a>
+   255→          <a href="#how" class="nav-link">How it works</a>
+   256→          <a href="#faq" class="nav-link">FAQ</a>
+   257→        </nav>
+   258→        <div class="flex items-center gap-2">
+   259→          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:text-pink-400">
+   260→            <span class="material-symbols-outlined !text-[18px]" data-theme-icon aria-hidden="true">dark_mode</span>
+   261→          </button>
+   262→          <button type="button" data-launch class="btn-shine hidden h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-4 text-xs font-bold text-white shadow-lg shadow-pink-600/25 transition-shadow hover:shadow-pink-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 sm:flex">
+   263→            Open app<span class="material-symbols-outlined !text-[15px]" aria-hidden="true">arrow_forward</span>
+   264→          </button>
+   265→          <button id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 md:hidden">
+   266→            <span id="menuIcon" class="material-symbols-outlined !text-[20px]" aria-hidden="true">menu</span>
+   267→          </button>
+   268→        </div>
+   269→      </div>
+   270→      <div id="mobileMenu" class="border-t border-line-light/60 bg-card-light/95 px-4 py-3 backdrop-blur-xl dark:border-line-dark/60 dark:bg-card-dark/95 md:hidden">
+   271→        <nav class="flex flex-col gap-1" aria-label="Mobile">
+   272→          <a href="#features" class="nav-link">Features</a>
+   273→          <a href="#how" class="nav-link">How it works</a>
+   274→          <a href="#faq" class="nav-link">FAQ</a>
+   275→          <button type="button" data-launch class="mt-2 flex h-11 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 text-sm font-bold text-white shadow-lg shadow-pink-600/25">
+   276→            Open app<span class="material-symbols-outlined !text-[16px]" aria-hidden="true">arrow_forward</span>
+   277→          </button>
+   278→        </nav>
+   279→      </div>
+   280→    </header>
+   281→
+   282→    <main class="flex-1">
+   283→
+   284→      <!-- ======================= HERO ======================= -->
+   285→      <section id="hero" class="relative overflow-hidden">
+   286→        <div class="mx-auto grid max-w-6xl gap-14 px-4 pb-20 pt-12 sm:px-6 lg:min-h-[92svh] lg:grid-cols-[1.04fr_.96fr] lg:items-center lg:gap-10 lg:pb-24 lg:pt-16">
+   287→
+   288→          <div class="text-center lg:text-left">
+   289→            <div class="hero-fade inline-flex items-center gap-2.5 rounded-full border border-line-light bg-card-light/80 py-1.5 pl-3 pr-4 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-500 shadow-card dark:border-line-dark dark:bg-card-dark/80 dark:text-zinc-400" style="--d:.05s">
+   290→              <span class="live-dot"></span>Free forever · No signup · No tracking
+   291→            </div>
+   292→
+   293→            <h1 class="mt-6 font-display text-[2.65rem] font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4.1rem]">
+   294→              <span class="h-line"><span class="h-word" style="--i:0">Burner</span> <span class="h-word" style="--i:1">email,</span></span><br />
+   295→              <span class="h-line"><span class="h-word" style="--i:2">ready</span> <span class="h-word" style="--i:3">in</span> <span class="h-word" style="--i:4"><span class="grad-text grad-anim">one&nbsp;tap.</span></span></span>
+   296→            </h1>
+   297→
+   298→            <p class="hero-fade mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base lg:mx-0" style="--d:.5s">
+   299→              AR TEMPMAIL gives you a real, working inbox the moment you open the app — grab OTP codes, survive sign-up forms and keep your real address off spam lists. No account. No noise. It self-destructs when you're done.
+   300→            </p>
+   301→
+   302→            <p class="hero-fade mt-4 flex justify-center gap-1.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400 lg:justify-start" style="--d:.58s">
+   303→              <span>Perfect for</span>
+   304→              <span id="rotMeasure" class="invisible absolute whitespace-nowrap" aria-hidden="true"></span>
+   305→              <span id="rotator" class="font-bold text-pink-600 dark:text-pink-400"><span id="rotWord">OTP codes</span></span>
+   306→            </p>
+   307→
+   308→            <div class="hero-fade mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start" style="--d:.66s">
+   309→              <button type="button" data-launch class="btn-shine magnetic group inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-7 text-sm font-bold text-white shadow-xl shadow-pink-600/30 transition-shadow hover:shadow-pink-500/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500">
+   310→                Open the app<span class="material-symbols-outlined !text-[18px] transition-transform group-hover:translate-x-0.5" aria-hidden="true">arrow_forward</span>
+   311→              </button>
+   312→              <a href="#how" class="inline-flex h-12 items-center gap-2 rounded-2xl border border-line-light bg-card-light/70 px-6 text-sm font-bold text-zinc-700 backdrop-blur transition hover:border-pink-300 hover:text-pink-700 dark:border-line-dark dark:bg-card-dark/70 dark:text-zinc-200 dark:hover:border-pink-500/50 dark:hover:text-pink-300">
+   313→                See how it works<span class="material-symbols-outlined !text-[18px]" aria-hidden="true">arrow_downward</span>
+   314→              </a>
+   315→            </div>
+   316→          </div>
+   317→
+   318→          <!-- Hero visual: live app mock with OTP demo loop -->
+   319→          <div class="hero-fade relative" style="--d:.4s">
+   320→            <div id="heroStage" class="relative mx-auto w-full max-w-[400px]">
+   321→              <div class="absolute -inset-10 -z-10 rounded-full bg-gradient-to-tr from-rose-500/25 via-pink-500/15 to-transparent blur-3xl" aria-hidden="true"></div>
+   322→
+   323→              <div id="heroVisual" class="relative will-change-transform">
+   324→                <div class="relative overflow-hidden rounded-[1.9rem] border border-line-light bg-card-light/90 p-4 shadow-card backdrop-blur-xl dark:border-line-dark dark:bg-card-dark/90 sm:p-5">
+   325→
+   326→                  <!-- mock header -->
+   327→                  <div class="flex items-center gap-2.5 border-b border-line-light/70 pb-3 dark:border-line-dark/70">
+   328→                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
+   329→                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="18" height="18" aria-hidden="true" focusable="false">
+   330→                        <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+   331→                        <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+   332→                      </svg>
+   333→                    </span>
+   334→                    <div class="min-w-0">
+   335→                      <p class="font-display text-sm font-bold tracking-tight">AR TEMPMAIL</p>
+   336→                      <p class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400"><span class="live-dot"></span>Live inbox</p>
+   337→                    </div>
+   338→                    <span class="ml-auto rounded-lg bg-pink-500/10 px-2 py-1 font-mono text-[10px] font-semibold text-pink-600 dark:text-pink-400">10s refresh</span>
+   339→                  </div>
+   340→
+   341→                  <!-- address row -->
+   342→                  <div class="mt-3 flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/80 px-3 py-2.5 dark:border-line-dark dark:bg-paper-dark/80">
+   343→                    <span class="truncate font-mono text-[11.5px] font-semibold text-zinc-700 dark:text-zinc-200">swift.puma-4821@indigobook.com</span>
+   344→                    <span class="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900" aria-hidden="true">
+   345→                      <span class="material-symbols-outlined !text-[14px]">content_copy</span>
+   346→                    </span>
+   347→                  </div>
+   348→
+   349→                  <!-- swap area: waiting shimmer ⇄ incoming mail -->
+   350→                  <div class="mt-3 grid">
+   351→                    <div id="mockShimmer" class="mock-shimmer rounded-xl border border-dashed border-line-light p-3 [grid-area:1/1] dark:border-line-dark">
+   352→                      <div class="h-2.5 w-24 rounded bg-zinc-300/80 dark:bg-zinc-700/60"></div>
+   353→                      <div class="mt-2 h-2 w-40 rounded bg-zinc-300/60 dark:bg-zinc-700/40"></div>
+   354→                      <p class="mt-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Waiting for mail…</p>
+   355→                    </div>
+   356→
+   357→                    <div id="mockMail" class="mock-mail rounded-xl border border-line-light bg-paper-light/70 p-3 [grid-area:1/1] dark:border-line-dark dark:bg-paper-dark/70">
+   358→                      <div class="flex items-center gap-2">
+   359→                        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-[11px] font-bold text-white" aria-hidden="true">H</span>
+   360→                        <span class="text-xs font-bold">Hexa Security</span>
+   361→                        <span class="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400">now <span class="h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span></span>
+   362→                      </div>
+   363→                      <p class="mt-2 text-xs font-bold">Your verification code</p>
+   364→                      <p class="mt-0.5 text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">Your sign-in code is below — it expires in 5 minutes.</p>
+   365→                      <div class="mt-2.5 flex items-center gap-2">
+   366→                        <span id="mockOtp" class="rounded-lg bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-3 py-1.5 font-mono text-sm font-bold tracking-[0.18em] text-white">000 000</span>
+   367→                        <span id="mockCopy" class="flex h-8 w-8 items-center justify-center rounded-lg border border-line-light bg-card-light text-zinc-500 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300" aria-hidden="true">
+   368→                          <span class="material-symbols-outlined !text-[15px]">content_copy</span>
+   369→                        </span>
+   370→                        <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Tap to copy</span>
+   371→                      </div>
+   372→                    </div>
+   373→                  </div>
+   374→
+   375→                  <!-- static second mail -->
+   376→                  <div class="mt-2.5 rounded-xl border border-line-light bg-paper-light/60 p-3 opacity-70 dark:border-line-dark dark:bg-paper-dark/60">
+   377→                    <div class="flex items-center gap-2">
+   378→                      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 via-pink-500 to-rose-500 font-display text-[11px] font-bold text-white" aria-hidden="true">N</span>
+   379→                      <span class="text-xs font-bold">Nimbus</span>
+   380→                      <span class="ml-auto text-[10px] font-semibold text-zinc-400">2m</span>
+   381→                    </div>
+   382→                    <p class="mt-2 text-xs font-bold">Welcome aboard 🎉</p>
+   383→                    <p class="mt-0.5 truncate text-[11px] text-zinc-500 dark:text-zinc-400">Thanks for joining — here's what's next…</p>
+   384→                  </div>
+   385→
+   386→                  <!-- mock toast -->
+   387→                  <div id="mockToast" class="mock-toast pointer-events-none absolute inset-x-6 bottom-4 flex items-center justify-center gap-1.5 rounded-xl bg-zinc-900/95 px-3.5 py-2 text-[11px] font-bold text-white shadow-xl dark:bg-white/95 dark:text-zinc-900">
+   388→                    <span class="material-symbols-outlined !text-[15px] text-emerald-400" aria-hidden="true">check_circle</span>Code copied
+   389→                  </div>
+   390→                </div>
+   391→
+   392→                <div class="fchip fchip-a" aria-hidden="true">
+   393→                  <span class="material-symbols-outlined !text-[16px] text-pink-500">timer</span>
+   394→                  <span id="mockTimer" class="font-mono text-xs font-semibold">09:41</span>
+   395→                </div>
+   396→                <div class="fchip fchip-b" aria-hidden="true">
+   397→                  <span class="material-symbols-outlined !text-[16px] text-pink-500">bookmark_added</span>
+   398→                  Saved for later
+   399→                </div>
+   400→                <div class="fchip fchip-c hidden sm:flex" aria-hidden="true">
+   401→                  <span class="material-symbols-outlined !text-[16px] text-emerald-500">shield</span>
+   402→                  Spam, kept out
+   403→                </div>
+   404→              </div>
+   405→            </div>
+   406→          </div>
+   407→        </div>
+   408→
+   409→        <div class="pointer-events-none absolute inset-x-0 bottom-5 hidden justify-center lg:flex" aria-hidden="true">
+   410→          <div class="hero-fade flex flex-col items-center gap-1.5 text-zinc-400 dark:text-zinc-500" style="--d:1.1s">
+   411→            <div class="flex h-9 w-6 items-start justify-center rounded-full border-2 border-current p-1.5">
+   412→              <span class="mouse-dot h-1.5 w-1 rounded-full bg-current"></span>
+   413→            </div>
+   414→          </div>
+   415→        </div>
+   416→      </section>
+   417→
+   418→      <!-- ======================= USE-CASE MARQUEE ======================= -->
+   419→      <div class="border-y border-line-light/70 bg-card-light/60 py-4 dark:border-line-dark/70 dark:bg-card-dark/60" aria-hidden="true">
+   420→        <div class="marquee-mask">
+   421→          <div class="marquee">
+   422→            <div class="mq-group">
+   423→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">OTP verification</span><span class="grad-text text-sm">✦</span>
+   424→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">App sign-ups</span><span class="grad-text text-sm">✦</span>
+   425→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Free trials</span><span class="grad-text text-sm">✦</span>
+   426→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Download links</span><span class="grad-text text-sm">✦</span>
+   427→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Public Wi-Fi</span><span class="grad-text text-sm">✦</span>
+   428→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Beta invites</span><span class="grad-text text-sm">✦</span>
+   429→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Newsletter previews</span><span class="grad-text text-sm">✦</span>
+   430→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Marketplace chats</span><span class="grad-text text-sm">✦</span>
+   431→            </div>
+   432→            <div class="mq-group">
+   433→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">OTP verification</span><span class="grad-text text-sm">✦</span>
+   434→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">App sign-ups</span><span class="grad-text text-sm">✦</span>
+   435→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Free trials</span><span class="grad-text text-sm">✦</span>
+   436→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Download links</span><span class="grad-text text-sm">✦</span>
+   437→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Public Wi-Fi</span><span class="grad-text text-sm">✦</span>
+   438→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Beta invites</span><span class="grad-text text-sm">✦</span>
+   439→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Newsletter previews</span><span class="grad-text text-sm">✦</span>
+   440→              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Marketplace chats</span><span class="grad-text text-sm">✦</span>
+   441→            </div>
+   442→          </div>
+   443→        </div>
+   444→      </div>
+   445→
+   446→      <!-- ======================= STATS ======================= -->
+   447→      <section class="relative" aria-label="Key numbers">
+   448→        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+   449→          <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+   450→            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark">
+   451→              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="0">0</span></p>
+   452→              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">sign-up forms to fill</p>
+   453→            </div>
+   454→            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.08s">
+   455→              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="10">0</span><span class="text-pink-500">s</span></p>
+   456→              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">inbox auto-refresh</p>
+   457→            </div>
+   458→            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.16s">
+   459→              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="10">0</span><span class="text-pink-500">min</span></p>
+   460→              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">mailbox lifetime · extendable</p>
+   461→            </div>
+   462→            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.24s">
+   463→              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="100">0</span><span class="text-pink-500">%</span></p>
+   464→              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">free, no catches</p>
+   465→            </div>
+   466→          </div>
+   467→        </div>
+   468→      </section>
+   469→
+   470→      <!-- ======================= FEATURES (BENTO) ======================= -->
+   471→      <section id="features" class="relative">
+   472→        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
+   473→          <div class="reveal mx-auto max-w-2xl text-center">
+   474→            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">Features</p>
+   475→            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Everything a burner inbox should be.</h2>
+   476→            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">Built mobile-first, tuned for speed, and honest about what it does — no accounts, no upsells, no clutter.</p>
+   477→          </div>
+   478→
+   479→          <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-6 lg:gap-5">
+   480→            <!-- A: live inbox (big) -->
+   481→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-4 lg:p-7">
+   482→              <div class="flex h-full flex-col gap-6 lg:flex-row lg:items-center">
+   483→                <div class="lg:flex-1">
+   484→                  <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   485→                    <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">bolt</span>
+   486→                  </div>
+   487→                  <h3 class="mt-4 font-display text-lg font-bold tracking-tight">A live inbox, in one tap</h3>
+   488→                  <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Real, working addresses the second you open the app. New mail appears on its own — auto-refresh every 10 seconds, pull-to-refresh on mobile, unread badges included.</p>
+   489→                </div>
+   490→                <div class="w-full max-w-[240px] shrink-0 rounded-2xl border border-line-light bg-paper-light/70 p-3 dark:border-line-dark dark:bg-paper-dark/70 lg:w-[240px]" aria-hidden="true">
+   491→                  <div class="rounded-xl border border-pink-300/60 bg-card-light p-2.5 dark:border-pink-500/40 dark:bg-card-dark">
+   492→                    <div class="flex items-center gap-2">
+   493→                      <span class="h-6 w-6 rounded-lg bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500"></span>
+   494→                      <div class="flex-1"><div class="h-1.5 w-20 rounded bg-zinc-300 dark:bg-zinc-600"></div><div class="mt-1 h-1.5 w-28 rounded bg-zinc-200 dark:bg-zinc-700"></div></div>
+   495→                      <span class="live-dot"></span>
+   496→                    </div>
+   497→                  </div>
+   498→                  <div class="mt-2 rounded-xl border border-line-light bg-card-light p-2.5 opacity-60 dark:border-line-dark dark:bg-card-dark">
+   499→                    <div class="flex items-center gap-2">
+   500→                      <span class="h-6 w-6 rounded-lg bg-zinc-300 dark:bg-zinc-700"></span>
+   501→                      <div class="flex-1"><div class="h-1.5 w-24 rounded bg-zinc-200 dark:bg-zinc-700"></div><div class="mt-1 h-1.5 w-16 rounded bg-zinc-200/70 dark:bg-zinc-700/60"></div></div>
+   502→                    </div>
+   503→                  </div>
+   504→                  <p class="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Auto-refresh · every 10s</p>
+   505→                </div>
+   506→              </div>
+   507→            </article>
+   508→
+   509→            <!-- B: OTP detection -->
+   510→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.08s">
+   511→              <div class="flex h-full flex-col">
+   512→                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   513→                  <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">pin</span>
+   514→                </div>
+   515→                <h3 class="mt-4 font-display text-lg font-bold tracking-tight">OTP auto-detection</h3>
+   516→                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">4–8 digit codes are spotted automatically and served as one-tap copy chips — inbox, message view, even the toast. Auto-copy optional.</p>
+   517→                <div class="mt-4 flex items-center gap-2" aria-hidden="true">
+   518→                  <span class="rounded-lg bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-3 py-1.5 font-mono text-sm font-bold tracking-[0.18em] text-white">493 118</span>
+   519→                  <span class="flex h-8 items-center gap-1 rounded-lg border border-emerald-300/60 bg-emerald-50 px-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-400"><span class="material-symbols-outlined !text-[13px]">check</span>Copied</span>
+   520→                </div>
+   521→              </div>
+   522→            </article>
+   523→
+   524→            <!-- C: saved mailboxes -->
+   525→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2">
+   526→              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   527→                <span class="material-symbols-outlined ms-fill !text-[22px]" aria-hidden="true">bookmark_added</span>
+   528→              </div>
+   529→              <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Saved mailboxes</h3>
+   530→              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Bookmark an address before the timer ends and restore it tomorrow — or any day after. Same mailbox, same OTPs, zero re-setup.</p>
+   531→            </article>
+   532→
+   533→            <!-- D: self-destruct timer -->
+   534→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.08s">
+   535→              <div class="flex h-full flex-col">
+   536→                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   537→                  <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">timer</span>
+   538→                </div>
+   539→                <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Self-destruct timer</h3>
+   540→                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Ten minutes on the clock with a live progress ring. Tap Extend when you need more time.</p>
+   541→                <div class="mt-4 flex items-center gap-3" aria-hidden="true">
+   542→                  <svg viewBox="0 0 64 64" class="h-12 w-12 -rotate-90"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(236,72,153,.18)" stroke-width="5"/><circle class="ring-arc" cx="32" cy="32" r="26" fill="none" stroke="url(#ringGrad)" stroke-width="5" stroke-linecap="round"/><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs></svg>
+   543→                  <span class="font-mono text-lg font-semibold tracking-wider text-zinc-700 dark:text-zinc-200">10:00</span>
+   544→                </div>
+   545→              </div>
+   546→            </article>
+   547→
+   548→            <!-- F: privacy -->
+   549→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.16s">
+   550→              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   551→                <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">shield_lock</span>
+   552→              </div>
+   553→              <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Privacy, built in</h3>
+   554→              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Privacy blur hides senders until you tap, remote tracking images are blocked, and every email renders in sanitized HTML — scripts and trackers never run.</p>
+   555→            </article>
+   556→
+   557→            <!-- E: attachments (wide) -->
+   558→            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-6">
+   559→              <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+   560→                <div class="max-w-xl">
+   561→                  <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
+   562→                    <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">attach_file</span>
+   563→                  </div>
+   564→                  <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Attachments, handled</h3>
+   565→                  <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">PDFs, images, tickets — view and download attachments right from the message with type-aware icons and one-tap downloads. No extra apps, no hoops.</p>
+   566→                </div>
+   567→                <div class="flex flex-wrap gap-2.5" aria-hidden="true">
+   568→                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">picture_as_pdf</span>report.pdf<span class="text-zinc-400">· 200 KB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
+   569→                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">image</span>ticket.png<span class="text-zinc-400">· 84 KB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
+   570→                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">folder_zip</span>assets.zip<span class="text-zinc-400">· 1.2 MB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
+   571→                </div>
+   572→              </div>
+   573→            </article>
+   574→
+   575→            <!-- G: details strip -->
+   576→            <article class="reveal rounded-3xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-6">
+   577→              <div class="grid gap-px overflow-hidden rounded-3xl bg-line-light/60 dark:bg-line-dark/60 sm:grid-cols-2 lg:grid-cols-4">
+   578→                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
+   579→                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">search</span></span>
+   580→                  <div><h4 class="font-display text-sm font-bold">Inbox search</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Find any sender, subject — or a code you half-remember.</p></div>
+   581→                </div>
+   582→                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
+   583→                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">notifications</span></span>
+   584→                  <div><h4 class="font-display text-sm font-bold">Sound &amp; vibration</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">A gentle chime the moment your code lands.</p></div>
+   585→                </div>
+   586→                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
+   587→                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">settings_backup_restore</span></span>
+   588→                  <div><h4 class="font-display text-sm font-bold">Backup &amp; restore</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Export saved mailboxes as JSON, import them anywhere.</p></div>
+   589→                </div>
+   590→                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
+   591→                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">dark_mode</span></span>
+   592→                  <div><h4 class="font-display text-sm font-bold">Light &amp; dark themes</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">A theme for every hour — it remembers your choice.</p></div>
+   593→                </div>
+   594→              </div>
+   595→            </article>
+   596→          </div>
+   597→        </div>
+   598→      </section>
+   599→
+   600→      <!-- ======================= HOW IT WORKS ======================= -->
+   601→      <section id="how" class="relative">
+   602→        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
+   603→          <div class="reveal mx-auto max-w-2xl text-center">
+   604→            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">How it works</p>
+   605→            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Three steps. Zero friction.</h2>
+   606→            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">From "I need an email right now" to verified — in under a minute.</p>
+   607→          </div>
+   608→
+   609→          <div class="relative mt-12">
+   610→            <div class="steps-line absolute left-[16%] right-[16%] top-9 hidden md:block" aria-hidden="true"></div>
+   611→            <ol class="relative grid gap-5 md:grid-cols-3">
+   612→              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark">
+   613→                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">01</span>
+   614→                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Open the app</h3>
+   615→                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">A secure disposable mailbox is generated instantly — no signup, no personal details, nothing to remember.</p>
+   616→              </li>
+   617→              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.1s">
+   618→                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">02</span>
+   619→                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Paste it anywhere</h3>
+   620→                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">One tap copies the address. Drop it into verification screens, sign-up forms, trials — anywhere you'd rather not use your real email.</p>
+   621→              </li>
+   622→              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.2s">
+   623→                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">03</span>
+   624→                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Read. Copy. Done.</h3>
+   625→                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Codes land within seconds and are detected automatically — copy them from the chip and move on. The mailbox cleans itself up.</p>
+   626→              </li>
+   627→            </ol>
+   628→          </div>
+   629→
+   630→          <p class="reveal mx-auto mt-8 flex w-fit max-w-full items-center gap-2 rounded-full border border-line-light bg-card-light/80 px-5 py-2.5 text-xs font-semibold text-zinc-600 shadow-card dark:border-line-dark dark:bg-card-dark/80 dark:text-zinc-300">
+   631→            <span class="material-symbols-outlined !text-[16px] text-pink-500" aria-hidden="true">timer</span>
+   632→            Need longer? Tap Extend — or bookmark the mailbox and return tomorrow.
+   633→          </p>
+   634→        </div>
+   635→      </section>
+   636→
+   637→      <!-- ======================= FAQ ======================= -->
+   638→      <section id="faq" class="relative">
+   639→        <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-24">
+   640→          <div class="reveal mx-auto max-w-2xl text-center">
+   641→            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">FAQ</p>
+   642→            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Straight answers.</h2>
+   643→            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">The stuff people actually ask before trusting a temp inbox.</p>
+   644→          </div>
+   645→
+   646→          <div class="mt-10 space-y-3">
+   647→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark">
+   648→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-1">
+   649→                Is AR TEMPMAIL really free?
+   650→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   651→              </button>
+   652→              <div id="faq-a-1" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every feature is free. No account, no subscription, no ads.</p></div></div>
+   653→            </div>
+   654→
+   655→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.05s">
+   656→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-2">
+   657→                How long does a mailbox last?
+   658→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   659→              </button>
+   660→              <div id="faq-a-2" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">10 minutes by default with one-tap extend. Saved mailboxes can be restored any time — the same day or days later — and keep receiving mail.</p></div></div>
+   661→            </div>
+   662→
+   663→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.1s">
+   664→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-3">
+   665→                Can I receive OTP and verification codes?
+   666→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   667→              </button>
+   668→              <div id="faq-a-3" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes. 4–8 digit codes are auto-detected and shown as a copyable chip in the inbox and a large copy button in the message view, with an optional auto-copy setting.</p></div></div>
+   669→            </div>
+   670→
+   671→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.15s">
+   672→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-4">
+   673→                What does saving a mailbox do?
+   674→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   675→              </button>
+   676→              <div id="faq-a-4" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">It stores the mailbox address and password in your browser's local storage only — never on our servers — so you can reopen the exact mailbox later and continue receiving mail.</p></div></div>
+   677→            </div>
+   678→
+   679→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.2s">
+   680→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-5">
+   681→                Do you read or store my emails?
+   682→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   683→              </button>
+   684→              <div id="faq-a-5" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There are no analytics, ads or tracking.</p></div></div>
+   685→            </div>
+   686→
+   687→            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.25s">
+   688→              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-6">
+   689→                Is it safe for banking or important accounts?
+   690→                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
+   691→              </button>
+   692→              <div id="faq-a-6" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. Disposable addresses are for low-risk signups only — trials, downloads, forums. Never use one for accounts whose loss would harm you.</p></div></div>
+   693→            </div>
+   694→          </div>
+   695→
+   696→          <p class="reveal mt-6 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500">
+   697→            More questions? The <a href="/faq.html" target="_top" class="rounded font-bold text-pink-600 underline-offset-2 hover:underline dark:text-pink-400">full FAQ</a> has you covered.
+   698→          </p>
+   699→        </div>
+   700→      </section>
+   701→
+   702→      <!-- ======================= CTA ======================= -->
+   703→      <section id="cta" class="relative">
+   704→        <div class="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6">
+   705→          <div class="conic-frame reveal relative overflow-hidden rounded-3xl border border-line-light bg-gradient-to-br from-rose-500/10 via-card-light to-blue-500/10 p-10 text-center shadow-card dark:border-line-dark dark:from-rose-500/15 dark:via-card-dark dark:to-blue-500/15 sm:p-14">
+   706→            <div class="pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full bg-rose-500/20 blur-3xl" aria-hidden="true"></div>
+   707→            <div class="pointer-events-none absolute -bottom-24 -right-16 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" aria-hidden="true"></div>
+   708→
+   709→            <h2 class="relative font-display text-3xl font-bold tracking-tight sm:text-4xl">Spam has a new enemy.</h2>
+   710→            <p class="relative mx-auto mt-3 max-w-md text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">Your next disposable inbox is one tap away — mint it, use it, forget it.</p>
+   711→            <button type="button" data-launch class="btn-shine magnetic relative mt-8 inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-7 text-sm font-bold text-white shadow-xl shadow-pink-600/30 transition-shadow hover:shadow-pink-500/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500">
+   712→              Open AR TEMPMAIL<span class="material-symbols-outlined !text-[18px]" aria-hidden="true">arrow_forward</span>
+   713→            </button>
+   714→            <p class="relative mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+   715→              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>Free forever</span>
+   716→              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>No account</span>
+   717→              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>Nothing stored about you</span>
+   718→            </p>
+   719→          </div>
+   720→        </div>
+   721→      </section>
+   722→    </main>
+   723→
+   724→    <!-- ======================= FOOTER ======================= -->
+   725→    <footer class="mt-auto border-t border-line-light/70 bg-card-light/80 dark:border-line-dark/70 dark:bg-card-dark/80">
+   726→      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+   727→        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+   728→          <div class="max-w-sm">
+   729→            <div class="flex items-center gap-2.5">
+   730→              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
+   731→                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false">
+   732→                  <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+   733→                  <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+   734→                </svg>
+   735→              </span>
+   736→              <span class="font-display text-lg font-bold tracking-tight">AR&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">TEMPMAIL</span></span>
+   737→            </div>
+   738→            <p class="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Disposable email for a cleaner digital life. Built for legitimate privacy — please don't use it for fraud, abuse or anything unlawful.</p>
+   739→          </div>
+   740→          <nav aria-label="Footer" class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 md:justify-end">
+   741→            <a href="/about.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">About</a>
+   742→            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+   743→            <a href="/faq.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">FAQ</a>
+   744→            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+   745→            <a href="/privacy.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Privacy Policy</a>
+   746→            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+   747→            <a href="/disclaimer.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Disclaimer</a>
+   748→            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+   749→            <button type="button" data-launch class="rounded font-bold text-pink-600 transition hover:text-pink-500 dark:text-pink-400 dark:hover:text-pink-400">Open app</button>
+   750→          </nav>
+   751→        </div>
+   752→        <p class="mt-8 border-t border-line-light/60 pt-5 text-[11px] text-zinc-400 dark:border-line-dark/60 dark:text-zinc-500">
+   753→          © <span id="year">2025</span> AR TEMPMAIL · Private by design · Powered by Mail.tm · <a href="/llms.txt" target="_top" class="rounded hover:underline">llms.txt</a>
+   754→        </p>
+   755→      </div>
+   756→    </footer>
+   757→  </div>
+   758→
+   759→  <script>
+   760→  (function () {
+   761→    'use strict';
+   762→    var $ = function (s, r) { return (r || document).querySelector(s); };
+   763→    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+   764→    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+   765→    var finePointer = window.matchMedia('(pointer: fine)').matches;
+   766→    var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+   767→
+   768→    /* ---------- theme (shared key with the app + static pages) ---------- */
+   769→    (function () {
+   770→      var btn = $('#theme-toggle');
+   771→      var icon = btn ? btn.querySelector('[data-theme-icon]') : null;
+   772→      if (!btn || !icon) return;
+   773→      var sync = function () { icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode'; };
+   774→      btn.addEventListener('click', function () {
+   775→        var dark = document.documentElement.classList.toggle('dark');
+   776→        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+   777→        sync();
+   778→      });
+   779→      sync();
+   780→    })();
+   781→
+   782→    /* ---------- launch → site shell shows the app ---------- */
+   783→    function launch() {
+   784→      try {
+   785→        if (window.self !== window.top) { window.parent.postMessage({ type: 'AR_TEMPMAIL_LAUNCH' }, '*'); return; }
+   786→      } catch (e) { /* fall through to standalone */ }
+   787→      window.location.href = '/ar-tempmail.html';
+   788→    }
+   789→    $$('[data-launch]').forEach(function (b) { b.addEventListener('click', launch); });
+   790→
+   791→    /* ---------- preloader ---------- */
+   792→    (function () {
+   793→      var pre = $('#preloader');
+   794→      var MIN = reduceMotion ? 200 : 1250;
+   795→      var fired = false;
+   796→      var done = function () {
+   797→        if (fired) return;
+   798→        fired = true;
+   799→        if (pre) pre.classList.add('done');
+   800→        document.body.classList.add('ready');
+   801→        setTimeout(function () { if (pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 800);
+   802→      };
+   803→      setTimeout(done, MIN);
+   804→      setTimeout(done, 3500); /* hard fallback */
+   805→    })();
+   806→
+   807→    /* ---------- nav ---------- */
+   808→    (function () {
+   809→      var nav = $('#nav');
+   810→      if (!nav) return;
+   811→      var onScroll = function () { nav.classList.toggle('scrolled', (window.scrollY || 0) > 16); };
+   812→      window.addEventListener('scroll', onScroll, { passive: true });
+   813→      onScroll();
+   814→    })();
+   815→
+   816→    (function () {
+   817→      var btn = $('#menuBtn'), menu = $('#mobileMenu'), icon = $('#menuIcon');
+   818→      if (!btn || !menu) return;
+   819→      btn.addEventListener('click', function () {
+   820→        var open = menu.classList.toggle('open');
+   821→        btn.setAttribute('aria-expanded', String(open));
+   822→        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+   823→        if (icon) icon.textContent = open ? 'close' : 'menu';
+   824→      });
+   825→      $$('#mobileMenu a, #mobileMenu [data-launch]').forEach(function (el) {
+   826→        el.addEventListener('click', function () {
+   827→          menu.classList.remove('open');
+   828→          btn.setAttribute('aria-expanded', 'false');
+   829→          btn.setAttribute('aria-label', 'Open menu');
+   830→          if (icon) icon.textContent = 'menu';
+   831→        });
+   832→      });
+   833→    })();
+   834→
+   835→    /* ---------- cursor spotlight ---------- */
+   836→    (function () {
+   837→      if (!finePointer || reduceMotion) return;
+   838→      var spot = $('#spotlight');
+   839→      if (!spot) return;
+   840→      var tx = window.innerWidth * 0.5, ty = window.innerHeight * 0.35, cx = tx, cy = ty;
+   841→      window.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+   842→      (function loop() {
+   843→        cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+   844→        spot.style.background = 'radial-gradient(560px circle at ' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px, rgba(219,39,119,.09), transparent 65%)';
+   845→        window.requestAnimationFrame(loop);
+   846→      })();
+   847→    })();
+   848→
+   849→    /* ---------- hero tilt ---------- */
+   850→    (function () {
+   851→      if (!finePointer || reduceMotion) return;
+   852→      var stage = $('#heroStage'), visual = $('#heroVisual');
+   853→      if (!stage || !visual) return;
+   854→      var rx = 0, ry = 0, trx = 0, tryv = 0;
+   855→      (function loop() {
+   856→        rx += (trx - rx) * 0.08; ry += (tryv - ry) * 0.08;
+   857→        visual.style.transform = 'perspective(1200px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+   858→        window.requestAnimationFrame(loop);
+   859→      })();
+   860→      stage.addEventListener('pointermove', function (e) {
+   861→        var r = visual.getBoundingClientRect();
+   862→        var px = (e.clientX - r.left) / r.width - 0.5;
+   863→        var py = (e.clientY - r.top) / r.height - 0.5;
+   864→        trx = -py * 6.5; tryv = px * 8.5;
+   865→      });
+   866→      stage.addEventListener('pointerleave', function () { trx = 0; tryv = 0; });
+   867→    })();
+   868→
+   869→    /* ---------- scroll reveals ---------- */
+   870→    (function () {
+   871→      var els = $$('.reveal');
+   872→      if (!('IntersectionObserver' in window) || reduceMotion) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+   873→      var io = new IntersectionObserver(function (entries) {
+   874→        entries.forEach(function (en) {
+   875→          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+   876→        });
+   877→      }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+   878→      els.forEach(function (el) { io.observe(el); });
+   879→    })();
+   880→
+   881→    /* ---------- animated counters ---------- */
+   882→    (function () {
+   883→      var els = $$('[data-count]');
+   884→      if (!els.length) return;
+   885→      var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+   886→      var animate = function (el) {
+   887→        var target = parseFloat(el.getAttribute('data-count')) || 0;
+   888→        if (reduceMotion || target === 0) { el.textContent = String(target); return; }
+   889→        var dur = 1300, start = performance.now();
+   890→        var tick = function (now) {
+   891→          var p = Math.min(1, (now - start) / dur);
+   892→          el.textContent = String(Math.round(target * ease(p)));
+   893→          if (p < 1) window.requestAnimationFrame(tick);
+   894→        };
+   895→        window.requestAnimationFrame(tick);
+   896→      };
+   897→      if (!('IntersectionObserver' in window)) { els.forEach(animate); return; }
+   898→      var io = new IntersectionObserver(function (entries) {
+   899→        entries.forEach(function (en) {
+   900→          if (en.isIntersecting) { io.unobserve(en.target); animate(en.target); }
+   901→        });
+   902→      }, { threshold: 0.5 });
+   903→      els.forEach(function (el) { io.observe(el); });
+   904→    })();
+   905→
+   906→    /* ---------- rotating word ---------- */
+   907→    (function () {
+   908→      var rot = $('#rotator'), word = $('#rotWord'), meas = $('#rotMeasure');
+   909→      if (!rot || !word || !meas) return;
+   910→      var words = ['OTP codes', 'app sign-ups', 'free trials', 'download links', 'beta invites', 'public Wi-Fi'];
+   911→      var i = 0;
+   912→      var setWidth = function (t) { meas.textContent = t; rot.style.width = meas.offsetWidth + 'px'; };
+   913→      word.textContent = words[0];
+   914→      setWidth(words[0]);
+   915→      window.addEventListener('load', function () { setWidth(words[i]); });
+   916→      if (reduceMotion) return;
+   917→      setInterval(function () {
+   918→        word.classList.add('rot-out');
+   919→        setTimeout(function () {
+   920→          i = (i + 1) % words.length;
+   921→          word.textContent = words[i];
+   922→          setWidth(words[i]);
+   923→          word.classList.remove('rot-out');
+   924→          word.classList.add('rot-in');
+   925→          setTimeout(function () { word.classList.remove('rot-in'); }, 380);
+   926→        }, 300);
+   927→      }, 2600);
+   928→    })();
+   929→
+   930→    /* ---------- feature card spotlight ---------- */
+   931→    $$('.fcard').forEach(function (card) {
+   932→      card.addEventListener('pointermove', function (e) {
+   933→        var r = card.getBoundingClientRect();
+   934→        card.style.setProperty('--gx', (e.clientX - r.left) + 'px');
+   935→        card.style.setProperty('--gy', (e.clientY - r.top) + 'px');
+   936→      });
+   937→    });
+   938→
+   939→    /* ---------- magnetic buttons ---------- */
+   940→    if (finePointer && !reduceMotion) {
+   941→      $$('.magnetic').forEach(function (btn) {
+   942→        btn.addEventListener('pointermove', function (e) {
+   943→          var r = btn.getBoundingClientRect();
+   944→          var x = (e.clientX - r.left - r.width / 2) * 0.16;
+   945→          var y = (e.clientY - r.top - r.height / 2) * 0.28;
+   946→          btn.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+   947→        });
+   948→        btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
+   949→      });
+   950→    }
+   951→
+   952→    /* ---------- FAQ accordion ---------- */
+   953→    $$('.faq-item').forEach(function (item) {
+   954→      var btn = $('.faq-q', item);
+   955→      if (!btn) return;
+   956→      btn.addEventListener('click', function () {
+   957→        var wasOpen = item.classList.contains('open');
+   958→        $$('.faq-item.open').forEach(function (o) {
+   959→          o.classList.remove('open');
+   960→          var b = $('.faq-q', o);
+   961→          if (b) b.setAttribute('aria-expanded', 'false');
+   962→        });
+   963→        if (!wasOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+   964→      });
+   965→    });
+   966→
+   967→    /* ---------- mock timer chip ---------- */
+   968→    (function () {
+   969→      var el = $('#mockTimer');
+   970→      if (!el) return;
+   971→      if (reduceMotion) { el.textContent = '09:41'; return; }
+   972→      var s = 9 * 60 + 41;
+   973→      setInterval(function () {
+   974→        s -= 1;
+   975→        if (s < 8 * 60) s = 10 * 60;
+   976→        var m = Math.floor(s / 60), r = s % 60;
+   977→        el.textContent = (m < 10 ? '0' + m : String(m)) + ':' + (r < 10 ? '0' + r : String(r));
+   978→      }, 1000);
+   979→    })();
+   980→
+   981→    /* ---------- OTP arrival demo loop ---------- */
+   982→    (function () {
+   983→      var mail = $('#mockMail'), shimmer = $('#mockShimmer'), otp = $('#mockOtp'),
+   984→          copy = $('#mockCopy'), toast = $('#mockToast');
+   985→      if (!mail || !shimmer || !otp) return;
+   986→      var FINAL = '493 118';
+   987→
+   988→      if (reduceMotion) {
+   989→        shimmer.classList.add('mock-hide');
+   990→        mail.classList.add('in');
+   991→        otp.textContent = FINAL;
+   992→        return;
+   993→      }
+   994→
+   995→      var scramble = function () {
+   996→        return new Promise(function (resolve) {
+   997→          var dur = 950, start = performance.now();
+   998→          var tick = function () {
+   999→            var p = Math.min(1, (performance.now() - start) / dur);
+  1000→            var settled = Math.floor(p * 6);
+  1001→            var out = '';
+  1002→            for (var k = 0; k < 6; k++) out += (k < settled ? '493118'.charAt(k) : String(Math.floor(Math.random() * 10)));
+  1003→            otp.textContent = out.slice(0, 3) + ' ' + out.slice(3);
+  1004→            if (p < 1) { window.requestAnimationFrame(tick); } else { otp.textContent = FINAL; resolve(); }
+  1005→          };
+  1006→          window.requestAnimationFrame(tick);
+  1007→        });
+  1008→      };
+  1009→
+  1010→      (async function loop() {
+  1011→        for (;;) {
+  1012→          await sleep(1400);
+  1013→          shimmer.classList.add('mock-hide');
+  1014→          mail.classList.add('in');
+  1015→          await sleep(1050);
+  1016→          await scramble();
+  1017→          otp.classList.add('otp-settle');
+  1018→          await sleep(700);
+  1019→          if (copy) copy.classList.add('copy-pulse');
+  1020→          await sleep(420);
+  1021→          if (toast) toast.classList.add('show');
+  1022→          await sleep(2000);
+  1023→          if (toast) toast.classList.remove('show');
+  1024→          if (copy) copy.classList.remove('copy-pulse');
+  1025→          otp.classList.remove('otp-settle');
+  1026→          await sleep(300);
+  1027→          mail.classList.remove('in');
+  1028→          mail.classList.add('leaving');
+  1029→          await sleep(600);
+  1030→          mail.classList.remove('leaving');
+  1031→          shimmer.classList.remove('mock-hide');
+  1032→        }
+  1033→      })();
+  1034→    })();
+  1035→
+  1036→    /* ---------- footer year + debug handle ---------- */
+  1037→    var y = $('#year');
+  1038→    if (y) y.textContent = String(new Date().getFullYear());
+  1039→    window.__AR_LANDING__ = { launch: launch };
+  1040→  })();
+  1041→  </script>
+  1042→</body>
+  1043→</html>
+  1044→

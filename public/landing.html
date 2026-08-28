@@ -3,65 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox</title>
+  <title>Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox</title>
   <meta name="description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
-  <link rel="canonical" href="https://artempmail.app/" />
+  <link rel="canonical" href="https://hitempmail.app/" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="AR TEMPMAIL" />
-  <meta property="og:title" content="AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox" />
+  <meta property="og:site_name" content="Hi Temp Mail" />
+  <meta property="og:title" content="Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox" />
   <meta property="og:description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
-  <meta property="og:url" content="https://artempmail.app/" />
-  <meta property="og:image" content="https://artempmail.app/og-image.png" />
+  <meta property="og:url" content="https://hitempmail.app/" />
+  <meta property="og:image" content="https://hitempmail.app/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox" />
+  <meta name="twitter:title" content="Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox" />
   <meta name="twitter:description" content="Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy." />
-  <meta name="twitter:image" content="https://artempmail.app/og-image.png" />
+  <meta name="twitter:image" content="https://hitempmail.app/og-image.png" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f3fb" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0912" />
   <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}</script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#f5f3fb" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0b0912" media="(prefers-color-scheme: dark)" />
+
+  <!-- Fonts: Inter (body) · Space Grotesk (display) · Instrument Serif (editorial accents) · JetBrains Mono (addresses & codes) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+
+  <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { darkMode: 'class', theme: { extend: {
-      fontFamily: {
-        sans: ['Inter','ui-sans-serif','system-ui','sans-serif'],
-        display: ['"Space Grotesk"','Inter','sans-serif'],
-        mono: ['"JetBrains Mono"','ui-monospace','monospace'],
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Space Grotesk"', 'Inter', 'ui-sans-serif', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+          },
+          colors: {
+            paper: { light: '#f5f3fb', dark: '#0b0912' },
+            card:  { light: '#ffffff', dark: '#16131f' },
+            line:  { light: '#e8e4f2', dark: '#262133' },
+          },
+          boxShadow: {
+            card: '0 1px 2px rgb(24 16 48 / .05), 0 10px 30px -14px rgb(24 16 48 / .14)',
+            pop:  '0 16px 44px -14px rgb(219 39 119 / .40)',
+          },
+        },
       },
-      colors: { paper:{light:'#f5f3fb',dark:'#0b0912'}, card:{light:'#ffffff',dark:'#16131f'}, line:{light:'#e8e4f2',dark:'#262133'} },
-      boxShadow: { card:'0 1px 2px rgb(24 16 48 / .05), 0 10px 30px -14px rgb(24 16 48 / .14)' },
-    }}};
+    };
   </script>
+
   <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
-    .ms-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
-    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+    /* ============================== base ============================== */
+    html { scroll-behavior: smooth; }
+    body { -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+    ::selection { background: rgb(236 72 153 / .25); }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; user-select: none; }
+    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
 
-    /* ---------- ambient background ---------- */
-    .orb { position: absolute; border-radius: 9999px; filter: blur(70px); will-change: transform; }
-    .orb-a { width: 44rem; height: 44rem; left: -14rem; top: -16rem; background: radial-gradient(circle at 35% 35%, rgba(244,63,94,.28), transparent 66%); animation: drift1 26s ease-in-out infinite alternate; }
-    .orb-b { width: 40rem; height: 40rem; right: -12rem; top: 22vh; background: radial-gradient(circle at 60% 40%, rgba(59,130,246,.22), transparent 66%); animation: drift2 32s ease-in-out infinite alternate; }
-    .orb-c { width: 34rem; height: 34rem; left: 22%; bottom: -18rem; background: radial-gradient(circle at 50% 50%, rgba(236,72,153,.2), transparent 62%); animation: drift3 38s ease-in-out infinite alternate; }
-    .dark .orb-a { background: radial-gradient(circle at 35% 35%, rgba(244,63,94,.32), transparent 66%); }
-    .dark .orb-b { background: radial-gradient(circle at 60% 40%, rgba(59,130,246,.26), transparent 66%); }
-    @keyframes drift1 { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(5rem,3rem,0) scale(1.14); } }
-    @keyframes drift2 { from { transform: translate3d(0,0,0) scale(1.06); } to { transform: translate3d(-6rem,-2.5rem,0) scale(.94); } }
-    @keyframes drift3 { from { transform: translate3d(0,0,0); } to { transform: translate3d(4rem,-3rem,0) scale(1.1); } }
-    .bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(24,16,48,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(24,16,48,.05) 1px, transparent 1px); background-size: 54px 54px; -webkit-mask-image: radial-gradient(ellipse 92% 62% at 50% 0%, #000 30%, transparent 78%); mask-image: radial-gradient(ellipse 92% 62% at 50% 0%, #000 30%, transparent 78%); }
-    .dark .bg-grid { background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); }
-    .noise { position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.4'/></svg>"); }
-    #spotlight { position: fixed; inset: 0; z-index: 5; pointer-events: none; display: none; }
-    @media (pointer: fine) { #spotlight { display: block; } }
+    /* branded scrollbar */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f43f5e, #ec4899, #3b82f6); border-radius: 9999px; border: 3px solid transparent; background-clip: padding-box; }
+    html { scrollbar-color: #ec4899 transparent; }
 
-    /* ---------- preloader ---------- */
-    #preloader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #f5f3fb; transition: opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1), visibility .65s; }
+    /* ============================== scroll progress ============================== */
+    #scrollbar { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 90; transform-origin: 0 50%; transform: scaleX(0);
+      background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6); }
+
+    /* ============================== preloader ============================== */
+    #preloader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+      background: #f5f3fb; transition: opacity .55s ease, visibility .55s ease, transform .55s ease; }
     .dark #preloader { background: #0b0912; }
     #preloader.done { opacity: 0; visibility: hidden; transform: scale(1.05); }
     .pre-letter { display: inline-block; opacity: 0; animation: letterIn .7s cubic-bezier(.22,1,.36,1) forwards; animation-delay: calc(var(--i) * 55ms + 120ms); }
@@ -70,142 +87,160 @@
     @keyframes prePulse { 0%, 100% { transform: scale(1); box-shadow: 0 14px 44px -12px rgba(236,72,153,.55); } 50% { transform: scale(1.06); box-shadow: 0 18px 56px -12px rgba(236,72,153,.55); } }
     .pre-bar-track { position: relative; overflow: hidden; }
     .pre-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 40%; border-radius: 9999px; background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6); animation: preSlide 1.05s cubic-bezier(.45,0,.55,1) infinite; }
-    @keyframes preSlide { from { transform: translateX(-110%); } to { transform: translateX(360%); } }
+    @keyframes preSlide { from { transform: translateX(-110%); } to { transform: translateX(290%); } }
 
-    /* ---------- hero entrance ---------- */
-    .hero-fade { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); }
-    body.ready .hero-fade { opacity: 1; transform: none; }
-    .h-line { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .09em; margin-bottom: -.09em; }
-    .h-word { display: inline-block; opacity: 0; transform: translateY(112%); animation: wordIn .85s cubic-bezier(.22,1,.36,1) forwards; animation-play-state: paused; animation-delay: calc(var(--i) * 80ms + .2s); }
-    body.ready .h-word { animation-play-state: running; }
-    @keyframes wordIn { to { opacity: 1; transform: none; } }
-    .grad-text { background-image: linear-gradient(100deg, #f43f5e, #ec4899, #3b82f6); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-    body.ready .grad-anim { animation: gradShift 6s ease-in-out infinite; }
-    @keyframes gradShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    /* ============================== aurora & atmosphere ============================== */
+    .orb { position: absolute; border-radius: 9999px; filter: blur(90px); will-change: transform; }
+    @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(60px,-40px) scale(1.12); } 66% { transform: translate(-40px,30px) scale(.94); } }
+    @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 40% { transform: translate(-70px,50px) scale(1.08); } 70% { transform: translate(50px,-30px) scale(.92); } }
+    @keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,60px) scale(1.15); } }
+    .orb-a { animation: drift1 26s ease-in-out infinite; }
+    .orb-b { animation: drift2 31s ease-in-out infinite; }
+    .orb-c { animation: drift3 36s ease-in-out infinite; }
 
-    .live-dot { position: relative; width: .5rem; height: .5rem; border-radius: 9999px; background: #10b981; flex-shrink: 0; }
-    .live-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 9999px; border: 2px solid rgba(16,185,129,.5); animation: ping 1.6s cubic-bezier(0,0,.2,1) infinite; }
-    @keyframes ping { 0% { transform: scale(.55); opacity: 1; } 80%, 100% { transform: scale(1.8); opacity: 0; } }
+    .grid-mask {
+      background-image: linear-gradient(to right, rgb(124 58 237 / 0) 0, rgb(24 16 48 / .07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgb(124 58 237 / 0) 0, rgb(24 16 48 / .07) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 30%, transparent 75%);
+      mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 30%, transparent 75%);
+    }
+    .dark .grid-mask {
+      background-image: linear-gradient(to right, rgb(0 0 0 / 0) 0, rgb(255 255 255 / .05) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgb(0 0 0 / 0) 0, rgb(255 255 255 / .05) 1px, transparent 1px);
+    }
+    .noise { opacity: .5; mix-blend-mode: soft-light; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E"); }
 
-    /* ---------- buttons ---------- */
+    /* hero cursor spotlight */
+    #hero .spotlight { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s ease;
+      background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 40%), rgb(236 72 153 / .10), transparent 65%); }
+    #hero:hover .spotlight { opacity: 1; }
+
+    /* ============================== animated gradient text ============================== */
+    .grad-text { background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6, #ec4899, #f43f5e); background-size: 220% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradShift 7s linear infinite; }
+    @keyframes gradShift { from { background-position: 0% 50%; } to { background-position: 220% 50%; } }
+
+    /* serif italic accent */
+    .fancy { font-family: '"Instrument Serif"', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+
+    /* ============================== hero word stagger ============================== */
+    .word { display: inline-block; opacity: 0; transform: translateY(26px) rotate(2deg); filter: blur(10px);
+      animation: wordIn .8s cubic-bezier(.22,1,.36,1) forwards; animation-delay: calc(var(--i) * 90ms + 250ms); }
+    @keyframes wordIn { to { opacity: 1; transform: none; filter: none; } }
+    .hero-fade { opacity: 0; animation: fadeUp .9s cubic-bezier(.22,1,.36,1) forwards; animation-delay: var(--d, .5s); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+    /* ============================== buttons ============================== */
     .btn-shine { position: relative; overflow: hidden; }
-    .btn-shine::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.35) 50%, transparent 58%); transform: translateX(-130%); transition: transform .8s cubic-bezier(.22,1,.36,1); pointer-events: none; }
-    .btn-shine:hover::after { transform: translateX(130%); }
-    .nav-link { padding: .5rem .85rem; border-radius: .75rem; font-size: .8rem; font-weight: 600; color: #52525b; transition: color .2s, background .2s; }
-    .nav-link:hover { color: #db2777; background: rgba(219,39,119,.08); }
-    .dark .nav-link { color: #a1a1aa; }
-    .dark .nav-link:hover { color: #f9a8d4; background: rgba(236,72,153,.14); }
-    #nav.scrolled { box-shadow: 0 10px 34px -20px rgba(24,16,48,.28); }
-    #mobileMenu { display: none; }
-    #mobileMenu.open { display: block; animation: menuIn .3s cubic-bezier(.22,1,.36,1); }
-    @keyframes menuIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    .btn-shine::after { content: ''; position: absolute; inset: 0; transform: translateX(-130%) skewX(-18deg);
+      background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / .38) 50%, transparent 65%); }
+    .btn-shine:hover::after { animation: shine .85s ease forwards; }
+    @keyframes shine { to { transform: translateX(130%) skewX(-18deg); } }
 
-    /* ---------- scroll reveal ---------- */
-    .reveal { opacity: 0; transform: translateY(30px) scale(.985); transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); }
+    /* ============================== cards / glass ============================== */
+    .glass { backdrop-filter: blur(18px) saturate(1.35); -webkit-backdrop-filter: blur(18px) saturate(1.35); }
+    .card-lift { transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .5s cubic-bezier(.22,1,.36,1), border-color .4s ease; }
+    .card-lift:hover { transform: translateY(-6px); box-shadow: 0 24px 60px -24px rgb(219 39 119 / .35); border-color: rgb(236 72 153 / .38); }
+    .card-glow { position: relative; }
+    .card-glow::before { content: ''; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .45s ease; pointer-events: none;
+      background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgb(236 72 153 / .12), transparent 55%); }
+    .card-glow:hover::before { opacity: 1; }
+
+    /* conic gradient border (CTA + featured card) */
+    .conic-border { position: relative; background-clip: padding-box; }
+    .conic-border::before { content: ''; position: absolute; inset: -1.5px; border-radius: inherit; padding: 1.5px; z-index: 0;
+      background: conic-gradient(from var(--ang, 0deg), #f43f5e, #ec4899, #3b82f6, #ec4899, #f43f5e);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+      animation: spinAng 6s linear infinite; }
+    @property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+    @keyframes spinAng { to { --ang: 360deg; } }
+
+    /* ============================== reveal on scroll ============================== */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); }
     .reveal.in { opacity: 1; transform: none; }
 
-    /* ---------- marquee ---------- */
-    .marquee { display: flex; width: max-content; animation: marquee 36s linear infinite; }
-    .marquee:hover { animation-play-state: paused; }
-    @keyframes marquee { to { transform: translateX(-50%); } }
-    .marquee-mask { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-    .mq-group { display: flex; align-items: center; gap: 2.5rem; padding-right: 2.5rem; }
+    /* ============================== marquee ============================== */
+    .marquee { display: flex; gap: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
+    .marquee-track { display: flex; align-items: center; flex-shrink: 0; gap: 3.5rem; padding-right: 3.5rem; animation: marquee 30s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 
-    /* ---------- feature cards ---------- */
-    .fcard { position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s; }
-    .fcard::after { content: ''; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .35s; background: radial-gradient(320px circle at var(--gx,50%) var(--gy,50%), rgba(236,72,153,.10), transparent 62%); pointer-events: none; }
-    .fcard:hover::after { opacity: 1; }
-    .fcard:hover { transform: translateY(-4px); box-shadow: 0 18px 44px -18px rgba(219,39,119,.28); }
-    .dark .fcard::after { background: radial-gradient(320px circle at var(--gx,50%) var(--gy,50%), rgba(59,130,246,.12), transparent 62%); }
-    .fcard:hover { border-color: rgba(249,168,212,.9); }
-    .dark .fcard:hover { border-color: rgba(236,72,153,.5); }
+    /* ============================== hero app mock ============================== */
+    .tilt-wrap { perspective: 1200px; }
+    .tilt { transform-style: preserve-3d; transition: transform .18s ease-out; will-change: transform; }
+    .floaty { animation: floaty 6s ease-in-out infinite; }
+    .floaty-slow { animation: floaty 8.5s ease-in-out infinite; }
+    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
-    /* ---------- how-it-works connector ---------- */
-    .steps-line { background-image: linear-gradient(90deg, rgba(236,72,153,.55) 50%, transparent 50%); background-size: 14px 2px; background-repeat: repeat-x; height: 2px; animation: dash 1.1s linear infinite; }
-    @keyframes dash { to { background-position: 14px 0; } }
+    .mock-mail { transition: transform .55s cubic-bezier(.22,1,.36,1), opacity .55s ease; }
+    .mock-mail.enter { transform: translateY(0); opacity: 1; }
+    .mock-mail.pre { transform: translateY(-130%); opacity: 0; }
+    .digit { display: inline-block; min-width: .62em; text-align: center; }
+    .digit.roll { animation: digitRoll .12s linear infinite; }
+    @keyframes digitRoll { 0% { transform: translateY(-32%); opacity: .35; } 50% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(32%); opacity: .35; } }
 
-    /* ---------- timer ring ---------- */
-    .ring-arc { stroke-dasharray: 163.36; animation: ringDrain 10s linear infinite; }
-    @keyframes ringDrain { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 163.36; } }
+    .mock-toast { transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .45s ease; }
+    .mock-toast.show { transform: translateY(0) scale(1); opacity: 1; }
+    .mock-toast.hide { transform: translateY(14px) scale(.92); opacity: 0; }
 
-    /* ---------- hero app mock ---------- */
-    .mock-shimmer { position: relative; overflow: hidden; transition: opacity .4s ease; }
-    .mock-shimmer::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(219,39,119,.09), transparent); animation: shimmer 1.5s infinite; }
-    @keyframes shimmer { to { transform: translateX(100%); } }
-    .mock-shimmer.mock-hide { opacity: 0; }
-    .mock-mail { opacity: 0; transform: translateY(-10px) scale(.98); transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
-    .mock-mail.in { opacity: 1; transform: none; }
-    .mock-mail.leaving { opacity: 0; transform: translateY(8px) scale(.98); }
-    .otp-settle { animation: otpGlow 1s ease-out; }
-    @keyframes otpGlow { 0% { box-shadow: 0 0 0 0 rgba(236,72,153,.45); } 100% { box-shadow: 0 0 0 14px rgba(236,72,153,0); } }
-    .copy-pulse { animation: copyPulse .9s ease-out; }
-    @keyframes copyPulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.5); } 100% { box-shadow: 0 0 0 12px rgba(16,185,129,0); } }
-    .mock-toast { opacity: 0; transform: translateY(10px) scale(.96); transition: opacity .4s cubic-bezier(.22,1,.36,1), transform .4s cubic-bezier(.22,1,.36,1); }
-    .mock-toast.show { opacity: 1; transform: none; }
+    .copy-pulse { animation: copyPulse .6s ease; }
+    @keyframes copyPulse { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
 
-    /* ---------- floating chips ---------- */
-    .fchip { position: absolute; display: flex; align-items: center; gap: .5rem; border-radius: 9999px; border: 1px solid rgba(232,228,242,.9); background: rgba(255,255,255,.85); backdrop-filter: blur(12px); padding: .5rem .875rem; font-size: .72rem; font-weight: 600; color: #3f3f46; box-shadow: 0 10px 30px -12px rgba(24,16,48,.25); animation: floatY 5.2s ease-in-out infinite; white-space: nowrap; }
-    .dark .fchip { border-color: rgba(38,33,51,.9); background: rgba(22,19,31,.82); color: #d4d4d8; box-shadow: 0 10px 30px -12px rgba(0,0,0,.6); }
-    .fchip-a { top: -1rem; right: -.75rem; animation-delay: 0s; }
-    .fchip-b { bottom: 2.75rem; left: -.75rem; animation-delay: 1.2s; }
-    .fchip-c { top: 36%; right: -1.25rem; animation-delay: 2.1s; }
-    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    /* rotating use-case word */
+    .rot-word { display: inline-grid; }
+    .rot-word > span { grid-area: 1 / 1; opacity: 0; transform: translateY(60%); transition: opacity .45s ease, transform .45s cubic-bezier(.22,1,.36,1); }
+    .rot-word > span.on { opacity: 1; transform: none; }
+    .rot-word > span.out { opacity: 0; transform: translateY(-60%); }
 
-    /* ---------- rotating word ---------- */
-    #rotator { display: inline-flex; overflow: hidden; vertical-align: bottom; white-space: nowrap; transition: width .45s cubic-bezier(.22,1,.36,1); }
-    #rotWord { display: inline-block; transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s; }
-    #rotWord.rot-out { transform: translateY(-110%); opacity: 0; }
-    #rotWord.rot-in { animation: rotIn .34s cubic-bezier(.22,1,.36,1); }
-    @keyframes rotIn { from { transform: translateY(110%); opacity: 0; } to { transform: none; opacity: 1; } }
+    /* OTP chip sheen */
+    .otp-chip { position: relative; overflow: hidden; }
+    .otp-chip::after { content: ''; position: absolute; inset: 0; transform: translateX(-130%) skewX(-18deg);
+      background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / .5) 50%, transparent 70%); animation: chipSheen 2.6s ease infinite; }
+    @keyframes chipSheen { 0%, 55% { transform: translateX(-130%) skewX(-18deg); } 85%, 100% { transform: translateX(130%) skewX(-18deg); } }
 
-    /* ---------- FAQ accordion ---------- */
+    /* conic timer ring */
+    .ring { background: conic-gradient(#ec4899 calc(var(--p) * 1%), rgb(236 72 153 / .15) 0); }
+
+    /* FAQ accordion */
     .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.22,1,.36,1); }
-    .faq-item.open .faq-a { grid-template-rows: 1fr; }
     .faq-a > div { overflow: hidden; }
-    .faq-icon { transition: transform .4s cubic-bezier(.22,1,.36,1); }
-    .faq-item.open .faq-icon { transform: rotate(180deg); }
+    .faq-item[data-open="true"] .faq-a { grid-template-rows: 1fr; }
+    .faq-item[data-open="true"] .faq-chevron { transform: rotate(180deg); }
+    .faq-chevron { transition: transform .35s ease; }
 
-    /* ---------- conic border CTA ---------- */
-    @property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-    .conic-frame { position: relative; }
-    .conic-frame::before { content: ''; position: absolute; inset: -1.5px; border-radius: 1.6rem; padding: 1.5px; background: conic-gradient(from var(--ang), transparent 0deg, rgba(236,72,153,0) 40deg, #f43f5e 80deg, #ec4899 125deg, #3b82f6 170deg, transparent 190deg, transparent 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: spinBorder 5.5s linear infinite; pointer-events: none; }
-    @keyframes spinBorder { to { --ang: 360deg; } }
+    /* dashed connector draw-in */
+    .connector { stroke-dasharray: 8 8; animation: dashMove 1.2s linear infinite; }
+    @keyframes dashMove { to { stroke-dashoffset: -16; } }
 
-    /* ---------- scroll cue ---------- */
-    .mouse-dot { animation: cueDrop 1.8s ease-in-out infinite; }
-    @keyframes cueDrop { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+    /* scroll cue */
+    .scroll-cue { animation: cueDrop 1.8s ease-in-out infinite; }
+    @keyframes cueDrop { 0%,100% { transform: translateY(0); opacity: .9; } 50% { transform: translateY(7px); opacity: .35; } }
 
-    /* ---------- scrollbar + focus ---------- */
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(244,63,94,.45), rgba(59,130,246,.45)); border-radius: 9999px; border: 2px solid transparent; background-clip: padding-box; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    :focus-visible { outline: 2px solid #ec4899; outline-offset: 2px; }
-
-    /* ---------- reduced motion ---------- */
+    /* ============================== reduced motion ============================== */
     @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-      .hero-fade, .h-word, .reveal, .pre-letter { opacity: 1 !important; transform: none !important; }
-      #spotlight { display: none !important; }
+      .word, .hero-fade { opacity: 1 !important; transform: none !important; filter: none !important; }
+      .reveal { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
     }
+    :focus-visible { outline: 2px solid #ec4899; outline-offset: 2px; }
   </style>
+
+  <!-- Structured data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://artempmail.app/landing.html#webpage",
-        "url": "https://artempmail.app/landing.html",
-        "name": "AR TEMPMAIL — Free Temporary Email, Instant Disposable Inbox",
-        "description": "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.",
-        "isPartOf": { "@id": "https://artempmail.app/#website" },
-        "inLanguage": "en"
-      }
-    ]
+    "@type": "WebPage",
+    "name": "Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox",
+    "url": "https://hitempmail.app/",
+    "description": "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.",
+    "inLanguage": "en"
   }
   </script>
 </head>
+
 <body class="bg-paper-light font-sans text-zinc-900 antialiased dark:bg-paper-dark dark:text-zinc-100">
 
   <!-- ======================= PRELOADER ======================= -->
@@ -217,827 +252,779 @@
           <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
         </svg>
       </div>
-      <p class="font-display text-base font-bold tracking-[0.3em] text-zinc-800 dark:text-zinc-100" role="presentation">
-        <span class="pre-letter" style="--i:0">A</span><span class="pre-letter" style="--i:1">R</span><span class="pre-letter" style="--i:2">&nbsp;</span><span class="pre-letter" style="--i:3">T</span><span class="pre-letter" style="--i:4">E</span><span class="pre-letter" style="--i:5">M</span><span class="pre-letter" style="--i:6">P</span><span class="pre-letter" style="--i:7">M</span><span class="pre-letter" style="--i:8">A</span><span class="pre-letter" style="--i:9">I</span><span class="pre-letter" style="--i:10">L</span>
-      </p>
-      <div class="pre-bar-track h-[3px] w-44 rounded-full bg-zinc-200/80 dark:bg-zinc-800">
+      <div class="font-display text-2xl font-bold tracking-tight" aria-hidden="true">
+        <span class="pre-letter" style="--i:0">H</span><span class="pre-letter" style="--i:1">i</span><span class="pre-letter" style="--i:2">&nbsp;</span><span class="pre-letter" style="--i:3">T</span><span class="pre-letter" style="--i:4">e</span><span class="pre-letter" style="--i:5">m</span><span class="pre-letter" style="--i:6">p</span><span class="pre-letter" style="--i:7">&nbsp;</span><span class="pre-letter" style="--i:8">M</span><span class="pre-letter" style="--i:9">a</span><span class="pre-letter" style="--i:10">i</span><span class="pre-letter" style="--i:11">l</span>
+      </div>
+      <div class="pre-bar-track h-1.5 w-44 rounded-full bg-zinc-200 dark:bg-zinc-800">
         <div class="pre-bar"></div>
       </div>
     </div>
   </div>
 
-  <!-- ======================= AMBIENT BACKGROUND ======================= -->
-  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-    <div class="orb orb-a"></div>
-    <div class="orb orb-b"></div>
-    <div class="orb orb-c"></div>
-    <div class="bg-grid"></div>
-    <div class="noise"></div>
-  </div>
-  <div id="spotlight" aria-hidden="true"></div>
+  <!-- scroll progress -->
+  <div id="scrollbar" aria-hidden="true"></div>
 
-  <div class="relative z-10 flex min-h-screen flex-col">
+  <!-- ======================= NAV ======================= -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-line-light/60 bg-paper-light/70 glass dark:border-line-dark/60 dark:bg-paper-dark/70">
+    <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main">
+      <a href="#top" class="flex items-center gap-2.5 rounded-xl transition hover:opacity-90" aria-label="Hi Temp Mail — home">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 shadow-md shadow-pink-500/25">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="19" height="19" aria-hidden="true" focusable="false">
+            <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+            <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+          </svg>
+        </span>
+        <span class="font-display text-lg font-bold tracking-tight">Hi&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">Temp&nbsp;Mail</span></span>
+      </a>
 
-    <!-- ======================= HEADER ======================= -->
-    <header id="nav" class="sticky top-0 z-40 border-b border-line-light/70 bg-card-light/80 backdrop-blur-xl dark:border-line-dark/70 dark:bg-card-dark/80">
-      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <a href="#hero" aria-label="AR TEMPMAIL — back to top" class="flex items-center gap-2.5 rounded-xl">
-          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false">
-              <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
-              <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
-            </svg>
-          </span>
-          <span class="font-display text-lg font-bold tracking-tight">AR&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">TEMPMAIL</span></span>
-        </a>
-        <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
-          <a href="#features" class="nav-link">Features</a>
-          <a href="#how" class="nav-link">How it works</a>
-          <a href="#faq" class="nav-link">FAQ</a>
-        </nav>
-        <div class="flex items-center gap-2">
-          <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:text-pink-400">
-            <span class="material-symbols-outlined !text-[18px]" data-theme-icon aria-hidden="true">dark_mode</span>
-          </button>
-          <button type="button" data-launch class="btn-shine hidden h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-4 text-xs font-bold text-white shadow-lg shadow-pink-600/25 transition-shadow hover:shadow-pink-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 sm:flex">
-            Open app<span class="material-symbols-outlined !text-[15px]" aria-hidden="true">arrow_forward</span>
-          </button>
-          <button id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 md:hidden">
-            <span id="menuIcon" class="material-symbols-outlined !text-[20px]" aria-hidden="true">menu</span>
-          </button>
-        </div>
-      </div>
-      <div id="mobileMenu" class="border-t border-line-light/60 bg-card-light/95 px-4 py-3 backdrop-blur-xl dark:border-line-dark/60 dark:bg-card-dark/95 md:hidden">
-        <nav class="flex flex-col gap-1" aria-label="Mobile">
-          <a href="#features" class="nav-link">Features</a>
-          <a href="#how" class="nav-link">How it works</a>
-          <a href="#faq" class="nav-link">FAQ</a>
-          <button type="button" data-launch class="mt-2 flex h-11 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 text-sm font-bold text-white shadow-lg shadow-pink-600/25">
-            Open app<span class="material-symbols-outlined !text-[16px]" aria-hidden="true">arrow_forward</span>
-          </button>
-        </nav>
-      </div>
-    </header>
-
-    <main class="flex-1">
-
-      <!-- ======================= HERO ======================= -->
-      <section id="hero" class="relative overflow-hidden">
-        <div class="mx-auto grid max-w-6xl gap-14 px-4 pb-20 pt-12 sm:px-6 lg:min-h-[92svh] lg:grid-cols-[1.04fr_.96fr] lg:items-center lg:gap-10 lg:pb-24 lg:pt-16">
-
-          <div class="text-center lg:text-left">
-            <div class="hero-fade inline-flex items-center gap-2.5 rounded-full border border-line-light bg-card-light/80 py-1.5 pl-3 pr-4 text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-500 shadow-card dark:border-line-dark dark:bg-card-dark/80 dark:text-zinc-400" style="--d:.05s">
-              <span class="live-dot"></span>Free forever · No signup · No tracking
-            </div>
-
-            <h1 class="mt-6 font-display text-[2.65rem] font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4.1rem]">
-              <span class="h-line"><span class="h-word" style="--i:0">Burner</span> <span class="h-word" style="--i:1">email,</span></span><br />
-              <span class="h-line"><span class="h-word" style="--i:2">ready</span> <span class="h-word" style="--i:3">in</span> <span class="h-word" style="--i:4"><span class="grad-text grad-anim">one&nbsp;tap.</span></span></span>
-            </h1>
-
-            <p class="hero-fade mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base lg:mx-0" style="--d:.5s">
-              AR TEMPMAIL gives you a real, working inbox the moment you open the app — grab OTP codes, survive sign-up forms and keep your real address off spam lists. No account. No noise. It self-destructs when you're done.
-            </p>
-
-            <p class="hero-fade mt-4 flex justify-center gap-1.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400 lg:justify-start" style="--d:.58s">
-              <span>Perfect for</span>
-              <span id="rotMeasure" class="invisible absolute whitespace-nowrap" aria-hidden="true"></span>
-              <span id="rotator" class="font-bold text-pink-600 dark:text-pink-400"><span id="rotWord">OTP codes</span></span>
-            </p>
-
-            <div class="hero-fade mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start" style="--d:.66s">
-              <button type="button" data-launch class="btn-shine magnetic group inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-7 text-sm font-bold text-white shadow-xl shadow-pink-600/30 transition-shadow hover:shadow-pink-500/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500">
-                Open the app<span class="material-symbols-outlined !text-[18px] transition-transform group-hover:translate-x-0.5" aria-hidden="true">arrow_forward</span>
-              </button>
-              <a href="#how" class="inline-flex h-12 items-center gap-2 rounded-2xl border border-line-light bg-card-light/70 px-6 text-sm font-bold text-zinc-700 backdrop-blur transition hover:border-pink-300 hover:text-pink-700 dark:border-line-dark dark:bg-card-dark/70 dark:text-zinc-200 dark:hover:border-pink-500/50 dark:hover:text-pink-300">
-                See how it works<span class="material-symbols-outlined !text-[18px]" aria-hidden="true">arrow_downward</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Hero visual: live app mock with OTP demo loop -->
-          <div class="hero-fade relative" style="--d:.4s">
-            <div id="heroStage" class="relative mx-auto w-full max-w-[400px]">
-              <div class="absolute -inset-10 -z-10 rounded-full bg-gradient-to-tr from-rose-500/25 via-pink-500/15 to-transparent blur-3xl" aria-hidden="true"></div>
-
-              <div id="heroVisual" class="relative will-change-transform">
-                <div class="relative overflow-hidden rounded-[1.9rem] border border-line-light bg-card-light/90 p-4 shadow-card backdrop-blur-xl dark:border-line-dark dark:bg-card-dark/90 sm:p-5">
-
-                  <!-- mock header -->
-                  <div class="flex items-center gap-2.5 border-b border-line-light/70 pb-3 dark:border-line-dark/70">
-                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="18" height="18" aria-hidden="true" focusable="false">
-                        <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
-                        <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
-                      </svg>
-                    </span>
-                    <div class="min-w-0">
-                      <p class="font-display text-sm font-bold tracking-tight">AR TEMPMAIL</p>
-                      <p class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400"><span class="live-dot"></span>Live inbox</p>
-                    </div>
-                    <span class="ml-auto rounded-lg bg-pink-500/10 px-2 py-1 font-mono text-[10px] font-semibold text-pink-600 dark:text-pink-400">10s refresh</span>
-                  </div>
-
-                  <!-- address row -->
-                  <div class="mt-3 flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/80 px-3 py-2.5 dark:border-line-dark dark:bg-paper-dark/80">
-                    <span class="truncate font-mono text-[11.5px] font-semibold text-zinc-700 dark:text-zinc-200">swift.puma-4821@indigobook.com</span>
-                    <span class="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900" aria-hidden="true">
-                      <span class="material-symbols-outlined !text-[14px]">content_copy</span>
-                    </span>
-                  </div>
-
-                  <!-- swap area: waiting shimmer ⇄ incoming mail -->
-                  <div class="mt-3 grid">
-                    <div id="mockShimmer" class="mock-shimmer rounded-xl border border-dashed border-line-light p-3 [grid-area:1/1] dark:border-line-dark">
-                      <div class="h-2.5 w-24 rounded bg-zinc-300/80 dark:bg-zinc-700/60"></div>
-                      <div class="mt-2 h-2 w-40 rounded bg-zinc-300/60 dark:bg-zinc-700/40"></div>
-                      <p class="mt-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Waiting for mail…</p>
-                    </div>
-
-                    <div id="mockMail" class="mock-mail rounded-xl border border-line-light bg-paper-light/70 p-3 [grid-area:1/1] dark:border-line-dark dark:bg-paper-dark/70">
-                      <div class="flex items-center gap-2">
-                        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-[11px] font-bold text-white" aria-hidden="true">H</span>
-                        <span class="text-xs font-bold">Hexa Security</span>
-                        <span class="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400">now <span class="h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span></span>
-                      </div>
-                      <p class="mt-2 text-xs font-bold">Your verification code</p>
-                      <p class="mt-0.5 text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">Your sign-in code is below — it expires in 5 minutes.</p>
-                      <div class="mt-2.5 flex items-center gap-2">
-                        <span id="mockOtp" class="rounded-lg bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-3 py-1.5 font-mono text-sm font-bold tracking-[0.18em] text-white">000 000</span>
-                        <span id="mockCopy" class="flex h-8 w-8 items-center justify-center rounded-lg border border-line-light bg-card-light text-zinc-500 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300" aria-hidden="true">
-                          <span class="material-symbols-outlined !text-[15px]">content_copy</span>
-                        </span>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Tap to copy</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- static second mail -->
-                  <div class="mt-2.5 rounded-xl border border-line-light bg-paper-light/60 p-3 opacity-70 dark:border-line-dark dark:bg-paper-dark/60">
-                    <div class="flex items-center gap-2">
-                      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 via-pink-500 to-rose-500 font-display text-[11px] font-bold text-white" aria-hidden="true">N</span>
-                      <span class="text-xs font-bold">Nimbus</span>
-                      <span class="ml-auto text-[10px] font-semibold text-zinc-400">2m</span>
-                    </div>
-                    <p class="mt-2 text-xs font-bold">Welcome aboard 🎉</p>
-                    <p class="mt-0.5 truncate text-[11px] text-zinc-500 dark:text-zinc-400">Thanks for joining — here's what's next…</p>
-                  </div>
-
-                  <!-- mock toast -->
-                  <div id="mockToast" class="mock-toast pointer-events-none absolute inset-x-6 bottom-4 flex items-center justify-center gap-1.5 rounded-xl bg-zinc-900/95 px-3.5 py-2 text-[11px] font-bold text-white shadow-xl dark:bg-white/95 dark:text-zinc-900">
-                    <span class="material-symbols-outlined !text-[15px] text-emerald-400" aria-hidden="true">check_circle</span>Code copied
-                  </div>
-                </div>
-
-                <div class="fchip fchip-a" aria-hidden="true">
-                  <span class="material-symbols-outlined !text-[16px] text-pink-500">timer</span>
-                  <span id="mockTimer" class="font-mono text-xs font-semibold">09:41</span>
-                </div>
-                <div class="fchip fchip-b" aria-hidden="true">
-                  <span class="material-symbols-outlined !text-[16px] text-pink-500">bookmark_added</span>
-                  Saved for later
-                </div>
-                <div class="fchip fchip-c hidden sm:flex" aria-hidden="true">
-                  <span class="material-symbols-outlined !text-[16px] text-emerald-500">shield</span>
-                  Spam, kept out
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pointer-events-none absolute inset-x-0 bottom-5 hidden justify-center lg:flex" aria-hidden="true">
-          <div class="hero-fade flex flex-col items-center gap-1.5 text-zinc-400 dark:text-zinc-500" style="--d:1.1s">
-            <div class="flex h-9 w-6 items-start justify-center rounded-full border-2 border-current p-1.5">
-              <span class="mouse-dot h-1.5 w-1 rounded-full bg-current"></span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================= USE-CASE MARQUEE ======================= -->
-      <div class="border-y border-line-light/70 bg-card-light/60 py-4 dark:border-line-dark/70 dark:bg-card-dark/60" aria-hidden="true">
-        <div class="marquee-mask">
-          <div class="marquee">
-            <div class="mq-group">
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">OTP verification</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">App sign-ups</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Free trials</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Download links</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Public Wi-Fi</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Beta invites</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Newsletter previews</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Marketplace chats</span><span class="grad-text text-sm">✦</span>
-            </div>
-            <div class="mq-group">
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">OTP verification</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">App sign-ups</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Free trials</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Download links</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Public Wi-Fi</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Beta invites</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Newsletter previews</span><span class="grad-text text-sm">✦</span>
-              <span class="whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">Marketplace chats</span><span class="grad-text text-sm">✦</span>
-            </div>
-          </div>
-        </div>
+      <div class="hidden items-center gap-1 md:flex">
+        <a href="#features" class="nav-link rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-pink-500/5 hover:text-pink-700 dark:text-zinc-300 dark:hover:text-pink-300">Features</a>
+        <a href="#how" class="nav-link rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-pink-500/5 hover:text-pink-700 dark:text-zinc-300 dark:hover:text-pink-300">How it works</a>
+        <a href="#faq" class="nav-link rounded-lg px-3.5 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-pink-500/5 hover:text-pink-700 dark:text-zinc-300 dark:hover:text-pink-300">FAQ</a>
       </div>
 
-      <!-- ======================= STATS ======================= -->
-      <section class="relative" aria-label="Key numbers">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark">
-              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="0">0</span></p>
-              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">sign-up forms to fill</p>
-            </div>
-            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.08s">
-              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="10">0</span><span class="text-pink-500">s</span></p>
-              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">inbox auto-refresh</p>
-            </div>
-            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.16s">
-              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="10">0</span><span class="text-pink-500">min</span></p>
-              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">mailbox lifetime · extendable</p>
-            </div>
-            <div class="reveal rounded-2xl border border-line-light bg-card-light p-6 text-center shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.24s">
-              <p class="font-display text-4xl font-bold tracking-tight"><span data-count="100">0</span><span class="text-pink-500">%</span></p>
-              <p class="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">free, no catches</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="flex items-center gap-2">
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:text-pink-400">
+          <span class="material-symbols-outlined !text-[18px]" data-theme-icon aria-hidden="true">dark_mode</span>
+        </button>
+        <button type="button" data-launch class="btn-shine magnetic hidden h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-4 text-xs font-bold text-white shadow-lg shadow-pink-600/25 transition-shadow hover:shadow-pink-500/40 sm:flex">
+          Open app<span class="material-symbols-outlined !text-[15px]" aria-hidden="true">arrow_forward</span>
+        </button>
+        <button id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu" class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-500 transition hover:text-pink-600 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 md:hidden">
+          <span class="material-symbols-outlined !text-[20px]" aria-hidden="true">menu</span>
+        </button>
+      </div>
+    </nav>
 
-      <!-- ======================= FEATURES (BENTO) ======================= -->
-      <section id="features" class="relative">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">Features</p>
-            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Everything a burner inbox should be.</h2>
-            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">Built mobile-first, tuned for speed, and honest about what it does — no accounts, no upsells, no clutter.</p>
-          </div>
+    <!-- mobile menu -->
+    <nav id="mobileMenu" class="hidden border-t border-line-light/60 bg-paper-light/95 px-4 py-4 glass dark:border-line-dark/60 dark:bg-paper-dark/95 md:hidden" aria-label="Mobile">
+      <a href="#features" class="block rounded-xl px-4 py-3 text-sm font-semibold text-zinc-700 transition hover:bg-pink-500/5 dark:text-zinc-200">Features</a>
+      <a href="#how" class="block rounded-xl px-4 py-3 text-sm font-semibold text-zinc-700 transition hover:bg-pink-500/5 dark:text-zinc-200">How it works</a>
+      <a href="#faq" class="block rounded-xl px-4 py-3 text-sm font-semibold text-zinc-700 transition hover:bg-pink-500/5 dark:text-zinc-200">FAQ</a>
+      <button type="button" data-launch class="mt-2 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 text-sm font-bold text-white shadow-lg shadow-pink-600/25">
+        Open app<span class="material-symbols-outlined !text-[16px]" aria-hidden="true">arrow_forward</span>
+      </button>
+    </nav>
+  </header>
 
-          <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-6 lg:gap-5">
-            <!-- A: live inbox (big) -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-4 lg:p-7">
-              <div class="flex h-full flex-col gap-6 lg:flex-row lg:items-center">
-                <div class="lg:flex-1">
-                  <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                    <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">bolt</span>
-                  </div>
-                  <h3 class="mt-4 font-display text-lg font-bold tracking-tight">A live inbox, in one tap</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Real, working addresses the second you open the app. New mail appears on its own — auto-refresh every 10 seconds, pull-to-refresh on mobile, unread badges included.</p>
-                </div>
-                <div class="w-full max-w-[240px] shrink-0 rounded-2xl border border-line-light bg-paper-light/70 p-3 dark:border-line-dark dark:bg-paper-dark/70 lg:w-[240px]" aria-hidden="true">
-                  <div class="rounded-xl border border-pink-300/60 bg-card-light p-2.5 dark:border-pink-500/40 dark:bg-card-dark">
-                    <div class="flex items-center gap-2">
-                      <span class="h-6 w-6 rounded-lg bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500"></span>
-                      <div class="flex-1"><div class="h-1.5 w-20 rounded bg-zinc-300 dark:bg-zinc-600"></div><div class="mt-1 h-1.5 w-28 rounded bg-zinc-200 dark:bg-zinc-700"></div></div>
-                      <span class="live-dot"></span>
-                    </div>
-                  </div>
-                  <div class="mt-2 rounded-xl border border-line-light bg-card-light p-2.5 opacity-60 dark:border-line-dark dark:bg-card-dark">
-                    <div class="flex items-center gap-2">
-                      <span class="h-6 w-6 rounded-lg bg-zinc-300 dark:bg-zinc-700"></span>
-                      <div class="flex-1"><div class="h-1.5 w-24 rounded bg-zinc-200 dark:bg-zinc-700"></div><div class="mt-1 h-1.5 w-16 rounded bg-zinc-200/70 dark:bg-zinc-700/60"></div></div>
-                    </div>
-                  </div>
-                  <p class="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Auto-refresh · every 10s</p>
-                </div>
-              </div>
-            </article>
+  <main id="top">
+    <!-- ======================= HERO ======================= -->
+    <section id="hero" class="relative overflow-hidden pb-16 pt-32 sm:pb-24 sm:pt-36 lg:pt-40">
+      <!-- atmosphere -->
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="orb orb-a left-[-8%] top-[-12%] h-[26rem] w-[26rem] bg-rose-400/30 dark:bg-rose-600/20"></div>
+        <div class="orb orb-b right-[-10%] top-[6%] h-[30rem] w-[30rem] bg-pink-400/30 dark:bg-pink-600/20"></div>
+        <div class="orb orb-c bottom-[-24%] left-[28%] h-[28rem] w-[28rem] bg-blue-400/25 dark:bg-blue-700/20"></div>
+        <div class="grid-mask absolute inset-0"></div>
+        <div class="noise absolute inset-0"></div>
+        <div class="spotlight"></div>
+      </div>
 
-            <!-- B: OTP detection -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.08s">
-              <div class="flex h-full flex-col">
-                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                  <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">pin</span>
-                </div>
-                <h3 class="mt-4 font-display text-lg font-bold tracking-tight">OTP auto-detection</h3>
-                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">4–8 digit codes are spotted automatically and served as one-tap copy chips — inbox, message view, even the toast. Auto-copy optional.</p>
-                <div class="mt-4 flex items-center gap-2" aria-hidden="true">
-                  <span class="rounded-lg bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-3 py-1.5 font-mono text-sm font-bold tracking-[0.18em] text-white">493 118</span>
-                  <span class="flex h-8 items-center gap-1 rounded-lg border border-emerald-300/60 bg-emerald-50 px-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-400"><span class="material-symbols-outlined !text-[13px]">check</span>Copied</span>
-                </div>
-              </div>
-            </article>
-
-            <!-- C: saved mailboxes -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2">
-              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                <span class="material-symbols-outlined ms-fill !text-[22px]" aria-hidden="true">bookmark_added</span>
-              </div>
-              <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Saved mailboxes</h3>
-              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Bookmark an address before the timer ends and restore it tomorrow — or any day after. Same mailbox, same OTPs, zero re-setup.</p>
-            </article>
-
-            <!-- D: self-destruct timer -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.08s">
-              <div class="flex h-full flex-col">
-                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                  <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">timer</span>
-                </div>
-                <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Self-destruct timer</h3>
-                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Ten minutes on the clock with a live progress ring. Tap Extend when you need more time.</p>
-                <div class="mt-4 flex items-center gap-3" aria-hidden="true">
-                  <svg viewBox="0 0 64 64" class="h-12 w-12 -rotate-90"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(236,72,153,.18)" stroke-width="5"/><circle class="ring-arc" cx="32" cy="32" r="26" fill="none" stroke="url(#ringGrad)" stroke-width="5" stroke-linecap="round"/><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs></svg>
-                  <span class="font-mono text-lg font-semibold tracking-wider text-zinc-700 dark:text-zinc-200">10:00</span>
-                </div>
-              </div>
-            </article>
-
-            <!-- F: privacy -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-2" style="--d:.16s">
-              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">shield_lock</span>
-              </div>
-              <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Privacy, built in</h3>
-              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Privacy blur hides senders until you tap, remote tracking images are blocked, and every email renders in sanitized HTML — scripts and trackers never run.</p>
-            </article>
-
-            <!-- E: attachments (wide) -->
-            <article class="fcard reveal rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-6">
-              <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                <div class="max-w-xl">
-                  <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 via-pink-500/15 to-blue-500/15 text-pink-600 dark:text-pink-400">
-                    <span class="material-symbols-outlined !text-[22px]" aria-hidden="true">attach_file</span>
-                  </div>
-                  <h3 class="mt-4 font-display text-lg font-bold tracking-tight">Attachments, handled</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">PDFs, images, tickets — view and download attachments right from the message with type-aware icons and one-tap downloads. No extra apps, no hoops.</p>
-                </div>
-                <div class="flex flex-wrap gap-2.5" aria-hidden="true">
-                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">picture_as_pdf</span>report.pdf<span class="text-zinc-400">· 200 KB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
-                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">image</span>ticket.png<span class="text-zinc-400">· 84 KB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
-                  <span class="flex items-center gap-2 rounded-xl border border-line-light bg-paper-light/70 px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:border-line-dark dark:bg-paper-dark/70 dark:text-zinc-300"><span class="material-symbols-outlined !text-[17px] text-pink-500">folder_zip</span>assets.zip<span class="text-zinc-400">· 1.2 MB</span><span class="material-symbols-outlined !text-[15px] text-zinc-400">download</span></span>
-                </div>
-              </div>
-            </article>
-
-            <!-- G: details strip -->
-            <article class="reveal rounded-3xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark md:col-span-6">
-              <div class="grid gap-px overflow-hidden rounded-3xl bg-line-light/60 dark:bg-line-dark/60 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
-                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">search</span></span>
-                  <div><h4 class="font-display text-sm font-bold">Inbox search</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Find any sender, subject — or a code you half-remember.</p></div>
-                </div>
-                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
-                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">notifications</span></span>
-                  <div><h4 class="font-display text-sm font-bold">Sound &amp; vibration</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">A gentle chime the moment your code lands.</p></div>
-                </div>
-                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
-                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">settings_backup_restore</span></span>
-                  <div><h4 class="font-display text-sm font-bold">Backup &amp; restore</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Export saved mailboxes as JSON, import them anywhere.</p></div>
-                </div>
-                <div class="flex items-start gap-3.5 bg-card-light p-6 dark:bg-card-dark">
-                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined !text-[19px]" aria-hidden="true">dark_mode</span></span>
-                  <div><h4 class="font-display text-sm font-bold">Light &amp; dark themes</h4><p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">A theme for every hour — it remembers your choice.</p></div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================= HOW IT WORKS ======================= -->
-      <section id="how" class="relative">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">How it works</p>
-            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Three steps. Zero friction.</h2>
-            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">From "I need an email right now" to verified — in under a minute.</p>
-          </div>
-
-          <div class="relative mt-12">
-            <div class="steps-line absolute left-[16%] right-[16%] top-9 hidden md:block" aria-hidden="true"></div>
-            <ol class="relative grid gap-5 md:grid-cols-3">
-              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark">
-                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">01</span>
-                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Open the app</h3>
-                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">A secure disposable mailbox is generated instantly — no signup, no personal details, nothing to remember.</p>
-              </li>
-              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.1s">
-                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">02</span>
-                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Paste it anywhere</h3>
-                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">One tap copies the address. Drop it into verification screens, sign-up forms, trials — anywhere you'd rather not use your real email.</p>
-              </li>
-              <li class="fcard reveal rounded-3xl border border-line-light bg-card-light p-7 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.2s">
-                <span class="relative z-10 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-2xl font-bold text-white shadow-lg shadow-pink-600/30">03</span>
-                <h3 class="mt-5 font-display text-lg font-bold tracking-tight">Read. Copy. Done.</h3>
-                <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Codes land within seconds and are detected automatically — copy them from the chip and move on. The mailbox cleans itself up.</p>
-              </li>
-            </ol>
-          </div>
-
-          <p class="reveal mx-auto mt-8 flex w-fit max-w-full items-center gap-2 rounded-full border border-line-light bg-card-light/80 px-5 py-2.5 text-xs font-semibold text-zinc-600 shadow-card dark:border-line-dark dark:bg-card-dark/80 dark:text-zinc-300">
-            <span class="material-symbols-outlined !text-[16px] text-pink-500" aria-hidden="true">timer</span>
-            Need longer? Tap Extend — or bookmark the mailbox and return tomorrow.
+      <div class="relative mx-auto grid max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:gap-8">
+        <!-- copy -->
+        <div class="text-center lg:text-left">
+          <p class="hero-fade mx-auto inline-flex items-center gap-2 rounded-full border border-pink-200/70 bg-card-light/70 py-1.5 pl-2.5 pr-3.5 text-xs font-bold text-zinc-600 shadow-sm backdrop-blur dark:border-pink-500/20 dark:bg-card-dark/70 dark:text-zinc-300 lg:mx-0" style="--d:.15s">
+            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 text-[10px] text-white" aria-hidden="true">👋</span>
+            Free forever — no signup, no login
           </p>
-        </div>
-      </section>
 
-      <!-- ======================= FAQ ======================= -->
-      <section id="faq" class="relative">
-        <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-24">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-xs font-bold uppercase tracking-[0.24em] text-pink-600 dark:text-pink-400">FAQ</p>
-            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">Straight answers.</h2>
-            <p class="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">The stuff people actually ask before trusting a temp inbox.</p>
-          </div>
+          <h1 class="font-display mt-6 text-[2.6rem] font-bold leading-[1.04] tracking-tight sm:text-6xl lg:text-[4.2rem]">
+            <span class="word" style="--i:0">Say</span>
+            <span class="word fancy grad-text pr-1 text-[1.12em]" style="--i:1">hi</span>
+            <span class="word" style="--i:2">to</span>
+            <span class="word" style="--i:3">email</span>
+            <span class="word" style="--i:4">that</span>
+            <span class="word" style="--i:5">leaves</span>
+            <span class="word" style="--i:6">no</span>
+            <span class="word grad-text" style="--i:7">trace.</span>
+          </h1>
 
-          <div class="mt-10 space-y-3">
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-1">
-                Is AR TEMPMAIL really free?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-1" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every feature is free. No account, no subscription, no ads.</p></div></div>
-            </div>
-
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.05s">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-2">
-                How long does a mailbox last?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-2" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">10 minutes by default with one-tap extend. Saved mailboxes can be restored any time — the same day or days later — and keep receiving mail.</p></div></div>
-            </div>
-
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.1s">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-3">
-                Can I receive OTP and verification codes?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-3" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes. 4–8 digit codes are auto-detected and shown as a copyable chip in the inbox and a large copy button in the message view, with an optional auto-copy setting.</p></div></div>
-            </div>
-
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.15s">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-4">
-                What does saving a mailbox do?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-4" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">It stores the mailbox address and password in your browser's local storage only — never on our servers — so you can reopen the exact mailbox later and continue receiving mail.</p></div></div>
-            </div>
-
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.2s">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-5">
-                Do you read or store my emails?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-5" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There are no analytics, ads or tracking.</p></div></div>
-            </div>
-
-            <div class="faq-item reveal rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.25s">
-              <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[15px] font-bold tracking-tight" aria-expanded="false" aria-controls="faq-a-6">
-                Is it safe for banking or important accounts?
-                <span class="faq-icon material-symbols-outlined shrink-0 text-zinc-400" aria-hidden="true">expand_more</span>
-              </button>
-              <div id="faq-a-6" class="faq-a"><div><p class="px-5 pb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. Disposable addresses are for low-risk signups only — trials, downloads, forums. Never use one for accounts whose loss would harm you.</p></div></div>
-            </div>
-          </div>
-
-          <p class="reveal mt-6 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500">
-            More questions? The <a href="/faq.html" target="_top" class="rounded font-bold text-pink-600 underline-offset-2 hover:underline dark:text-pink-400">full FAQ</a> has you covered.
+          <p class="hero-fade mx-auto mt-6 max-w-xl text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg lg:mx-0" style="--d:.55s">
+            Hi Temp Mail mints you a real, working inbox the moment you arrive — catch
+            OTP codes, keep the spam out, and walk away when you're done.
+            No account. No limits. No strings.
           </p>
-        </div>
-      </section>
 
-      <!-- ======================= CTA ======================= -->
-      <section id="cta" class="relative">
-        <div class="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6">
-          <div class="conic-frame reveal relative overflow-hidden rounded-3xl border border-line-light bg-gradient-to-br from-rose-500/10 via-card-light to-blue-500/10 p-10 text-center shadow-card dark:border-line-dark dark:from-rose-500/15 dark:via-card-dark dark:to-blue-500/15 sm:p-14">
-            <div class="pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full bg-rose-500/20 blur-3xl" aria-hidden="true"></div>
-            <div class="pointer-events-none absolute -bottom-24 -right-16 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" aria-hidden="true"></div>
-
-            <h2 class="relative font-display text-3xl font-bold tracking-tight sm:text-4xl">Spam has a new enemy.</h2>
-            <p class="relative mx-auto mt-3 max-w-md text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base">Your next disposable inbox is one tap away — mint it, use it, forget it.</p>
-            <button type="button" data-launch class="btn-shine magnetic relative mt-8 inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-7 text-sm font-bold text-white shadow-xl shadow-pink-600/30 transition-shadow hover:shadow-pink-500/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500">
-              Open AR TEMPMAIL<span class="material-symbols-outlined !text-[18px]" aria-hidden="true">arrow_forward</span>
+          <div class="hero-fade mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start" style="--d:.66s">
+            <button type="button" data-launch class="btn-shine magnetic group inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 px-7 text-sm font-bold text-white shadow-xl shadow-pink-600/30 transition-shadow hover:shadow-pink-500/45">
+              Open the app<span class="material-symbols-outlined !text-[18px] transition-transform group-hover:translate-x-0.5" aria-hidden="true">arrow_forward</span>
             </button>
-            <p class="relative mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>Free forever</span>
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>No account</span>
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[14px] text-emerald-500" aria-hidden="true">check</span>Nothing stored about you</span>
-            </p>
+            <a href="#how" class="inline-flex h-12 items-center gap-2 rounded-2xl border border-line-light bg-card-light/70 px-6 text-sm font-bold text-zinc-700 backdrop-blur transition hover:border-pink-300 hover:text-pink-700 dark:border-line-dark dark:bg-card-dark/70 dark:text-zinc-200 dark:hover:border-pink-500/50 dark:hover:text-pink-300">
+              <span class="material-symbols-outlined !text-[18px]" aria-hidden="true">play_circle</span>See how it works
+            </a>
           </div>
-        </div>
-      </section>
-    </main>
 
-    <!-- ======================= FOOTER ======================= -->
-    <footer class="mt-auto border-t border-line-light/70 bg-card-light/80 dark:border-line-dark/70 dark:bg-card-dark/80">
-      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-          <div class="max-w-sm">
-            <div class="flex items-center gap-2.5">
-              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false">
-                  <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
-                  <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
-                </svg>
-              </span>
-              <span class="font-display text-lg font-bold tracking-tight">AR&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">TEMPMAIL</span></span>
-            </div>
-            <p class="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Disposable email for a cleaner digital life. Built for legitimate privacy — please don't use it for fraud, abuse or anything unlawful.</p>
-          </div>
-          <nav aria-label="Footer" class="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 md:justify-end">
-            <a href="/about.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">About</a>
-            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
-            <a href="/faq.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">FAQ</a>
-            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
-            <a href="/privacy.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Privacy Policy</a>
-            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
-            <a href="/disclaimer.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Disclaimer</a>
-            <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
-            <button type="button" data-launch class="rounded font-bold text-pink-600 transition hover:text-pink-500 dark:text-pink-400 dark:hover:text-pink-400">Open app</button>
-          </nav>
+          <p class="hero-fade mt-7 inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400" style="--d:.78s">
+            <span class="text-zinc-400 dark:text-zinc-500">Perfect for</span>
+            <span class="rot-word font-semibold text-pink-600 dark:text-pink-400">
+              <span class="on">OTP codes</span><span>free trials</span><span>downloads</span><span>forum signups</span><span>Wi-Fi portals</span>
+            </span>
+          </p>
         </div>
-        <p class="mt-8 border-t border-line-light/60 pt-5 text-[11px] text-zinc-400 dark:border-line-dark/60 dark:text-zinc-500">
-          © <span id="year">2025</span> AR TEMPMAIL · Private by design · Powered by Mail.tm · <a href="/llms.txt" target="_top" class="rounded hover:underline">llms.txt</a>
+
+        <!-- app mock -->
+        <div class="hero-fade tilt-wrap relative mx-auto w-full max-w-[400px]" style="--d:.5s">
+          <div class="pointer-events-none absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-rose-400/25 via-pink-400/25 to-blue-400/25 blur-3xl dark:from-rose-600/20 dark:via-pink-600/20 dark:to-blue-600/20" aria-hidden="true"></div>
+
+          <div id="mock" class="tilt relative rounded-[2rem] border border-line-light/80 bg-card-light/85 p-4 shadow-2xl shadow-pink-500/10 backdrop-blur-xl dark:border-line-dark/80 dark:bg-card-dark/85 sm:p-5">
+            <!-- mock header -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="14" height="14" aria-hidden="true" focusable="false">
+                    <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+                    <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+                  </svg>
+                </span>
+                <span class="font-display text-sm font-bold">Hi&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">Temp&nbsp;Mail</span></span>
+              </div>
+              <span class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                <span class="relative flex h-1.5 w-1.5"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span></span>
+                LIVE
+              </span>
+            </div>
+
+            <!-- address card -->
+            <div class="mt-4 rounded-2xl border border-line-light bg-paper-light/80 p-3.5 dark:border-line-dark dark:bg-paper-dark/80">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Your temporary address</p>
+              <div class="mt-1.5 flex items-center justify-between gap-2">
+                <code class="truncate font-mono text-[13px] font-semibold text-zinc-800 dark:text-zinc-100">koi.pond4821@emalupe.com</code>
+                <button id="mockCopy" type="button" tabindex="-1" aria-label="Copy address (demo)" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 text-white shadow-md shadow-pink-500/25">
+                  <span class="material-symbols-outlined !text-[16px]" aria-hidden="true">content_copy</span>
+                </button>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span id="mockRing" class="ring flex h-8 w-8 items-center justify-center rounded-full" role="img" aria-label="Mailbox time remaining (demo)">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-card-light dark:bg-card-dark"><span id="mockTime" class="font-mono text-[9px] font-bold text-zinc-700 dark:text-zinc-200">09:58</span></span>
+                  </span>
+                  <span class="text-[10px] font-semibold text-zinc-400 dark:text-zinc-500">self-destructs in 10 min</span>
+                </div>
+                <span class="rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">+ EXTEND</span>
+              </div>
+            </div>
+
+            <!-- inbox -->
+            <div class="relative mt-3 h-[104px] overflow-hidden rounded-2xl border border-line-light bg-paper-light/80 p-2.5 dark:border-line-dark dark:bg-paper-dark/80">
+              <div class="flex items-center justify-between px-0.5 pb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Inbox</span>
+                <span id="mockCount" class="rounded-full bg-pink-500/10 px-1.5 py-0.5 font-mono text-[9px] font-bold text-pink-600 dark:text-pink-400">1 new</span>
+              </div>
+              <div id="mockMail" class="mock-mail pre rounded-xl border border-line-light bg-card-light p-2.5 shadow-sm dark:border-line-dark dark:bg-card-dark">
+                <div class="flex items-center gap-2.5">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 text-[11px] font-bold text-white">N</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="truncate text-xs font-bold text-zinc-800 dark:text-zinc-100">NoReply Security</p>
+                      <span class="font-mono text-[9px] text-zinc-400">now</span>
+                    </div>
+                    <p class="truncate text-[11px] text-zinc-500 dark:text-zinc-400">Your verification code</p>
+                  </div>
+                </div>
+                <div class="mt-2 flex items-center justify-between rounded-lg border border-dashed border-pink-300/70 bg-pink-500/5 px-2.5 py-1.5 dark:border-pink-500/30 dark:bg-pink-500/10">
+                  <span id="mockDigits" class="font-mono text-sm font-bold tracking-[.3em] text-pink-600 dark:text-pink-300" aria-label="Detected verification code (demo)">
+                    <span class="digit">4</span><span class="digit">9</span><span class="digit">3</span><span class="digit">&nbsp;</span><span class="digit">1</span><span class="digit">1</span><span class="digit">8</span>
+                  </span>
+                  <span class="material-symbols-outlined !text-[14px] text-pink-500" aria-hidden="true">content_copy</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- in-mock toast -->
+            <div id="mockToast" class="mock-toast hide pointer-events-none absolute inset-x-6 bottom-4 z-10 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 py-2 text-[11px] font-bold text-white shadow-lg shadow-pink-600/30">
+              <span class="material-symbols-outlined !text-[14px]" aria-hidden="true">task_alt</span>Code copied!
+            </div>
+          </div>
+
+          <!-- floating chips -->
+          <div class="floaty absolute -left-4 -top-5 hidden items-center gap-1.5 rounded-xl border border-line-light bg-card-light/90 px-3 py-2 text-[11px] font-bold text-zinc-600 shadow-lg backdrop-blur dark:border-line-dark dark:bg-card-dark/90 dark:text-zinc-300 sm:flex" aria-hidden="true">
+            <span class="material-symbols-outlined !text-[15px] text-pink-500">bookmarks</span>Saved for later
+          </div>
+          <div class="floaty-slow absolute -bottom-5 -right-3 hidden items-center gap-1.5 rounded-xl border border-line-light bg-card-light/90 px-3 py-2 text-[11px] font-bold text-zinc-600 shadow-lg backdrop-blur dark:border-line-dark dark:bg-card-dark/90 dark:text-zinc-300 sm:flex" aria-hidden="true">
+            <span class="material-symbols-outlined !text-[15px] text-pink-500">shield</span>Spam, kept out
+          </div>
+        </div>
+      </div>
+
+      <!-- scroll cue -->
+      <div class="relative mt-14 flex justify-center" aria-hidden="true">
+        <span class="material-symbols-outlined scroll-cue !text-[22px] text-zinc-400 dark:text-zinc-500">keyboard_double_arrow_down</span>
+      </div>
+    </section>
+
+    <!-- ======================= STATS ======================= -->
+    <section class="relative border-y border-line-light/60 bg-card-light/60 glass dark:border-line-dark/60 dark:bg-card-dark/40" aria-label="Key facts">
+      <div class="mx-auto grid max-w-6xl grid-cols-2 gap-y-8 px-4 py-10 sm:px-6 lg:grid-cols-4">
+        <div class="reveal text-center" style="--d:0s">
+          <p class="font-display text-4xl font-bold tracking-tight sm:text-5xl"><span class="count grad-text" data-count="0">0</span></p>
+          <p class="mt-1.5 text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Signups needed</p>
+        </div>
+        <div class="reveal text-center" style="--d:.08s">
+          <p class="font-display text-4xl font-bold tracking-tight sm:text-5xl"><span class="count grad-text" data-count="10" data-suffix="s">0s</span></p>
+          <p class="mt-1.5 text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">To a live inbox</p>
+        </div>
+        <div class="reveal text-center" style="--d:.16s">
+          <p class="font-display text-4xl font-bold tracking-tight sm:text-5xl"><span class="count grad-text" data-count="10" data-suffix="min">0min</span></p>
+          <p class="mt-1.5 text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Mailbox lifetime</p>
+        </div>
+        <div class="reveal text-center" style="--d:.24s">
+          <p class="font-display text-4xl font-bold tracking-tight sm:text-5xl"><span class="count grad-text" data-count="100" data-suffix="%">0%</span></p>
+          <p class="mt-1.5 text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Private &amp; ad-free</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= MARQUEE ======================= -->
+    <section class="overflow-hidden border-b border-line-light/60 py-6 dark:border-line-dark/60" aria-hidden="true">
+      <div class="marquee" id="marquee1">
+        <div class="marquee-track font-display text-sm font-bold uppercase tracking-[.2em] text-zinc-300 dark:text-zinc-600">
+          <span>OTP codes</span><span class="text-pink-400">✦</span><span>Free trials</span><span class="text-pink-400">✦</span><span>Downloads</span><span class="text-pink-400">✦</span><span>Forum signups</span><span class="text-pink-400">✦</span><span>Wi-Fi portals</span><span class="text-pink-400">✦</span><span>App testing</span><span class="text-pink-400">✦</span><span>Zero spam</span><span class="text-pink-400">✦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURES ======================= -->
+    <section id="features" class="relative mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="orb orb-b right-[-14%] top-[8%] h-[22rem] w-[22rem] bg-pink-300/25 dark:bg-pink-700/15"></div>
+      </div>
+
+      <div class="relative mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-bold uppercase tracking-[.25em] text-pink-600 dark:text-pink-400">Features</p>
+        <h2 class="reveal font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl" style="--d:.08s">
+          Everything a burner inbox<br class="hidden sm:block" /> should <span class="fancy grad-text">dream</span> of.
+        </h2>
+        <p class="reveal mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-base" style="--d:.16s">
+          Built like a native app, running entirely in your browser. Every feature below ships free — because privacy tools shouldn't be paywalled.
         </p>
       </div>
-    </footer>
-  </div>
+
+      <div class="relative mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- OTP auto-detection — featured -->
+        <article class="reveal conic-border card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark sm:col-span-2" style="--d:0s">
+          <div class="relative z-[1] flex h-full flex-col justify-between gap-6 sm:flex-row sm:items-center">
+            <div class="max-w-sm">
+              <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 text-white shadow-lg shadow-pink-500/25">
+                <span class="material-symbols-outlined" aria-hidden="true">password</span>
+              </span>
+              <h3 class="font-display mt-4 text-xl font-bold tracking-tight">OTP auto-detection</h3>
+              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Verification codes are spotted the instant they land — shown as a one-tap chip in the inbox, a big copy button in the message, with optional auto-copy.</p>
+            </div>
+            <div class="flex shrink-0 flex-col items-center gap-3">
+              <span class="otp-chip inline-flex items-center gap-2 rounded-xl border border-dashed border-pink-300/80 bg-pink-500/5 px-4 py-2.5 dark:border-pink-500/40 dark:bg-pink-500/10">
+                <span class="font-mono text-lg font-bold tracking-[.28em] text-pink-600 dark:text-pink-300">493&nbsp;118</span>
+                <span class="material-symbols-outlined !text-[16px] text-pink-500" aria-hidden="true">content_copy</span>
+              </span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">detected · tap to copy</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Instant inbox -->
+        <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.08s">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">bolt</span></span>
+          <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Instant inbox</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">A real, working address the moment you open the app. No forms, no email verification, no waiting rooms.</p>
+        </article>
+
+        <!-- Saved mailboxes -->
+        <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.16s">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">bookmarks</span></span>
+          <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Saved mailboxes</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Bookmark an address and restore it days later — same inbox, codes still arriving. Stored only on your device.</p>
+        </article>
+
+        <!-- Self-destruct -->
+        <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.24s">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">timer</span></span>
+              <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Self-destruct timer</h3>
+              <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Ten minutes per mailbox by default — extend with one tap whenever you need more time.</p>
+            </div>
+            <span id="featRing" class="ring mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-full" role="img" aria-label="Timer ring demo">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-card-light dark:bg-card-dark"><span class="font-mono text-[10px] font-bold text-zinc-600 dark:text-zinc-300">09:58</span></span>
+            </span>
+          </div>
+        </article>
+
+        <!-- Privacy -->
+        <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.32s">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">shield</span></span>
+          <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Privacy by design</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Tracking pixels blocked, remote images off by default, HTML sanitized — scripts and trackers never run.</p>
+        </article>
+
+        <!-- Attachments -->
+        <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.4s">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">attach_file</span></span>
+          <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Attachments, handled</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Files that arrive are listed with type and size — view them, download them, no drama.</p>
+        </article>
+      </div>
+
+      <!-- details strip -->
+      <div class="reveal mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-line-light bg-line-light shadow-card dark:border-line-dark dark:bg-line-dark sm:grid-cols-4" style="--d:.2s">
+        <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
+          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">person_off</span>
+          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">No account</span>
+        </div>
+        <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
+          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">block</span>
+          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">No ads, ever</span>
+        </div>
+        <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
+          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">verified_user</span>
+          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">Sanitized HTML</span>
+        </div>
+        <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
+          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">devices</span>
+          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">Any browser</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= HOW IT WORKS ======================= -->
+    <section id="how" class="relative scroll-mt-20 border-y border-line-light/60 bg-card-light/50 glass dark:border-line-dark/60 dark:bg-card-dark/30">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="reveal text-xs font-bold uppercase tracking-[.25em] text-pink-600 dark:text-pink-400">How it works</p>
+          <h2 class="reveal font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl" style="--d:.08s">
+            Three taps. <span class="fancy grad-text">Zero</span> spam.
+          </h2>
+        </div>
+
+        <div class="relative mt-16 grid gap-10 sm:grid-cols-3 sm:gap-6">
+          <!-- connector -->
+          <svg class="pointer-events-none absolute inset-x-0 top-7 hidden h-2 w-full sm:block" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1000 8">
+            <line x1="120" y1="4" x2="880" y2="4" stroke="currentColor" stroke-width="2.5" class="connector text-pink-300 dark:text-pink-700" stroke-linecap="round" />
+          </svg>
+
+          <div class="reveal relative text-center" style="--d:0s">
+            <span class="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-xl font-bold text-white shadow-xl shadow-pink-500/30">1</span>
+            <h3 class="font-display mt-5 text-lg font-bold tracking-tight">Open &amp; mint</h3>
+            <p class="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Launch the app — a secure disposable mailbox is generated before the splash screen even fades.</p>
+          </div>
+          <div class="reveal relative text-center" style="--d:.12s">
+            <span class="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-xl font-bold text-white shadow-xl shadow-pink-500/30">2</span>
+            <h3 class="font-display mt-5 text-lg font-bold tracking-tight">Paste anywhere</h3>
+            <p class="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">One tap copies the address. Drop it into any signup, trial or download form that wants your email.</p>
+          </div>
+          <div class="reveal relative text-center" style="--d:.24s">
+            <span class="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 font-display text-xl font-bold text-white shadow-xl shadow-pink-500/30">3</span>
+            <h3 class="font-display mt-5 text-lg font-bold tracking-tight">Catch the code</h3>
+            <p class="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">OTP codes are detected and served as a one-tap chip. Then walk away — the mailbox burns itself.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FAQ ======================= -->
+    <section id="faq" class="mx-auto max-w-3xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
+      <div class="text-center">
+        <p class="reveal text-xs font-bold uppercase tracking-[.25em] text-pink-600 dark:text-pink-400">FAQ</p>
+        <h2 class="reveal font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl" style="--d:.08s">
+          Asked <span class="fancy grad-text">constantly.</span>
+        </h2>
+      </div>
+
+      <div class="mt-12 space-y-3">
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="true" style="--d:0s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="true">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">What is Hi Temp Mail?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Hi Temp Mail is a free, privacy-first disposable email service. A real, working temporary address is generated the moment you open the app — no account, no signup, no personal details. Use it to receive verification emails, one-time passwords and download links without exposing your real inbox.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.06s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">Can I receive OTP and verification codes?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — that's the headline feature. 4–8 digit codes are detected automatically and shown as a copyable chip in the inbox and a large copy button in the message view. There's even an optional auto-copy setting that grabs the code the instant it arrives.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.12s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">How long does a mailbox last?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Ten minutes by default, with one-tap extend. Save a mailbox to your vault and you can restore it any time — the same day or days later — and it keeps receiving mail.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.18s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">Do you read or store my emails?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. The app runs entirely in your browser with no server database of its own — messages live with the upstream mail provider, and your saved mailboxes live in your browser's local storage. There are no analytics, no ads and no tracking.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.24s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">Is Hi Temp Mail really free?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every feature is free. No account, no subscription, no ads, no "premium" tier hiding the good parts.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.3s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">Is it safe for banking or important accounts?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No — and we won't pretend otherwise. Disposable addresses are for low-risk signups only: trials, downloads, forums, Wi-Fi portals. Never use one for an account whose loss would harm you.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CTA ======================= -->
+    <section class="relative overflow-hidden px-4 pb-24 sm:px-6" aria-label="Get started">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="orb orb-a left-[8%] bottom-[-30%] h-[24rem] w-[24rem] bg-rose-300/30 dark:bg-rose-700/20"></div>
+        <div class="orb orb-c right-[4%] bottom-[-35%] h-[26rem] w-[26rem] bg-blue-300/30 dark:bg-blue-800/20"></div>
+      </div>
+
+      <div class="conic-border reveal relative mx-auto max-w-4xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-rose-600 via-pink-600 to-blue-600 px-6 py-16 text-center shadow-2xl shadow-pink-600/30 dark:from-rose-700 dark:via-pink-800 dark:to-blue-800 sm:px-12 sm:py-20" style="--d:0s">
+        <div class="noise absolute inset-0" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-white/15 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -bottom-20 -right-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" aria-hidden="true"></div>
+
+        <div class="relative">
+          <p class="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur">
+            <span class="material-symbols-outlined !text-[15px]" aria-hidden="true">waving_hand</span>Ready when you are
+          </p>
+          <h2 class="font-display mx-auto mt-5 max-w-xl text-3xl font-bold tracking-tight text-white sm:text-5xl">
+            Say <span class="fancy">hi</span> to your new inbox.
+          </h2>
+          <p class="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/85 sm:text-base">Your next disposable email is one tap away — mint it, use it, forget it.</p>
+          <button type="button" data-launch class="btn-shine magnetic group mt-8 inline-flex h-12 items-center gap-2 rounded-2xl bg-white px-8 text-sm font-bold text-pink-600 shadow-xl transition-transform hover:scale-[1.02] active:scale-[.98]">
+            Open Hi Temp Mail<span class="material-symbols-outlined !text-[18px] transition-transform group-hover:translate-x-0.5" aria-hidden="true">arrow_forward</span>
+          </button>
+          <p class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>No signup</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>No ads</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>Free forever</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="border-t border-line-light/60 bg-card-light/60 glass dark:border-line-dark/60 dark:bg-card-dark/40">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div class="flex flex-col items-center justify-between gap-8 sm:flex-row sm:items-start">
+        <div class="max-w-xs text-center sm:text-left">
+          <a href="#top" class="inline-flex items-center gap-2.5" aria-label="Hi Temp Mail — back to top">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-pink-500 to-blue-500 shadow-md shadow-pink-500/25">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="19" height="19" aria-hidden="true" focusable="false">
+                <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+                <path d="M14 24l18 12 18-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+              </svg>
+            </span>
+            <span class="font-display text-lg font-bold tracking-tight">Hi&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">Temp&nbsp;Mail</span></span>
+          </a>
+          <p class="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">The friendliest disposable inbox on the internet. Mint it, use it, forget it.</p>
+        </div>
+
+        <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400" aria-label="Footer">
+          <a href="/about.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">About</a>
+          <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+          <a href="/faq.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">FAQ</a>
+          <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+          <a href="/privacy.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Privacy Policy</a>
+          <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+          <a href="/disclaimer.html" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">Disclaimer</a>
+          <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+          <a href="/llms.txt" target="_top" class="rounded transition hover:text-pink-600 dark:hover:text-pink-400">llms.txt</a>
+          <span class="select-none text-zinc-300 dark:text-zinc-600" aria-hidden="true">·</span>
+          <button type="button" data-launch class="rounded font-bold text-pink-600 transition hover:text-pink-500 dark:text-pink-400">Open app</button>
+        </nav>
+      </div>
+
+      <p class="mt-10 border-t border-line-light/60 pt-5 text-center text-[11px] text-zinc-400 dark:border-line-dark/60 dark:text-zinc-500">
+        © 2026 Hi Temp Mail · Private by design · Powered by Mail.tm · Independent project, not affiliated with Mail.tm
+      </p>
+    </div>
+  </footer>
 
   <script>
-  (function () {
-    'use strict';
-    var $ = function (s, r) { return (r || document).querySelector(s); };
-    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var finePointer = window.matchMedia('(pointer: fine)').matches;
-    var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
-
-    /* ---------- theme (shared key with the app + static pages) ---------- */
     (function () {
-      var btn = $('#theme-toggle');
-      var icon = btn ? btn.querySelector('[data-theme-icon]') : null;
-      if (!btn || !icon) return;
-      var sync = function () { icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode'; };
-      btn.addEventListener('click', function () {
-        var dark = document.documentElement.classList.toggle('dark');
-        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
-        sync();
+      'use strict';
+      var doc = document, root = doc.documentElement;
+      var reduceMotion = false;
+      try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* noop */ }
+
+      /* ============================== theme ============================== */
+      var themeIcon = doc.querySelector('[data-theme-icon]');
+      function paintThemeIcon() {
+        if (!themeIcon) return;
+        var dark = root.classList.contains('dark');
+        themeIcon.textContent = dark ? 'light_mode' : 'dark_mode';
+      }
+      paintThemeIcon();
+      doc.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark = root.classList.toggle('dark');
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* noop */ }
+        paintThemeIcon();
       });
-      sync();
-    })();
 
-    /* ---------- launch → site shell shows the app ---------- */
-    function launch() {
-      try {
-        if (window.self !== window.top) { window.parent.postMessage({ type: 'AR_TEMPMAIL_LAUNCH' }, '*'); return; }
-      } catch (e) { /* fall through to standalone */ }
-      window.location.href = '/ar-tempmail.html';
-    }
-    $$('[data-launch]').forEach(function (b) { b.addEventListener('click', launch); });
-
-    /* ---------- preloader ---------- */
-    (function () {
-      var pre = $('#preloader');
-      var MIN = reduceMotion ? 200 : 1250;
-      var fired = false;
-      var done = function () {
-        if (fired) return;
-        fired = true;
-        if (pre) pre.classList.add('done');
-        document.body.classList.add('ready');
-        setTimeout(function () { if (pre && pre.parentNode) pre.parentNode.removeChild(pre); }, 800);
-      };
-      setTimeout(done, MIN);
-      setTimeout(done, 3500); /* hard fallback */
-    })();
-
-    /* ---------- nav ---------- */
-    (function () {
-      var nav = $('#nav');
-      if (!nav) return;
-      var onScroll = function () { nav.classList.toggle('scrolled', (window.scrollY || 0) > 16); };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    })();
-
-    (function () {
-      var btn = $('#menuBtn'), menu = $('#mobileMenu'), icon = $('#menuIcon');
-      if (!btn || !menu) return;
-      btn.addEventListener('click', function () {
-        var open = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(open));
-        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-        if (icon) icon.textContent = open ? 'close' : 'menu';
-      });
-      $$('#mobileMenu a, #mobileMenu [data-launch]').forEach(function (el) {
-        el.addEventListener('click', function () {
-          menu.classList.remove('open');
-          btn.setAttribute('aria-expanded', 'false');
-          btn.setAttribute('aria-label', 'Open menu');
-          if (icon) icon.textContent = 'menu';
-        });
-      });
-    })();
-
-    /* ---------- cursor spotlight ---------- */
-    (function () {
-      if (!finePointer || reduceMotion) return;
-      var spot = $('#spotlight');
-      if (!spot) return;
-      var tx = window.innerWidth * 0.5, ty = window.innerHeight * 0.35, cx = tx, cy = ty;
-      window.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
-      (function loop() {
-        cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-        spot.style.background = 'radial-gradient(560px circle at ' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px, rgba(219,39,119,.09), transparent 65%)';
-        window.requestAnimationFrame(loop);
-      })();
-    })();
-
-    /* ---------- hero tilt ---------- */
-    (function () {
-      if (!finePointer || reduceMotion) return;
-      var stage = $('#heroStage'), visual = $('#heroVisual');
-      if (!stage || !visual) return;
-      var rx = 0, ry = 0, trx = 0, tryv = 0;
-      (function loop() {
-        rx += (trx - rx) * 0.08; ry += (tryv - ry) * 0.08;
-        visual.style.transform = 'perspective(1200px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
-        window.requestAnimationFrame(loop);
-      })();
-      stage.addEventListener('pointermove', function (e) {
-        var r = visual.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width - 0.5;
-        var py = (e.clientY - r.top) / r.height - 0.5;
-        trx = -py * 6.5; tryv = px * 8.5;
-      });
-      stage.addEventListener('pointerleave', function () { trx = 0; tryv = 0; });
-    })();
-
-    /* ---------- scroll reveals ---------- */
-    (function () {
-      var els = $$('.reveal');
-      if (!('IntersectionObserver' in window) || reduceMotion) { els.forEach(function (el) { el.classList.add('in'); }); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-    })();
-
-    /* ---------- animated counters ---------- */
-    (function () {
-      var els = $$('[data-count]');
-      if (!els.length) return;
-      var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
-      var animate = function (el) {
-        var target = parseFloat(el.getAttribute('data-count')) || 0;
-        if (reduceMotion || target === 0) { el.textContent = String(target); return; }
-        var dur = 1300, start = performance.now();
-        var tick = function (now) {
-          var p = Math.min(1, (now - start) / dur);
-          el.textContent = String(Math.round(target * ease(p)));
-          if (p < 1) window.requestAnimationFrame(tick);
-        };
-        window.requestAnimationFrame(tick);
-      };
-      if (!('IntersectionObserver' in window)) { els.forEach(animate); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { io.unobserve(en.target); animate(en.target); }
-        });
-      }, { threshold: 0.5 });
-      els.forEach(function (el) { io.observe(el); });
-    })();
-
-    /* ---------- rotating word ---------- */
-    (function () {
-      var rot = $('#rotator'), word = $('#rotWord'), meas = $('#rotMeasure');
-      if (!rot || !word || !meas) return;
-      var words = ['OTP codes', 'app sign-ups', 'free trials', 'download links', 'beta invites', 'public Wi-Fi'];
-      var i = 0;
-      var setWidth = function (t) { meas.textContent = t; rot.style.width = meas.offsetWidth + 'px'; };
-      word.textContent = words[0];
-      setWidth(words[0]);
-      window.addEventListener('load', function () { setWidth(words[i]); });
-      if (reduceMotion) return;
-      setInterval(function () {
-        word.classList.add('rot-out');
-        setTimeout(function () {
-          i = (i + 1) % words.length;
-          word.textContent = words[i];
-          setWidth(words[i]);
-          word.classList.remove('rot-out');
-          word.classList.add('rot-in');
-          setTimeout(function () { word.classList.remove('rot-in'); }, 380);
-        }, 300);
-      }, 2600);
-    })();
-
-    /* ---------- feature card spotlight ---------- */
-    $$('.fcard').forEach(function (card) {
-      card.addEventListener('pointermove', function (e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty('--gx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--gy', (e.clientY - r.top) + 'px');
-      });
-    });
-
-    /* ---------- magnetic buttons ---------- */
-    if (finePointer && !reduceMotion) {
-      $$('.magnetic').forEach(function (btn) {
-        btn.addEventListener('pointermove', function (e) {
-          var r = btn.getBoundingClientRect();
-          var x = (e.clientX - r.left - r.width / 2) * 0.16;
-          var y = (e.clientY - r.top - r.height / 2) * 0.28;
-          btn.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-        });
-        btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
-      });
-    }
-
-    /* ---------- FAQ accordion ---------- */
-    $$('.faq-item').forEach(function (item) {
-      var btn = $('.faq-q', item);
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var wasOpen = item.classList.contains('open');
-        $$('.faq-item.open').forEach(function (o) {
-          o.classList.remove('open');
-          var b = $('.faq-q', o);
-          if (b) b.setAttribute('aria-expanded', 'false');
-        });
-        if (!wasOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
-      });
-    });
-
-    /* ---------- mock timer chip ---------- */
-    (function () {
-      var el = $('#mockTimer');
-      if (!el) return;
-      if (reduceMotion) { el.textContent = '09:41'; return; }
-      var s = 9 * 60 + 41;
-      setInterval(function () {
-        s -= 1;
-        if (s < 8 * 60) s = 10 * 60;
-        var m = Math.floor(s / 60), r = s % 60;
-        el.textContent = (m < 10 ? '0' + m : String(m)) + ':' + (r < 10 ? '0' + r : String(r));
-      }, 1000);
-    })();
-
-    /* ---------- OTP arrival demo loop ---------- */
-    (function () {
-      var mail = $('#mockMail'), shimmer = $('#mockShimmer'), otp = $('#mockOtp'),
-          copy = $('#mockCopy'), toast = $('#mockToast');
-      if (!mail || !shimmer || !otp) return;
-      var FINAL = '493 118';
-
-      if (reduceMotion) {
-        shimmer.classList.add('mock-hide');
-        mail.classList.add('in');
-        otp.textContent = FINAL;
-        return;
+      /* ============================== preloader ============================== */
+      var preloader = doc.getElementById('preloader');
+      function ready() {
+        if (!preloader || preloader.classList.contains('done')) return;
+        preloader.classList.add('done');
+        doc.body.classList.add('ready');
+        setTimeout(function () { if (preloader.parentNode) preloader.parentNode.removeChild(preloader); }, 650);
+      }
+      if (reduceMotion) { ready(); }
+      else {
+        if (doc.readyState === 'complete') setTimeout(ready, 900);
+        else window.addEventListener('load', function () { setTimeout(ready, 900); });
+        setTimeout(ready, 3200); // hard fallback — never trap the visitor
       }
 
-      var scramble = function () {
-        return new Promise(function (resolve) {
-          var dur = 950, start = performance.now();
-          var tick = function () {
-            var p = Math.min(1, (performance.now() - start) / dur);
-            var settled = Math.floor(p * 6);
-            var out = '';
-            for (var k = 0; k < 6; k++) out += (k < settled ? '493118'.charAt(k) : String(Math.floor(Math.random() * 10)));
-            otp.textContent = out.slice(0, 3) + ' ' + out.slice(3);
-            if (p < 1) { window.requestAnimationFrame(tick); } else { otp.textContent = FINAL; resolve(); }
-          };
-          window.requestAnimationFrame(tick);
+      /* ============================== scroll progress ============================== */
+      var bar = doc.getElementById('scrollbar');
+      var tickingBar = false;
+      function paintBar() {
+        var h = doc.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(window.scrollY / h, 1) : 0) + ')';
+        tickingBar = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!tickingBar) { tickingBar = true; requestAnimationFrame(paintBar); }
+      }, { passive: true });
+      paintBar();
+
+      /* ============================== mobile menu ============================== */
+      var menuBtn = doc.getElementById('menuBtn'), mobileMenu = doc.getElementById('mobileMenu');
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', function () {
+          var open = mobileMenu.classList.toggle('hidden') === false;
+          menuBtn.setAttribute('aria-expanded', String(open));
+          menuBtn.querySelector('span').textContent = open ? 'close' : 'menu';
         });
-      };
+        mobileMenu.addEventListener('click', function (e) {
+          if (e.target.closest('a')) {
+            mobileMenu.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
+            menuBtn.querySelector('span').textContent = 'menu';
+          }
+        });
+      }
 
-      (async function loop() {
-        for (;;) {
-          await sleep(1400);
-          shimmer.classList.add('mock-hide');
-          mail.classList.add('in');
-          await sleep(1050);
-          await scramble();
-          otp.classList.add('otp-settle');
-          await sleep(700);
-          if (copy) copy.classList.add('copy-pulse');
-          await sleep(420);
-          if (toast) toast.classList.add('show');
-          await sleep(2000);
-          if (toast) toast.classList.remove('show');
-          if (copy) copy.classList.remove('copy-pulse');
-          otp.classList.remove('otp-settle');
-          await sleep(300);
-          mail.classList.remove('in');
-          mail.classList.add('leaving');
-          await sleep(600);
-          mail.classList.remove('leaving');
-          shimmer.classList.remove('mock-hide');
+      /* ============================== reveal on scroll ============================== */
+      var revealEls = [].slice.call(doc.querySelectorAll('.reveal'));
+      if ('IntersectionObserver' in window && !reduceMotion) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        revealEls.forEach(function (el) { io.observe(el); });
+      } else {
+        revealEls.forEach(function (el) { el.classList.add('in'); });
+      }
+
+      /* ============================== counters ============================== */
+      function animateCount(el) {
+        var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+        var suffix = el.getAttribute('data-suffix') || '';
+        if (reduceMotion) { el.textContent = target + suffix; return; }
+        var t0 = null, dur = 1400;
+        function step(ts) {
+          if (!t0) t0 = ts;
+          var p = Math.min((ts - t0) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
         }
-      })();
-    })();
+        requestAnimationFrame(step);
+      }
+      var counts = [].slice.call(doc.querySelectorAll('.count'));
+      if ('IntersectionObserver' in window) {
+        var cio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) { animateCount(en.target); cio.unobserve(en.target); }
+          });
+        }, { threshold: 0.5 });
+        counts.forEach(function (el) { cio.observe(el); });
+      } else {
+        counts.forEach(animateCount);
+      }
 
-    /* ---------- footer year + debug handle ---------- */
-    var y = $('#year');
-    if (y) y.textContent = String(new Date().getFullYear());
-    window.__AR_LANDING__ = { launch: launch };
-  })();
+      /* ============================== hero spotlight + tilt ============================== */
+      var hero = doc.getElementById('hero');
+      if (hero && !reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+        var sx = 0, sy = 0, tx = 50, ty = 40, raf = null;
+        hero.addEventListener('pointermove', function (e) {
+          var r = hero.getBoundingClientRect();
+          sx = ((e.clientX - r.left) / r.width) * 100;
+          sy = ((e.clientY - r.top) / r.height) * 100;
+          if (!raf) raf = requestAnimationFrame(function () {
+            hero.style.setProperty('--mx', sx + '%');
+            hero.style.setProperty('--my', sy + '%');
+            raf = null;
+          });
+        });
+      }
+
+      var mock = doc.getElementById('mock');
+      if (mock && !reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+        var wrap = mock.parentNode;
+        var rx = 0, ry = 0, cx = 0, cy = 0, mraf = null;
+        function tiltLoop() {
+          cx += (rx - cx) * 0.09;
+          cy += (ry - cy) * 0.09;
+          mock.style.transform = 'rotateX(' + cy.toFixed(2) + 'deg) rotateY(' + cx.toFixed(2) + 'deg)';
+          if (Math.abs(rx - cx) > 0.01 || Math.abs(ry - cy) > 0.01) mraf = requestAnimationFrame(tiltLoop);
+          else mraf = null;
+        }
+        wrap.addEventListener('pointermove', function (e) {
+          var r = wrap.getBoundingClientRect();
+          ry = (((e.clientX - r.left) / r.width) - 0.5) * 10;
+          rx = (0.5 - ((e.clientY - r.top) / r.height)) * 8;
+          if (!mraf) mraf = requestAnimationFrame(tiltLoop);
+        });
+        wrap.addEventListener('pointerleave', function () { rx = 0; ry = 0; if (!mraf) mraf = requestAnimationFrame(tiltLoop); });
+      }
+
+      /* ============================== magnetic buttons ============================== */
+      if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+        [].slice.call(doc.querySelectorAll('.magnetic')).forEach(function (btn) {
+          btn.addEventListener('pointermove', function (e) {
+            var r = btn.getBoundingClientRect();
+            var mx = ((e.clientX - r.left) / r.width) - 0.5;
+            var my = ((e.clientY - r.top) / r.height) - 0.5;
+            btn.style.transform = 'translate(' + (mx * 7).toFixed(1) + 'px,' + (my * 6).toFixed(1) + 'px)';
+          });
+          btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
+        });
+      }
+
+      /* ============================== card glow tracking ============================== */
+      [].slice.call(doc.querySelectorAll('.card-glow')).forEach(function (card) {
+        card.addEventListener('pointermove', function (e) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--gx', (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '%');
+          card.style.setProperty('--gy', (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%');
+        });
+      });
+
+      /* ============================== rotating use-case word ============================== */
+      var rotWords = doc.querySelectorAll('.rot-word > span');
+      if (rotWords.length > 1 && !reduceMotion) {
+        var rotIdx = 0;
+        setInterval(function () {
+          var cur = rotWords[rotIdx];
+          cur.classList.remove('on'); cur.classList.add('out');
+          rotIdx = (rotIdx + 1) % rotWords.length;
+          var nxt = rotWords[rotIdx];
+          nxt.classList.remove('out'); nxt.classList.add('on');
+        }, 2300);
+      }
+
+      /* ============================== demo timer ring ============================== */
+      var mockTime = doc.getElementById('mockTime');
+      var mockRing = doc.getElementById('mockRing');
+      var featRing = doc.getElementById('featRing');
+      var secs = 9 * 60 + 58;
+      function paintRings() {
+        var total = 10 * 60;
+        var p = Math.round((secs / total) * 100);
+        var label = Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2);
+        if (mockRing) mockRing.style.setProperty('--p', String(p));
+        if (featRing) featRing.style.setProperty('--p', String(p));
+        if (mockTime) mockTime.textContent = label;
+        if (featRing) {
+          var t = featRing.querySelector('span span');
+          if (t) t.textContent = label;
+        }
+      }
+      paintRings();
+      setInterval(function () { secs = secs > 0 ? secs - 1 : 10 * 60; paintRings(); }, 1000);
+
+      /* ============================== OTP demo loop ============================== */
+      var mockMail = doc.getElementById('mockMail');
+      var mockToast = doc.getElementById('mockToast');
+      var mockCopy = doc.getElementById('mockCopy');
+      var digits = doc.querySelectorAll('#mockDigits .digit');
+      var mockCount = doc.getElementById('mockCount');
+      function rollDigits(on) {
+        digits.forEach(function (d) { if (d.textContent.trim()) d.classList.toggle('roll', on); });
+      }
+      function setDigits(str) {
+        var real = digits.length ? digits : [];
+        var chars = str.split('');
+        for (var i = 0; i < real.length; i++) {
+          if (!real[i].textContent.trim()) continue; // keep the blank spacer
+          real[i].textContent = chars[i] !== undefined && chars[i] !== ' ' ? chars[i] : '4';
+        }
+      }
+      function otpCycle() {
+        if (!mockMail) return;
+        mockMail.classList.add('pre'); mockMail.classList.remove('enter');
+        if (mockCount) mockCount.textContent = '0 new';
+        setTimeout(function () {
+          mockMail.classList.remove('pre'); mockMail.classList.add('enter');
+          if (mockCount) mockCount.textContent = '1 new';
+          setTimeout(function () {
+            if (reduceMotion) return;
+            rollDigits(true);
+            var ticks = 0, scramble = setInterval(function () {
+              setDigits(String(Math.floor(100 + Math.random() * 900)) + ' 1');
+              if (++ticks >= 9) {
+                clearInterval(scramble);
+                rollDigits(false);
+                setDigits('493 118');
+                setTimeout(function () {
+                  if (mockCopy) { mockCopy.classList.remove('copy-pulse'); void mockCopy.offsetWidth; mockCopy.classList.add('copy-pulse'); }
+                  if (mockToast) mockToast.classList.add('show');
+                  setTimeout(function () {
+                    if (mockToast) mockToast.classList.remove('show');
+                    setTimeout(otpCycle, 1600);
+                  }, 1900);
+                }, 350);
+              }
+            }, 120);
+          }, 650);
+        }, 1500);
+      }
+      setTimeout(otpCycle, 2600);
+
+      /* ============================== FAQ accordion (single open) ============================== */
+      var faqItems = [].slice.call(doc.querySelectorAll('.faq-item'));
+      faqItems.forEach(function (item) {
+        var q = item.querySelector('.faq-q');
+        if (!q) return;
+        q.addEventListener('click', function () {
+          var isOpen = item.getAttribute('data-open') === 'true';
+          faqItems.forEach(function (other) {
+            other.setAttribute('data-open', 'false');
+            var ob = other.querySelector('.faq-q');
+            if (ob) ob.setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.setAttribute('data-open', 'true');
+            q.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      /* ============================== launch → site shell shows the app ============================== */
+      function launch() {
+        try {
+          if (window.self !== window.top) { window.parent.postMessage({ type: 'HI_TEMPMAIL_LAUNCH' }, '*'); return; }
+        } catch (_) { /* standalone: no parent window */ }
+        window.location.href = '/ar-tempmail.html';
+      }
+      [].slice.call(doc.querySelectorAll('[data-launch]')).forEach(function (el) {
+        el.addEventListener('click', launch);
+      });
+    })();
   </script>
 </body>
 </html>

@@ -1,24 +1,24 @@
 'use client';
 
 /* ---------------------------------------------------------------------------
- * AR TEMPMAIL — home route.
+ * Hi Temp Mail — home route.
  * Flow: / renders the intro/landing experience first; every "Open app" action
- * on the landing page posts AR_TEMPMAIL_LAUNCH and this shell crossfades to
+ * on the landing page posts HI_TEMPMAIL_LAUNCH and this shell crossfades to
  * the app iframe. The app stays mounted afterwards (hidden, still polling) so
  * the generated mailbox survives a round-trip; the app's brand button posts
- * AR_TEMPMAIL_HOME to come back to the landing page.
+ * HI_TEMPMAIL_HOME to come back to the landing page.
  * JSON-LD + <noscript> content below remains crawlable by search engines and
  * AI/LLM agents, since iframe content is not indexed under this URL.
  * ------------------------------------------------------------------------- */
 
 import { useEffect, useState } from "react";
 
-const SITE_NAME = "AR TEMPMAIL";
+const SITE_NAME = "Hi Temp Mail";
 const SITE_DESCRIPTION =
   "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.";
 
-const LAUNCH_MSG = "AR_TEMPMAIL_LAUNCH";
-const HOME_MSG = "AR_TEMPMAIL_HOME";
+const LAUNCH_MSG = "HI_TEMPMAIL_LAUNCH";
+const HOME_MSG = "HI_TEMPMAIL_HOME";
 
 const FAQ = [
   {
@@ -42,7 +42,7 @@ const FAQ = [
     a: "No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There are no analytics, ads or tracking.",
   },
   {
-    q: "Is AR TEMPMAIL free?",
+    q: "Is Hi Temp Mail free?",
     a: "Yes — every feature is free. No account, no subscription, no ads.",
   },
   {
@@ -61,14 +61,14 @@ const jsonLd = {
     {
       "@type": "WebSite",
       name: SITE_NAME,
-      url: "https://artempmail.app/",
+      url: "https://hitempmail.app/",
       description: SITE_DESCRIPTION,
       inLanguage: "en",
     },
     {
       "@type": "WebApplication",
       name: SITE_NAME,
-      url: "https://artempmail.app/",
+      url: "https://hitempmail.app/",
       applicationCategory: "UtilitiesApplication",
       operatingSystem: "Any (web browser)",
       browserRequirements: "Requires JavaScript",
@@ -88,14 +88,14 @@ const jsonLd = {
     },
     {
       "@type": "HowTo",
-      name: "How to get a temporary email address with AR TEMPMAIL",
+      name: "How to get a temporary email address with Hi Temp Mail",
       totalTime: "PT1M",
       step: [
         {
           "@type": "HowToStep",
           position: 1,
           name: "Open the app",
-          text: "Open AR TEMPMAIL — a secure disposable mailbox is generated instantly, no signup required.",
+          text: "Open Hi Temp Mail — a secure disposable mailbox is generated instantly, no signup required.",
         },
         {
           "@type": "HowToStep",
@@ -204,7 +204,7 @@ export default function Home() {
       {/* Landing / intro — always mounted so scroll position and theme persist */}
       <iframe
         src="/landing.html"
-        title="AR TEMPMAIL — Intro & overview"
+        title="Hi Temp Mail — Intro & overview"
         aria-hidden={appActive}
         inert={appActive}
         className={`absolute inset-0 h-full w-full border-0 ${
@@ -216,7 +216,7 @@ export default function Home() {
       {appMounted && (
         <iframe
           src="/ar-tempmail.html"
-          title="AR TEMPMAIL — Free Temporary Email, Instant OTPs"
+          title="Hi Temp Mail — Free Temporary Email, Instant OTPs"
           aria-hidden={!appActive}
           inert={!appActive}
           allow="clipboard-write"

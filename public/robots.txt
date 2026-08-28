@@ -1,4 +1,4 @@
-# AR TEMPMAIL — robots.txt
+# Hi Temp Mail — robots.txt
 # Search engines and AI/LLM agents are welcome.
 
 User-agent: *
@@ -42,4 +42,4 @@ Allow: /
 User-agent: Amazonbot
 Allow: /
 
-Sitemap: https://artempmail.app/sitemap.xml
+Sitemap: https://hitempmail.app/sitemap.xml

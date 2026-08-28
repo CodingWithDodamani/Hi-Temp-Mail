@@ -1,14 +1,14 @@
-# AR TEMPMAIL
+# Hi Temp Mail
 
-> AR TEMPMAIL is a free, privacy-first disposable email web app. It generates a working temporary email address instantly (no login, no signup), auto-detects OTP/verification codes as one-tap copyable chips, and lets users save mailboxes locally (browser localStorage) and restore them days later to keep receiving mail. Receive-only; mailboxes are provisioned by the Mail.tm API via a technical relay. No analytics, no ads, no tracking; the app has no server-side database.
+> Hi Temp Mail is a free, privacy-first disposable email web app. It generates a working temporary email address instantly (no login, no signup), auto-detects OTP/verification codes as one-tap copyable chips, and lets users save mailboxes locally (browser localStorage) and restore them days later to keep receiving mail. Receive-only; mailboxes are provisioned by the Mail.tm API via a technical relay. No analytics, no ads, no tracking; the app has no server-side database.
 
-Primary app: https://artempmail.app/ (open the app; it runs entirely client-side)
+Primary app: https://hitempmail.app/ (open the app; it runs entirely client-side)
 
 ## Pages
-- [About](https://artempmail.app/about.html): what the app is, who it is for, how it works, features, technology.
-- [FAQ](https://artempmail.app/faq.html): 10 answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
-- [Privacy Policy](https://artempmail.app/privacy.html): what is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel blocking.
-- [Disclaimer](https://artempmail.app/disclaimer.html): as-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
+- [About](https://hitempmail.app/about.html): what the app is, who it is for, how it works, features, technology.
+- [FAQ](https://hitempmail.app/faq.html): 10 answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
+- [Privacy Policy](https://hitempmail.app/privacy.html): what is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel blocking.
+- [Disclaimer](https://hitempmail.app/disclaimer.html): as-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
 
 ## Key facts
 - Cost: free, no account required.
@@ -19,6 +19,6 @@ Primary app: https://artempmail.app/ (open the app; it runs entirely client-side
 - Not affiliated with Mail.tm; receive-only; not for sensitive accounts.
 
 ## For machines
-- Full documentation in one file: https://artempmail.app/llms-full.txt
-- Sitemap: https://artempmail.app/sitemap.xml
+- Full documentation in one file: https://hitempmail.app/llms-full.txt
+- Sitemap: https://hitempmail.app/sitemap.xml
 - Last updated: 2026-08-28
