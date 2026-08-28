@@ -21,3 +21,24 @@ Stage Summary:
 - Preview: `/` renders the app full-screen through an iframe; relay route `/api/mailtm/[...path]/route.ts` makes it fully functional despite Mail.tm's CORS lockdown.
 - Key decisions: violet/fuchsia gradient design system (no blue/indigo); direct-API-first with transparent relay fallback; 429 backoff retry; local (simulated) message deletion per spec; new mailbox generated on each app start per spec.
 - Known limits: receiving a real inbound email could not be exercised from the sandbox (no outbound SMTP); the pipeline was verified through the real /messages list endpoint plus mock-rendered UI. Standalone file:// usage requires any reachable Mail.tm relay (CORS is server-side and cannot be bypassed client-side).
+
+---
+Task ID: 2
+Agent: Z.ai Code (orchestrator)
+Task: v2 upgrade — "next level" modern UI/UX + Saved Mailboxes feature (save a temp email, return later — even next day — restore it and keep receiving OTP/verification emails), plus extra functionality across the app.
+
+Work Log:
+- Rewrote index.html (v2.0, ~1700 lines) around a 3-tab mobile-app shell: Mail / Saved / Settings with fixed bottom navigation (safe-area aware, active fill icons, live badges for unread mail and saved count) and animated screen transitions.
+- Saved Mailboxes: bookmark toggle on the identity card persists {id, address, password, savedAt, lastUsedAt} to localStorage (ar_saved_mails). Saved screen lists cards with avatar, relative timestamps, copy/remove actions and a gradient "Open mailbox" button that re-logins via POST /token and hot-swaps the active session, then jumps to the inbox. "Active now" state shown for the current address; double-tap "Clear all" in Settings with armed confirmation.
+- Session restore: active mailbox persisted (ar_active_session); on load the app re-logins with stored credentials (fresh token) so reloading keeps the same address. "Remember session" setting toggles this (verified OFF → reload generates fresh, ON → reload restores).
+- OTP auto-detection: keyword-proximity regex extracts 4-8 digit codes from subject/intro/text/html. Renders dashed copy-chips inside inbox items, a "VERIFICATION CODE DETECTED" banner with big code + Copy button in the detail view, and a tap-to-copy chip inside the new-mail toast. Optional "Auto-copy OTP codes" setting copies the code the instant it arrives; "Vibrate on new mail" adds haptic feedback.
+- Settings screen: dark mode switch (mirrors header toggle), remember-session, auto-refresh interval segmented control (5/10/30s — applied live to the running poller), vibrate, auto-copy OTP, saved-count, double-tap clear-all, about footer.
+- Inbox upgrades: client-side search (sender/subject/preview/code) with dedicated no-match state; message deletion is now real (DELETE /messages/{id} with local fallback); opened messages marked seen server-side via PATCH (merge-patch+json); 401 handler now first tries silent token re-login before regenerating.
+- Share button (Web Share API with copy fallback), decorative background glows, splash ring pulse animation, per-screen enter animations.
+- Fixed during verification: theme switch was double-bound to rememberSession (removed stray bindSwitch); OTP chip nested button-inside-button invalid HTML (converted to span[role=button]); delete-message button now receives the message id up front so deletion works even if the body failed to load; restore now auto-switches to the Mail tab.
+- Browser-verified (agent-browser, mobile 390x844 + desktop 1280x800, light + dark): save → badge → Saved tab; reload → same mailbox restored; second mailbox save → restore switch; OTP chip + banner + copy; search incl. code search + no-match; settings toggles/interval persistence; clear-all double-tap; single-card removal; delete message; fresh-load on `/` (iframe) with new mailbox; zero console errors; lint clean; dev.log shows full token/accounts/messages pipeline.
+
+Stage Summary:
+- Deliverable remains the single self-contained /home/z/my-project/index.html (mirrored to public/ar-tempmail.html for the / preview via iframe; relay /api/mailtm unchanged).
+- Headline v2 features: Saved Mailboxes with day-later restore, session restore on reload, OTP auto-detection everywhere (list chip, detail banner, toast, auto-copy), search, share, settings, bottom-tab app shell.
+- Storage keys: ar_saved_mails, ar_active_session, ar_settings (+ existing theme). Default settings: autoRefresh 10s, vibrate ON, autoCopyOtp OFF, rememberSession ON.
