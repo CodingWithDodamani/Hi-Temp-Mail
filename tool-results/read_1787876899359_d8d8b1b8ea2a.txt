@@ -1,0 +1,472 @@
+     1→<!DOCTYPE html>
+     2→<html lang="en">
+     3→<head>
+     4→  <meta charset="UTF-8" />
+     5→  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+     6→  <meta name="description" content="AR TEMPMAIL — Instant disposable email with saved mailboxes and OTP auto-detection. No login, no signup, just privacy." />
+     7→  <meta name="theme-color" content="#7c3aed" />
+     8→  <title>AR TEMPMAIL — No Login, No Signup, Just Privacy</title>
+     9→
+    10→  <!-- Fonts -->
+    11→  <link rel="preconnect" href="https://fonts.googleapis.com" />
+    12→  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    13→  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    14→  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+    15→
+    16→  <!-- Tailwind CSS (CDN) -->
+    17→  <script src="https://cdn.tailwindcss.com"></script>
+    18→  <script>
+    19→    tailwind.config = {
+    20→      darkMode: 'class',
+    21→      theme: {
+    22→        extend: {
+    23→          fontFamily: {
+    24→            sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+    25→          },
+    26→        },
+    27→      },
+    28→    };
+    29→  </script>
+    30→
+    31→  <!-- Theme boot: apply saved preference before first paint (default: light) -->
+    32→  <script>
+    33→    try {
+    34→      if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    35→    } catch (e) { /* no-op */ }
+    36→  </script>
+    37→
+    38→  <style>
+    39→    /* ---------- Icon font ---------- */
+    40→    .material-symbols-outlined {
+    41→      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    42→      user-select: none;
+    43→    }
+    44→    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+    45→
+    46→    /* ---------- Utilities ---------- */
+    47→    .no-scrollbar::-webkit-scrollbar { display: none; }
+    48→    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    49→    html { scroll-behavior: smooth; }
+    50→    body { -webkit-tap-highlight-color: transparent; }
+    51→
+    52→    /* ---------- Splash screen ---------- */
+    53→    @keyframes progressFill { from { width: 0%; } to { width: 100%; } }
+    54→    .progress-fill { animation: progressFill 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+    55→    @keyframes splashFade { to { opacity: 0; visibility: hidden; } }
+    56→    .splash-hide { animation: splashFade .6s ease forwards; }
+    57→    @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+    58→    .pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+    59→    @keyframes ringPulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.8); opacity: 0; } }
+    60→    .splash-ring { animation: ringPulse 1.8s cubic-bezier(.2, .6, .4, 1) infinite; }
+    61→
+    62→    /* ---------- App entrance & screens ---------- */
+    63→    #app { opacity: 0; transition: opacity .5s ease; }
+    64→    #app.ready { opacity: 1; }
+    65→    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    66→    #app.ready .fade-up { animation: fadeUp .45s cubic-bezier(.21, 1.02, .73, 1) both; }
+    67→    .screen-anim { animation: fadeUp .28s ease both; }
+    68→
+    69→    /* ---------- Toast ---------- */
+    70→    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 16px) scale(.95); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+    71→    @keyframes toastOut { from { opacity: 1; transform: translate(-50%, 0) scale(1); } to { opacity: 0; transform: translate(-50%, 12px) scale(.95); } }
+    72→    .toast-in { animation: toastIn .3s cubic-bezier(.21, 1.02, .73, 1) forwards; }
+    73→    .toast-out { animation: toastOut .3s ease forwards; }
+    74→
+    75→    /* ---------- Spinners ---------- */
+    76→    @keyframes spin360 { to { transform: rotate(360deg); } }
+    77→    .spinner {
+    78→      width: 1em; height: 1em;
+    79→      border: 2px solid currentColor; border-right-color: transparent;
+    80→      border-radius: 9999px; display: inline-block; vertical-align: -.125em;
+    81→      animation: spin360 .6s linear infinite;
+    82→    }
+    83→    .btn-spinner .material-symbols-outlined { display: none; }
+    84→    .refreshing .material-symbols-outlined { animation: spin360 1s linear infinite; }
+    85→
+    86→    /* ---------- Switch ---------- */
+    87→    .switch {
+    88→      position: relative; width: 46px; height: 26px; border-radius: 9999px;
+    89→      background: #d4d4d8; transition: background .2s ease; flex-shrink: 0; cursor: pointer;
+    90→    }
+    91→    .dark .switch { background: #3f3f46; }
+    92→    .switch[data-on="true"] { background: linear-gradient(to right, #8b5cf6, #d946ef); }
+    93→    .switch .knob {
+    94→      position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+    95→      border-radius: 9999px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / .3);
+    96→      transition: transform .2s cubic-bezier(.4, 0, .2, 1);
+    97→    }
+    98→    .switch[data-on="true"] .knob { transform: translateX(20px); }
+    99→
+   100→    /* ---------- Segmented control ---------- */
+   101→    .seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: #e4e4e7; }
+   102→    .dark .seg { background: #27272a; }
+   103→    .seg button {
+   104→      padding: 6px 14px; border-radius: 9px; font-size: 12px; font-weight: 600; color: #71717a;
+   105→      transition: all .15s ease;
+   106→    }
+   107→    .dark .seg button { color: #a1a1aa; }
+   108→    .seg button.active { background: #fff; color: #7c3aed; box-shadow: 0 1px 4px rgb(0 0 0 / .12); }
+   109→    .dark .seg button.active { background: #3f3f46; color: #d8b4fe; }
+   110→
+   111→    /* ---------- OTP chip ---------- */
+   112→    .otp-chip {
+   113→      display: inline-flex; align-items: center; gap: 4px;
+   114→      background: rgb(139 92 246 / .12); color: #7c3aed;
+   115→      border: 1px dashed rgb(139 92 246 / .45);
+   116→      border-radius: 8px; padding: 2px 8px;
+   117→      font-weight: 700; font-size: 12px; letter-spacing: .08em; font-variant-numeric: tabular-nums;
+   118→    }
+   119→    .dark .otp-chip { background: rgb(139 92 246 / .15); color: #d8b4fe; border-color: rgb(216 180 254 / .4); }
+   120→
+   121→    /* ---------- Rendered email body ---------- */
+   122→    .email-body { word-break: break-word; overflow-wrap: anywhere; }
+   123→    .email-body img, .email-body video { max-width: 100%; height: auto; border-radius: .5rem; }
+   124→    .email-body a { color: #7c3aed; text-decoration: underline; text-underline-offset: 2px; }
+   125→    .dark .email-body a { color: #c4b5fd; }
+   126→    .email-body p { margin: 0 0 .9em; }
+   127→    .email-body h1, .email-body h2, .email-body h3 { font-weight: 700; line-height: 1.3; margin: .5em 0 .45em; }
+   128→    .email-body h1 { font-size: 1.3em; } .email-body h2 { font-size: 1.18em; } .email-body h3 { font-size: 1.06em; }
+   129→    .email-body ul, .email-body ol { margin: 0 0 .9em 1.25em; }
+   130→    .email-body ul { list-style: disc; } .email-body ol { list-style: decimal; }
+   131→    .email-body li { margin-bottom: .3em; }
+   132→    .email-body hr { border: 0; border-top: 1px solid rgb(0 0 0 / .1); margin: 1em 0; }
+   133→    .dark .email-body hr { border-top-color: rgb(255 255 255 / .12); }
+   134→    .email-body blockquote { border-left: 3px solid rgb(124 58 237 / .4); padding-left: .8em; margin: 0 0 .9em; opacity: .8; }
+   135→    .email-body pre { background: rgb(0 0 0 / .05); padding: .8em; border-radius: .6em; overflow-x: auto; font-size: .85em; margin: 0 0 .9em; }
+   136→    .dark .email-body pre { background: rgb(255 255 255 / .08); }
+   137→    .email-body table { max-width: 100%; border-collapse: collapse; }
+   138→  </style>
+   139→</head>
+   140→
+   141→<body class="bg-zinc-100 font-sans text-zinc-900 antialiased selection:bg-violet-500/25 dark:bg-zinc-950 dark:text-zinc-100">
+   142→
+   143→  <!-- Decorative background glows -->
+   144→  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+   145→    <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-400/20 blur-3xl dark:bg-violet-700/15"></div>
+   146→    <div class="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-fuchsia-400/15 blur-3xl dark:bg-fuchsia-800/10"></div>
+   147→  </div>
+   148→
+   149→  <!-- ============================== SPLASH SCREEN ============================== -->
+   150→  <div id="splash" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 px-8 dark:from-violet-700 dark:via-purple-800 dark:to-fuchsia-800">
+   151→    <div class="relative flex h-24 w-24 items-center justify-center">
+   152→      <div class="splash-ring absolute inset-0 rounded-[2rem] bg-white/25"></div>
+   153→      <div class="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-white/15 shadow-2xl ring-1 ring-white/25 backdrop-blur">
+   154→        <span class="material-symbols-outlined icon-fill !text-[44px] text-white">mail_lock</span>
+   155→      </div>
+   156→    </div>
+   157→    <h1 class="mt-7 text-3xl font-bold tracking-wide text-white">AR TEMPMAIL</h1>
+   158→    <p class="mt-2 text-center text-sm font-medium text-white/80">No Login, No Signup, Just Privacy.</p>
+   159→    <div class="mt-9 h-1.5 w-56 overflow-hidden rounded-full bg-white/25">
+   160→      <div id="splashBar" class="progress-fill h-full rounded-full bg-white"></div>
+   161→    </div>
+   162→    <p class="pulse-soft mt-4 text-xs font-medium tracking-wide text-white/70">Preparing your secure mailbox…</p>
+   163→  </div>
+   164→
+   165→  <!-- ============================== APP ============================== -->
+   166→  <div id="app" class="flex min-h-screen flex-col">
+   167→
+   168→    <!-- Header -->
+   169→    <header class="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/80">
+   170→      <div class="mx-auto flex h-14 max-w-md items-center justify-between px-4">
+   171→        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
+   172→          <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
+   173→        </div>
+   174→        <h1 class="text-lg font-bold tracking-tight">
+   175→          AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
+   176→        </h1>
+   177→        <button id="themeToggle" type="button" aria-label="Toggle dark mode"
+   178→          class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
+   179→          <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
+   180→        </button>
+   181→      </div>
+   182→    </header>
+   183→
+   184→    <main class="w-full flex-1">
+   185→
+   186→      <!-- ============================ MAIL SCREEN ============================ -->
+   187→      <div id="mailScreen" class="mx-auto max-w-md px-4 pb-32 pt-5">
+   188→
+   189→        <!-- Quick actions -->
+   190→        <div class="grid grid-cols-2 gap-3">
+   191→          <button id="changeBtn" type="button"
+   192→            class="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg shadow-zinc-900/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:bg-zinc-800 active:scale-[.98] dark:bg-white dark:text-zinc-900 dark:shadow-black/30 dark:hover:bg-zinc-200">
+   193→            <span class="material-symbols-outlined text-[20px]">autorenew</span> Change Mail
+   194→          </button>
+   195→          <button id="deleteBtn" type="button"
+   196→            class="flex h-12 items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 hover:bg-rose-100 active:scale-[.98] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   197→            <span class="material-symbols-outlined text-[20px]">delete</span> Delete Mail
+   198→          </button>
+   199→        </div>
+   200→
+   201→        <!-- Identity card -->
+   202→        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 60ms">
+   203→          <div class="flex items-center justify-between">
+   204→            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your temporary email</span>
+   205→            <span id="statusBadge" class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+   206→              <span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>ACTIVE
+   207→            </span>
+   208→          </div>
+   209→          <p id="emailAddress" class="mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
+   210→          <div class="mt-4 flex gap-2">
+   211→            <button id="copyBtn" type="button"
+   212→              class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:opacity-95 active:scale-[.98]">
+   213→              <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy
+   214→            </button>
+   215→            <button id="saveBtn" type="button" aria-pressed="false" aria-label="Save this mailbox"
+   216→              class="flex h-11 w-11 items-center justify-center rounded-xl border border-zinc-200 text-zinc-500 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   217→              <span id="saveIcon" class="material-symbols-outlined text-[22px]">bookmark</span>
+   218→            </button>
+   219→            <button id="shareBtn" type="button" aria-label="Share this address"
+   220→              class="flex h-11 w-11 items-center justify-center rounded-xl border border-zinc-200 text-zinc-500 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   221→              <span class="material-symbols-outlined text-[22px]">share</span>
+   222→            </button>
+   223→          </div>
+   224→          <p class="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
+   225→            <span class="material-symbols-outlined !text-[14px]">bookmark_added</span>
+   226→            Save it to keep using this address later — OTPs keep arriving in the Saved tab.
+   227→          </p>
+   228→        </section>
+   229→
+   230→        <!-- Timer card -->
+   231→        <section class="fade-up mt-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900" style="animation-delay: 120ms">
+   232→          <div class="flex items-center justify-between gap-3">
+   233→            <div class="flex items-center gap-3">
+   234→              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 dark:text-amber-400">
+   235→                <span class="material-symbols-outlined">timer</span>
+   236→              </div>
+   237→              <div>
+   238→                <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Mail lifetime</p>
+   239→                <p id="timerText" class="mt-0.5 text-2xl font-bold leading-none tabular-nums">10:00</p>
+   240→              </div>
+   241→            </div>
+   242→            <button id="extendBtn" type="button"
+   243→              class="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-zinc-200 px-4 text-sm font-semibold text-zinc-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:border-violet-300 hover:text-violet-600 active:scale-[.98] dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   244→              <span class="material-symbols-outlined text-[18px]">more_time</span> Extend
+   245→            </button>
+   246→          </div>
+   247→          <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+   248→            <div id="timerBar" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-1000 ease-linear" style="width: 100%"></div>
+   249→          </div>
+   250→        </section>
+   251→
+   252→        <!-- Inbox -->
+   253→        <section class="fade-up mt-6" style="animation-delay: 180ms">
+   254→          <div class="mb-3 flex items-center justify-between">
+   255→            <div class="flex items-center gap-2">
+   256→              <h2 class="text-base font-bold">Inbox</h2>
+   257→              <span id="inboxCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
+   258→            </div>
+   259→            <button id="refreshBtn" type="button" aria-label="Refresh inbox"
+   260→              class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   261→              <span class="material-symbols-outlined text-[20px]">refresh</span>
+   262→              <span class="sr-only">Refresh</span>
+   263→            </button>
+   264→          </div>
+   265→
+   266→          <!-- Search -->
+   267→          <div class="relative mb-3">
+   268→            <span class="material-symbols-outlined pointer-events-none absolute left-3.5 top-1/2 !text-[20px] text-zinc-400 -translate-y-1/2">search</span>
+   269→            <input id="inboxSearch" type="search" placeholder="Search sender, subject or preview…" autocomplete="off"
+   270→              class="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-sm font-medium placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder:text-zinc-500" />
+   271→          </div>
+   272→
+   273→          <div id="inboxList" class="max-h-96 space-y-2 overflow-y-auto no-scrollbar pr-0.5" aria-live="polite"></div>
+   274→        </section>
+   275→      </div>
+   276→
+   277→      <!-- ============================ SAVED SCREEN ============================ -->
+   278→      <div id="savedScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-5">
+   279→        <div class="mb-4 flex items-center justify-between">
+   280→          <div class="flex items-center gap-2">
+   281→            <h2 class="text-lg font-bold">Saved Mailboxes</h2>
+   282→            <span id="savedHeaderCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
+   283→          </div>
+   284→        </div>
+   285→
+   286→        <div class="mb-4 flex items-start gap-3 rounded-2xl border border-violet-200/70 bg-gradient-to-br from-violet-50 to-fuchsia-50 p-4 dark:border-violet-500/20 dark:from-violet-500/10 dark:to-fuchsia-500/10">
+   287→          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 dark:text-violet-400">
+   288→            <span class="material-symbols-outlined text-[20px]">bolt</span>
+   289→          </div>
+   290→          <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+   291→            <span class="font-bold text-zinc-800 dark:text-zinc-100">Keep an address for later.</span>
+   292→            Saved mailboxes stay alive — sign up anywhere, come back the same day (or days later), tap <span class="font-semibold">Open</span>, and OTP or verification emails land right here.
+   293→          </p>
+   294→        </div>
+   295→
+   296→        <div id="savedList" class="space-y-2" aria-live="polite"></div>
+   297→      </div>
+   298→
+   299→      <!-- ============================ SETTINGS SCREEN ============================ -->
+   300→      <div id="settingsScreen" class="mx-auto hidden max-w-md space-y-4 px-4 pb-32 pt-5">
+   301→        <h2 class="mb-1 text-lg font-bold">Settings</h2>
+   302→
+   303→        <!-- Appearance -->
+   304→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   305→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Appearance</p>
+   306→          <div class="flex items-center justify-between gap-3 p-4">
+   307→            <div class="flex items-center gap-3">
+   308→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   309→                <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+   310→              </div>
+   311→              <div>
+   312→                <p class="text-sm font-semibold">Dark mode</p>
+   313→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Easy on the eyes at night</p>
+   314→              </div>
+   315→            </div>
+   316→            <button id="themeSwitch" class="switch" role="switch" aria-checked="false" aria-label="Toggle dark mode"><span class="knob"></span></button>
+   317→          </div>
+   318→        </section>
+   319→
+   320→        <!-- Mailbox -->
+   321→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   322→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Mailbox</p>
+   323→          <div class="flex items-center justify-between gap-3 p-4">
+   324→            <div class="flex items-center gap-3">
+   325→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   326→                <span class="material-symbols-outlined text-[20px]">history</span>
+   327→              </div>
+   328→              <div>
+   329→                <p class="text-sm font-semibold">Remember session</p>
+   330→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Restore current mailbox on reload</p>
+   331→              </div>
+   332→            </div>
+   333→            <button id="rememberSwitch" class="switch" role="switch" aria-checked="false" aria-label="Remember session"><span class="knob"></span></button>
+   334→          </div>
+   335→          <div class="flex items-center justify-between gap-3 p-4 pt-0 sm:pt-0">
+   336→            <div class="flex items-center gap-3">
+   337→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   338→                <span class="material-symbols-outlined text-[20px]">refresh</span>
+   339→              </div>
+   340→              <p class="text-sm font-semibold">Auto-refresh</p>
+   341→            </div>
+   342→            <div id="intervalSeg" class="seg" role="group" aria-label="Auto refresh interval">
+   343→              <button type="button" data-val="5">5s</button>
+   344→              <button type="button" data-val="10" class="active">10s</button>
+   345→              <button type="button" data-val="30">30s</button>
+   346→            </div>
+   347→          </div>
+   348→        </section>
+   349→
+   350→        <!-- Notifications -->
+   351→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   352→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Notifications</p>
+   353→          <div class="flex items-center justify-between gap-3 p-4">
+   354→            <div class="flex items-center gap-3">
+   355→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   356→                <span class="material-symbols-outlined text-[20px]">vibration</span>
+   357→              </div>
+   358→              <div>
+   359→                <p class="text-sm font-semibold">Vibrate on new mail</p>
+   360→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Haptic pulse when email arrives</p>
+   361→              </div>
+   362→            </div>
+   363→            <button id="vibrateSwitch" class="switch" role="switch" aria-checked="false" aria-label="Vibrate on new mail"><span class="knob"></span></button>
+   364→          </div>
+   365→          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+   366→            <div class="flex items-center gap-3">
+   367→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   368→                <span class="material-symbols-outlined text-[20px]">key</span>
+   369→              </div>
+   370→              <div>
+   371→                <p class="text-sm font-semibold">Auto-copy OTP codes</p>
+   372→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Copy the code as soon as it lands</p>
+   373→              </div>
+   374→            </div>
+   375→            <button id="autoCopySwitch" class="switch" role="switch" aria-checked="false" aria-label="Auto copy OTP codes"><span class="knob"></span></button>
+   376→          </div>
+   377→        </section>
+   378→
+   379→        <!-- Data -->
+   380→        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   381→          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Data</p>
+   382→          <div class="flex items-center justify-between gap-3 p-4">
+   383→            <div class="flex items-center gap-3">
+   384→              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+   385→                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+   386→              </div>
+   387→              <div>
+   388→                <p class="text-sm font-semibold">Saved mailboxes</p>
+   389→                <p class="text-[11px] text-zinc-400 dark:text-zinc-500"><span id="savedTotal">0</span> stored on this device</p>
+   390→              </div>
+   391→            </div>
+   392→            <button id="clearSavedBtn" type="button"
+   393→              class="h-10 shrink-0 rounded-xl border border-rose-200 bg-rose-50 px-4 text-xs font-bold text-rose-600 transition hover:bg-rose-100 active:scale-95 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   394→              Clear all
+   395→            </button>
+   396→          </div>
+   397→        </section>
+   398→
+   399→        <!-- About -->
+   400→        <p class="flex items-center justify-center gap-1.5 pt-2 text-center text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
+   401→          <span class="material-symbols-outlined !text-[13px]">lock</span>
+   402→          AR TEMPMAIL v2.0 · Private by design · Powered by Mail.tm
+   403→        </p>
+   404→      </div>
+   405→
+   406→      <!-- ============================ DETAIL SCREEN ============================ -->
+   407→      <div id="detailScreen" class="mx-auto hidden max-w-md px-4 pb-32 pt-4">
+   408→        <button id="backBtn" type="button"
+   409→          class="mb-4 flex h-10 items-center gap-1.5 rounded-xl border border-zinc-200 bg-white pl-2.5 pr-4 text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+   410→          <span class="material-symbols-outlined text-[20px]">arrow_back</span> Inbox
+   411→        </button>
+   412→
+   413→        <article class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+   414→          <div class="border-b border-zinc-100 p-5 dark:border-zinc-800">
+   415→            <h2 id="detailSubject" class="text-lg font-bold leading-snug">…</h2>
+   416→            <div class="mt-4 flex items-center gap-3">
+   417→              <div id="detailAvatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-lg font-bold uppercase text-white shadow-md shadow-violet-500/20">·</div>
+   418→              <div class="min-w-0 flex-1">
+   419→                <p id="detailFromName" class="truncate text-sm font-semibold">—</p>
+   420→                <p id="detailFromAddress" class="truncate text-xs text-zinc-500 dark:text-zinc-400"></p>
+   421→              </div>
+   422→              <div class="shrink-0 text-right">
+   423→                <p id="detailTime" class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400"></p>
+   424→                <p class="mt-0.5 flex items-center justify-end gap-1 text-[10px] text-zinc-400 dark:text-zinc-500">
+   425→                  <span class="material-symbols-outlined !text-[12px]">schedule</span> received
+   426→                </p>
+   427→              </div>
+   428→            </div>
+   429→          </div>
+   430→
+   431→          <!-- OTP banner -->
+   432→          <div id="detailOtp" class="hidden border-b border-zinc-100 bg-gradient-to-r from-violet-50 to-fuchsia-50 px-5 py-3.5 dark:border-zinc-800 dark:from-violet-500/10 dark:to-fuchsia-500/10">
+   433→            <div class="flex items-center justify-between gap-3">
+   434→              <div class="flex items-center gap-2.5">
+   435→                <span class="material-symbols-outlined !text-[20px] text-violet-500 dark:text-violet-400">key</span>
+   436→                <div>
+   437→                  <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Verification code detected</p>
+   438→                  <p id="detailOtpCode" class="text-xl font-bold tracking-[.25em] text-violet-600 tabular-nums dark:text-violet-300">······</p>
+   439→                </div>
+   440→              </div>
+   441→              <button id="detailOtpCopy" type="button"
+   442→                class="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-xs font-bold text-white shadow-md shadow-violet-500/25 transition hover:bg-violet-700 active:scale-95 dark:bg-violet-500 dark:hover:bg-violet-600">
+   443→                <span class="material-symbols-outlined !text-[15px]">content_copy</span> Copy
+   444→              </button>
+   445→            </div>
+   446→          </div>
+   447→
+   448→          <div id="detailBody" class="email-body p-5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"></div>
+   449→        </article>
+   450→
+   451→        <button id="deleteMsgBtn" type="button"
+   452→          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 active:scale-[.99] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+   453→          <span class="material-symbols-outlined text-[20px]">delete</span> Delete Message
+   454→        </button>
+   455→      </div>
+   456→    </main>
+   457→  </div>
+   458→
+   459→  <!-- ============================ BOTTOM NAVIGATION ============================ -->
+   460→  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-zinc-200/70 bg-white/90 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-950/90" aria-label="Main navigation">
+   461→    <div class="mx-auto grid max-w-md grid-cols-3 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1.5">
+   462→      <button type="button" data-tab="mail" aria-label="Mail tab"
+   463→        class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-violet-600 transition active:scale-95 dark:text-violet-400">
+   464→        <span class="material-symbols-outlined icon-fill text-[24px]">mail</span>
+   465→        <span class="text-[10px] font-bold">Mail</span>
+   466→        <span id="navMailBadge" class="absolute right-[24%] top-0 hidden min-w-[16px] rounded-full bg-rose-500 px-1 text-center text-[9px] font-bold leading-4 text-white shadow"></span>
+   467→      </button>
+   468→      <button type="button" data-tab="saved" aria-label="Saved tab"
+   469→        class="tab-btn relative flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-zinc-400 transition active:scale-95 dark:text-zinc-500">
+   470→        <span class="material-symbols-outlined text-[24px]">bookmark</span>
+
+[showing lines 1-470 of 1668; use offset=471 with limit to continue reading]

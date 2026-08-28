@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="AR TEMPMAIL — Instant disposable email with saved mailboxes and OTP auto-detection. No login, no signup, just privacy." />
-  <meta name="theme-color" content="#7c3aed" />
+  <meta id="metaThemeColor" name="theme-color" content="#7c3aed" />
   <title>AR TEMPMAIL — No Login, No Signup, Just Privacy</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%23d946ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z' fill='%23fff' opacity='.96'/%3E%3Cpath d='M14 24l18 12 18-12' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' opacity='.96'/%3E%3C/svg%3E" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -135,6 +136,28 @@
     .email-body pre { background: rgb(0 0 0 / .05); padding: .8em; border-radius: .6em; overflow-x: auto; font-size: .85em; margin: 0 0 .9em; }
     .dark .email-body pre { background: rgb(255 255 255 / .08); }
     .email-body table { max-width: 100%; border-collapse: collapse; }
+
+    /* ---------- Privacy blur (Settings → Privacy) ---------- */
+    .blur-target { transition: filter .18s ease; }
+    body.privacy-blur:not(.revealed) .blur-target { filter: blur(7px); }
+
+    /* ---------- Confirm / import sheets ---------- */
+    @keyframes sheetPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+    .sheet-pop { animation: sheetPop .22s cubic-bezier(.21, 1.02, .73, 1) both; }
+
+    /* ---------- Attachment chip ---------- */
+    .att-chip { transition: border-color .15s ease, background .15s ease; }
+    .att-chip:hover { border-color: rgb(139 92 246 / .5); }
+
+    /* ---------- Reduced motion (accessibility) ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 
@@ -186,6 +209,19 @@
       <!-- ============================ MAIL SCREEN ============================ -->
       <div id="mailScreen" class="mx-auto max-w-md px-4 pb-32 pt-5">
 
+        <!-- One-time onboarding tip -->
+        <div id="tipBanner" class="hidden mb-4 flex items-start gap-3 rounded-2xl border border-amber-200/70 bg-amber-50 p-4 dark:border-amber-500/20 dark:bg-amber-500/10">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-500 dark:text-amber-400">
+            <span class="material-symbols-outlined text-[20px]">lightbulb</span>
+          </div>
+          <p class="flex-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+            <span class="font-bold text-zinc-800 dark:text-zinc-100">Tip:</span> tap the <span class="material-symbols-outlined !text-[13px] align-[-2px]">bookmark</span> bookmark icon under your address to keep this mailbox forever — OTPs keep arriving even days later.
+          </p>
+          <button id="tipDismiss" type="button" aria-label="Dismiss tip" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-amber-500/10 hover:text-zinc-600 dark:hover:text-zinc-300">
+            <span class="material-symbols-outlined !text-[16px]">close</span>
+          </button>
+        </div>
+
         <!-- Quick actions -->
         <div class="grid grid-cols-2 gap-3">
           <button id="changeBtn" type="button"
@@ -206,7 +242,7 @@
               <span class="pulse-soft h-1.5 w-1.5 rounded-full bg-current"></span>ACTIVE
             </span>
           </div>
-          <p id="emailAddress" class="mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
+          <p id="emailAddress" class="blur-target mt-2.5 break-all text-lg font-bold leading-snug sm:text-xl">Generating secure mailbox…</p>
           <div class="mt-4 flex gap-2">
             <button id="copyBtn" type="button"
               class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 hover:opacity-95 active:scale-[.98]">
@@ -256,11 +292,30 @@
               <h2 class="text-base font-bold">Inbox</h2>
               <span id="inboxCount" class="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">0</span>
             </div>
-            <button id="refreshBtn" type="button" aria-label="Refresh inbox"
-              class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
-              <span class="material-symbols-outlined text-[20px]">refresh</span>
-              <span class="sr-only">Refresh</span>
-            </button>
+            <div class="flex items-center gap-2">
+              <button id="markAllReadBtn" type="button" aria-label="Mark all as read"
+                class="hidden h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-[11px] font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                <span class="material-symbols-outlined !text-[16px]">done_all</span> Read all
+              </button>
+              <button id="privacyEyeBtn" type="button" aria-label="Temporarily reveal private content"
+                class="hidden h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                <span id="privacyEyeIcon" class="material-symbols-outlined text-[20px]">visibility</span>
+                <span class="sr-only">Reveal</span>
+              </button>
+              <button id="refreshBtn" type="button" aria-label="Refresh inbox"
+                class="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+                <span class="material-symbols-outlined text-[20px]">refresh</span>
+                <span class="sr-only">Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pull-to-refresh indicator -->
+          <div id="ptrIndicator" class="overflow-hidden text-center text-xs font-semibold text-violet-500 dark:text-violet-400" style="height: 0" aria-hidden="true">
+            <span class="inline-flex items-center gap-1.5 py-1">
+              <span id="ptrIcon" class="material-symbols-outlined !text-[16px] transition-transform">arrow_downward</span>
+              <span id="ptrText">Pull to refresh</span>
+            </span>
           </div>
 
           <!-- Search -->
@@ -365,6 +420,18 @@
           <div class="flex items-center justify-between gap-3 p-4 pt-0">
             <div class="flex items-center gap-3">
               <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                <span class="material-symbols-outlined text-[20px]">volume_up</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold">Sound on new mail</p>
+                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Play a short chime when email arrives</p>
+              </div>
+            </div>
+            <button id="soundSwitch" class="switch" role="switch" aria-checked="false" aria-label="Sound on new mail"><span class="knob"></span></button>
+          </div>
+          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+            <div class="flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
                 <span class="material-symbols-outlined text-[20px]">key</span>
               </div>
               <div>
@@ -373,6 +440,23 @@
               </div>
             </div>
             <button id="autoCopySwitch" class="switch" role="switch" aria-checked="false" aria-label="Auto copy OTP codes"><span class="knob"></span></button>
+          </div>
+        </section>
+
+        <!-- Privacy -->
+        <section class="rounded-2xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <p class="px-4 pt-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Privacy</p>
+          <div class="flex items-center justify-between gap-3 p-4">
+            <div class="flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                <span class="material-symbols-outlined text-[20px]">blur_on</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold">Privacy blur</p>
+                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Blur senders &amp; previews until revealed</p>
+              </div>
+            </div>
+            <button id="blurSwitch" class="switch" role="switch" aria-checked="false" aria-label="Privacy blur"><span class="knob"></span></button>
           </div>
         </section>
 
@@ -394,12 +478,44 @@
               Clear all
             </button>
           </div>
+          <div class="flex items-center justify-between gap-3 p-4 pt-0">
+            <div class="flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                <span class="material-symbols-outlined text-[20px]">sync_alt</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold">Backup &amp; restore</p>
+                <p class="text-[11px] text-zinc-400 dark:text-zinc-500">Move saved mailboxes to another device</p>
+              </div>
+            </div>
+            <div class="flex shrink-0 items-center gap-1.5">
+              <button id="exportSavedBtn" type="button" aria-label="Export backup to clipboard"
+                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Export</button>
+              <button id="importSavedBtn" type="button" aria-label="Import saved mailboxes"
+                class="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-bold text-zinc-600 transition hover:border-violet-300 hover:text-violet-600 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">Import</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Security -->
+        <section class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              <span class="material-symbols-outlined text-[20px]">verified_user</span>
+            </div>
+            <p class="text-sm font-semibold">Security &amp; privacy</p>
+          </div>
+          <ul class="mt-3 space-y-2 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Credentials and saved mailboxes never leave this device — there is no server account.</li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Email HTML is sanitized — scripts, frames and trackers never run.</li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 !text-[14px] text-emerald-500">check</span>Mailboxes live on Mail.tm only until you delete them. No analytics, no tracking.</li>
+          </ul>
         </section>
 
         <!-- About -->
         <p class="flex items-center justify-center gap-1.5 pt-2 text-center text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
           <span class="material-symbols-outlined !text-[13px]">lock</span>
-          AR TEMPMAIL v2.0 · Private by design · Powered by Mail.tm
+          AR TEMPMAIL v3.0 · Private by design · Powered by Mail.tm
         </p>
       </div>
 
@@ -445,11 +561,25 @@
             </div>
           </div>
 
+          <!-- Attachments -->
+          <div id="detailAttachments" class="hidden border-b border-zinc-100 px-5 py-3.5 dark:border-zinc-800">
+            <p class="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              <span class="material-symbols-outlined !text-[14px]">attach_file</span>
+              <span id="attachmentCount">Attachments</span>
+            </p>
+            <div id="attachmentList" class="space-y-2"></div>
+          </div>
+
           <div id="detailBody" class="email-body p-5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"></div>
         </article>
 
+        <button id="copyTextBtn" type="button"
+          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:border-violet-300 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-[.99] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-500/50 dark:hover:text-violet-400">
+          <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy text
+        </button>
+
         <button id="deleteMsgBtn" type="button"
-          class="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 active:scale-[.99] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+          class="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 active:scale-[.99] dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
           <span class="material-symbols-outlined text-[20px]">delete</span> Delete Message
         </button>
       </div>
@@ -479,6 +609,54 @@
     </div>
   </nav>
 
+  <!-- ============================ CONFIRM SHEET ============================ -->
+  <div id="confirmSheet" class="fixed inset-0 z-[95] hidden flex items-center justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div id="confirmBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+          <span class="material-symbols-outlined">warning</span>
+        </div>
+        <div class="min-w-0">
+          <h3 id="confirmTitle" class="text-base font-bold">Are you sure?</h3>
+          <p id="confirmMsg" class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400"></p>
+        </div>
+      </div>
+      <label id="confirmCheckWrap" class="mt-4 hidden cursor-pointer items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 py-3 text-xs font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300">
+        <input id="confirmCheck" type="checkbox" checked class="h-4 w-4 accent-violet-600" />
+        <span id="confirmCheckLabel"></span>
+      </label>
+      <div class="mt-5 flex gap-2">
+        <button id="confirmCancel" type="button"
+          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+        <button id="confirmOk" type="button"
+          class="h-11 flex-1 rounded-xl bg-rose-500 text-sm font-bold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600 active:scale-[.98]">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ IMPORT SHEET ============================ -->
+  <div id="importSheet" class="fixed inset-0 z-[95] hidden flex items-end justify-center p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="Import saved mailboxes">
+    <div id="importBackdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="sheet-pop relative w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold">Import saved mailboxes</h3>
+        <button id="importClose" type="button" aria-label="Close import" class="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300">
+          <span class="material-symbols-outlined !text-[18px]">close</span>
+        </button>
+      </div>
+      <p class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">Paste an AR TEMPMAIL backup below. It contains mailbox credentials — only import backups you trust.</p>
+      <textarea id="importText" rows="5" spellcheck="false" placeholder='{ "mailboxes": [ … ] }'
+        class="mt-3 w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50 p-3 font-mono text-[11px] leading-relaxed text-zinc-700 placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-200"></textarea>
+      <div class="mt-4 flex gap-2">
+        <button id="importCancel" type="button"
+          class="h-11 flex-1 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-[.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancel</button>
+        <button id="importApply" type="button"
+          class="h-11 flex-1 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition hover:opacity-95 active:scale-[.98]">Import</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" role="status" aria-live="polite"
     class="pointer-events-none fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-1/2 z-[90] hidden"></div>
@@ -487,11 +665,13 @@
     'use strict';
 
     /* ======================================================================
-       AR TEMPMAIL v2 — single-file temporary email app
+       AR TEMPMAIL v3 — single-file temporary email app
        API: https://api.mail.tm · Polling: configurable · Timer: 10 minutes
        New in v2: Saved Mailboxes (restore anytime), session restore on reload,
        OTP auto-detection + copy chips, search, share, bottom navigation,
        settings (auto-refresh interval, vibrate, auto-copy OTP, remember).
+       v3: attachments (view + download), confirm/undo safety, backup export/import,
+       sound chime, privacy blur, mark-all-read, pull-to-refresh, security hardening.
        ====================================================================== */
 
     const DIRECT_API = 'https://api.mail.tm'; // official Mail.tm API (per spec)
@@ -503,11 +683,14 @@
     const LS_SAVED = 'ar_saved_mails';
     const LS_SESSION = 'ar_active_session';
     const LS_SETTINGS = 'ar_settings';
+    const LS_TIP = 'ar_tip_v3_dismissed';
 
     const DEFAULT_SETTINGS = {
       autoRefresh: 10,       // seconds
       vibrate: true,
+      sound: true,           // short chime on new mail (WebAudio, no assets)
       autoCopyOtp: false,
+      blur: false,           // privacy blur for senders/previews/address
       rememberSession: true,
     };
 
@@ -529,6 +712,9 @@
       prevTab: 'mail',
       searchQuery: '',
       currentOtp: null,
+      currentMsgText: null,
+      currentAttachments: [],
+      revealed: false,        // temporary privacy-blur reveal
     };
 
     /* ---------------- DOM ---------------- */
@@ -547,11 +733,27 @@
       clearSavedBtn: $('clearSavedBtn'), intervalSeg: $('intervalSeg'),
       themeSwitch: $('themeSwitch'), rememberSwitch: $('rememberSwitch'),
       vibrateSwitch: $('vibrateSwitch'), autoCopySwitch: $('autoCopySwitch'),
+      soundSwitch: $('soundSwitch'), blurSwitch: $('blurSwitch'),
+      markAllReadBtn: $('markAllReadBtn'), privacyEyeBtn: $('privacyEyeBtn'),
+      privacyEyeIcon: $('privacyEyeIcon'), ptrIndicator: $('ptrIndicator'),
+      ptrIcon: $('ptrIcon'), ptrText: $('ptrText'),
       detailScreen: $('detailScreen'), backBtn: $('backBtn'),
       detailSubject: $('detailSubject'), detailAvatar: $('detailAvatar'),
       detailFromName: $('detailFromName'), detailFromAddress: $('detailFromAddress'),
       detailTime: $('detailTime'), detailBody: $('detailBody'), deleteMsgBtn: $('deleteMsgBtn'),
       detailOtp: $('detailOtp'), detailOtpCode: $('detailOtpCode'), detailOtpCopy: $('detailOtpCopy'),
+      detailAttachments: $('detailAttachments'), attachmentList: $('attachmentList'),
+      attachmentCount: $('attachmentCount'), copyTextBtn: $('copyTextBtn'),
+      confirmSheet: $('confirmSheet'), confirmBackdrop: $('confirmBackdrop'),
+      confirmTitle: $('confirmTitle'), confirmMsg: $('confirmMsg'),
+      confirmCheckWrap: $('confirmCheckWrap'), confirmCheck: $('confirmCheck'),
+      confirmCheckLabel: $('confirmCheckLabel'), confirmCancel: $('confirmCancel'), confirmOk: $('confirmOk'),
+      importSheet: $('importSheet'), importBackdrop: $('importBackdrop'),
+      importText: $('importText'), importCancel: $('importCancel'),
+      importApply: $('importApply'), importClose: $('importClose'),
+      exportSavedBtn: $('exportSavedBtn'), importSavedBtn: $('importSavedBtn'),
+      tipBanner: $('tipBanner'), tipDismiss: $('tipDismiss'),
+      metaThemeColor: $('metaThemeColor'),
       navMailBadge: $('navMailBadge'), navSavedBadge: $('navSavedBadge'),
       toast: $('toast'),
     };
@@ -618,25 +820,42 @@
       return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
+    function formatBytes(bytes) {
+      const n = Number(bytes);
+      if (!Number.isFinite(n) || n < 0) return '';
+      if (n < 1024) return n + ' B';
+      const kb = n / 1024;
+      if (kb < 1024) return kb.toFixed(kb < 10 ? 1 : 0) + ' KB';
+      const mb = kb / 1024;
+      if (mb < 1024) return mb.toFixed(mb < 10 ? 1 : 0) + ' MB';
+      return (mb / 1024).toFixed(1) + ' GB';
+    }
+
     function randString(len) {
       const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
       let out = '';
-      if (globalThis.crypto && crypto.getRandomValues) {
-        const bytes = new Uint8Array(len);
-        crypto.getRandomValues(bytes);
-        for (let i = 0; i < len; i++) out += chars[bytes[i] % chars.length];
-      } else {
-        for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
-      }
+      for (let i = 0; i < len; i++) out += pickRandom(chars);
       return out;
+    }
+
+    /** Cryptographically-strong character picker (falls back to Math.random). */
+    function pickRandom(chars) {
+      if (globalThis.crypto && crypto.getRandomValues) {
+        // Rejection sampling keeps the distribution uniform for any charset size
+        const limit = Math.floor(256 / chars.length) * chars.length;
+        const buf = new Uint8Array(1);
+        do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
+        return chars[buf[0] % chars.length];
+      }
+      return chars[Math.floor(Math.random() * chars.length)];
     }
 
     function randomLocalPart() {
       const letters = 'abcdefghijklmnopqrstuvwxyz';
       const alnum = letters + '0123456789';
-      let out = letters[Math.floor(Math.random() * letters.length)];
+      let out = pickRandom(letters);
       const n = 7 + Math.floor(Math.random() * 4);
-      for (let i = 0; i < n; i++) out += alnum[Math.floor(Math.random() * alnum.length)];
+      for (let i = 0; i < n; i++) out += pickRandom(alnum);
       return out;
     }
 
@@ -645,6 +864,38 @@
         try { navigator.vibrate(pattern || 60); } catch (e) { /* no-op */ }
       }
     }
+
+    /* ---------------- Sound (WebAudio, no external assets) ---------------- */
+    let audioCtx = null;
+    function playChime() {
+      if (!state.settings.sound) return;
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') { audioCtx.resume().catch(() => {}); }
+        const t = audioCtx.currentTime;
+        const gain = audioCtx.createGain();
+        gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.07, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+        [[880, 0], [1318.5, 0.13]].forEach(([freq, offset]) => { // gentle two-tone
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, t + offset);
+          osc.connect(gain);
+          osc.start(t + offset);
+          osc.stop(t + offset + 0.35);
+        });
+      } catch (e) { /* audio unavailable — stay silent */ }
+    }
+
+    // Browsers require a user gesture before audio can play — unlock once.
+    document.addEventListener('pointerdown', function unlockAudio() {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      } catch (e) { /* no-op */ }
+    }, { once: true, capture: true });
 
     /** Heuristic OTP / verification-code extractor. */
     function extractOtp(...parts) {
@@ -734,6 +985,32 @@
       return data;
     }
 
+    /**
+     * Authenticated binary fetch (attachment downloads). Follows the same
+     * direct-API-first → relay fallback strategy as api(), but returns a Blob.
+     */
+    async function apiBlob(path) {
+      const attempt = async (base) => {
+        const headers = { Accept: '*/*' };
+        if (state.account && state.account.token) headers.Authorization = 'Bearer ' + state.account.token;
+        return fetchWithTimeout(base + path, { headers });
+      };
+      let res = null;
+      try {
+        res = await attempt(API_BASE);
+      } catch (err) {
+        if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+          console.warn('[AR TEMPMAIL] direct API unreachable for blob — switching to relay');
+          API_BASE = RELAY_API;
+          res = await attempt(API_BASE);
+        } else {
+          throw err;
+        }
+      }
+      if (!res.ok) throw new Error('Download failed (' + res.status + ').');
+      return res.blob();
+    }
+
     /* ---------------- Toast ---------------- */
     const TOAST_STYLE = {
       success: { icon: 'check_circle', ring: 'ring-emerald-400/30', iconColor: 'text-emerald-400' },
@@ -742,33 +1019,48 @@
       info:    { icon: 'info',        ring: 'ring-violet-400/30',   iconColor: 'text-violet-300' },
     };
     let toastTimer = null;
+    let pendingToastAction = null;
+
+    function dismissToastNow() {
+      clearTimeout(toastTimer);
+      el.toast.classList.remove('toast-in');
+      el.toast.classList.add('toast-out');
+      setTimeout(() => {
+        el.toast.classList.add('hidden');
+        el.toast.classList.remove('toast-out');
+      }, 320);
+    }
 
     function showToast(msg, type = 'info', opts = {}) {
       const meta = TOAST_STYLE[type] || TOAST_STYLE.info;
+      pendingToastAction = (opts.action && typeof opts.action.fn === 'function') ? opts.action.fn : null;
       const copyChip = opts.copyValue
         ? '<span data-copy="' + escapeHTML(opts.copyValue) + '" class="pointer-events-auto cursor-pointer rounded-md bg-white/10 px-1.5 py-0.5 font-bold tracking-[.15em] underline decoration-white/40 underline-offset-2">' + escapeHTML(opts.copyValue) + '</span>'
+        : '';
+      const actionBtn = opts.action
+        ? '<button type="button" data-toast-action class="pointer-events-auto shrink-0 rounded-lg bg-white/15 px-2.5 py-1 text-xs font-bold text-white transition hover:bg-white/25">' + escapeHTML(opts.action.label || 'View') + '</button>'
         : '';
       el.toast.innerHTML =
         '<div class="flex items-center gap-2.5 rounded-2xl bg-zinc-900/95 px-4 py-3 shadow-2xl ring-1 backdrop-blur dark:bg-zinc-800/95 dark:ring-white/10 ' + meta.ring + '">' +
           '<span class="material-symbols-outlined icon-fill !text-[20px] ' + meta.iconColor + '">' + meta.icon + '</span>' +
-          '<p class="max-w-[82vw] break-words text-sm font-medium text-white">' + escapeHTML(msg) + '</p>' + copyChip +
+          '<p class="max-w-[60vw] break-words text-sm font-medium text-white">' + escapeHTML(msg) + '</p>' + copyChip + actionBtn +
         '</div>';
       el.toast.classList.remove('hidden', 'toast-out');
       el.toast.classList.add('toast-in');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        el.toast.classList.remove('toast-in');
-        el.toast.classList.add('toast-out');
-        setTimeout(() => {
-          el.toast.classList.add('hidden');
-          el.toast.classList.remove('toast-out');
-        }, 320);
-      }, 3000);
+      toastTimer = setTimeout(dismissToastNow, opts.action ? 5000 : 3000); // actions need more reading time
     }
 
     el.toast.addEventListener('click', (e) => {
       const chip = e.target.closest('[data-copy]');
-      if (chip) copyText(chip.dataset.copy, 'Code ' + chip.dataset.copy + ' copied!');
+      if (chip) { copyText(chip.dataset.copy, 'Code ' + chip.dataset.copy + ' copied!'); return; }
+      const act = e.target.closest('[data-toast-action]');
+      if (act) {
+        const fn = pendingToastAction;
+        pendingToastAction = null;
+        dismissToastNow();
+        if (typeof fn === 'function') fn();
+      }
     });
 
     /* ---------------- Clipboard & share ---------------- */
@@ -843,6 +1135,7 @@
     function applyTheme(dark, announce = false) {
       document.documentElement.classList.toggle('dark', dark);
       el.themeIcon.textContent = dark ? 'light_mode' : 'dark_mode';
+      if (el.metaThemeColor) el.metaThemeColor.setAttribute('content', dark ? '#09090b' : '#7c3aed');
       try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* no-op */ }
       updateSettingsUI();
       if (announce) showToast(dark ? 'Dark mode enabled' : 'Light mode enabled', 'info');
@@ -1036,12 +1329,28 @@
     }
 
     function removeSaved(address) {
-      state.saved = state.saved.filter((s) => s.address !== address);
+      const index = state.saved.findIndex((s) => s.address === address);
+      if (index === -1) return;
+      const removed = state.saved[index];
+      state.saved.splice(index, 1);
       persistSaved();
       renderSavedList();
       updateSaveBtn();
       updateBadges();
-      showToast('Removed from Saved', 'info');
+      // Reversible removal — offer a 5-second UNDO instead of a confirm dialog
+      showToast('Removed from Saved', 'info', {
+        action: {
+          label: 'Undo',
+          fn: () => {
+            state.saved.splice(Math.min(index, state.saved.length), 0, removed);
+            persistSaved();
+            renderSavedList();
+            updateSaveBtn();
+            updateBadges();
+            showToast('Restored to Saved', 'success');
+          },
+        },
+      });
     }
 
     function clearAllSaved() {
@@ -1082,7 +1391,7 @@
             '<div class="flex items-start gap-3">' +
               '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
               '<div class="min-w-0 flex-1">' +
-                '<p class="truncate text-sm font-bold">' + escapeHTML(s.address) + '</p>' +
+                '<p class="truncate text-sm font-bold blur-target">' + escapeHTML(s.address) + '</p>' +
                 '<p class="mt-0.5 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">Saved ' + formatDate(s.savedAt) + lastUsed + '</p>' +
                 (isActive ? '<span class="mt-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"><span class="material-symbols-outlined !text-[11px]">check_circle</span>ACTIVE NOW</span>' : '') +
               '</div>' +
@@ -1191,6 +1500,15 @@
 
     /* ---------------- Core: delete current account, then regenerate ---------------- */
     async function deleteMail() {
+      if (!state.account) { showToast('Generate a mailbox first.', 'warning'); return; }
+      const isSaved = isCurrentSaved();
+      const ok = await confirmDialog({
+        title: 'Delete this mailbox?',
+        message: '“' + state.account.address + '” will be permanently removed from Mail.tm, together with every message in it. A fresh mailbox is generated afterwards.' + (isSaved ? ' Its Saved entry is removed too.' : ''),
+        okText: 'Delete forever',
+      });
+      if (!ok) return;
+
       showSpinner(el.deleteBtn);
       const acc = state.account;
       if (acc) {
@@ -1206,6 +1524,45 @@
         clearActiveSession();
       }
       await getNewEmail(el.deleteBtn); // spinner is kept & cleared inside
+    }
+
+    /* ---------------- Confirm dialog (promise-based, accessible) ---------------- */
+    function confirmDialog({ title = 'Are you sure?', message = '', okText = 'Delete', check = null } = {}) {
+      return new Promise((resolve) => {
+        el.confirmTitle.textContent = title;
+        el.confirmMsg.textContent = message;
+        el.confirmOk.textContent = okText;
+        if (check) {
+          el.confirmCheckLabel.textContent = check.label;
+          el.confirmCheck.checked = !!check.defaultChecked;
+          el.confirmCheckWrap.classList.remove('hidden');
+          el.confirmCheckWrap.classList.add('flex');
+        } else {
+          el.confirmCheckWrap.classList.add('hidden');
+          el.confirmCheckWrap.classList.remove('flex');
+        }
+        el.confirmSheet.classList.remove('hidden');
+        el.confirmOk.focus();
+
+        const done = (result) => {
+          el.confirmSheet.classList.add('hidden');
+          el.confirmOk.removeEventListener('click', onOk);
+          el.confirmCancel.removeEventListener('click', onCancel);
+          el.confirmBackdrop.removeEventListener('click', onCancel);
+          document.removeEventListener('keydown', onKey);
+          resolve(result);
+        };
+        const onOk = () => {
+          if (check && el.confirmCheck.checked && typeof check.onConfirm === 'function') check.onConfirm();
+          done(true);
+        };
+        const onCancel = () => done(false);
+        const onKey = (e) => { if (e.key === 'Escape') onCancel(); };
+        el.confirmOk.addEventListener('click', onOk);
+        el.confirmCancel.addEventListener('click', onCancel);
+        el.confirmBackdrop.addEventListener('click', onCancel);
+        document.addEventListener('keydown', onKey);
+      });
     }
 
     /* ---------------- Session recovery (401 → re-login) ---------------- */
@@ -1242,6 +1599,7 @@
 
       const unread = all.filter((m) => !state.seenIds.has(m.id) && !m.seen).length;
       el.inboxCount.textContent = String(all.length);
+      el.markAllReadBtn.classList.toggle('hidden', unread === 0);
       updateBadges(unread);
 
       if (!all.length) {
@@ -1272,6 +1630,9 @@
         const intro = escapeHTML(m.intro || 'No preview available');
         const unreadMsg = !state.seenIds.has(m.id) && !m.seen;
         const code = extractOtp(m.subject, m.intro);
+        const attach = m.hasAttachments
+          ? '<span class="material-symbols-outlined !text-[13px] text-zinc-400 dark:text-zinc-500" role="img" aria-label="Has attachment">attach_file</span>'
+          : '';
         const delay = ' style="animation-delay:' + Math.min(i * 40, 200) + 'ms"';
         return (
           '<button type="button" data-id="' + escapeHTML(m.id) + '"' + delay +
@@ -1280,11 +1641,11 @@
               '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold uppercase text-white shadow-sm">' + initial + '</span>' +
               '<span class="min-w-0 flex-1">' +
                 '<span class="flex items-center justify-between gap-2">' +
-                  '<span class="truncate text-sm font-semibold ' + (unreadMsg ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-300') + '">' + escapeHTML(name) + '</span>' +
-                  '<span class="shrink-0 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">' + escapeHTML(formatDate(m.createdAt)) + '</span>' +
+                  '<span class="truncate text-sm font-semibold blur-target ' + (unreadMsg ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-300') + '">' + escapeHTML(name) + '</span>' +
+                  '<span class="flex shrink-0 items-center gap-1 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">' + attach + escapeHTML(formatDate(m.createdAt)) + '</span>' +
                 '</span>' +
-                '<span class="mt-0.5 block truncate text-[13px] font-medium ' + (unreadMsg ? 'text-violet-600 dark:text-violet-400' : 'text-zinc-500 dark:text-zinc-400') + '">' + subject + '</span>' +
-                '<span class="mt-0.5 block truncate text-xs text-zinc-400 dark:text-zinc-500">' + intro + '</span>' +
+                '<span class="mt-0.5 block truncate text-[13px] font-medium blur-target ' + (unreadMsg ? 'text-violet-600 dark:text-violet-400' : 'text-zinc-500 dark:text-zinc-400') + '">' + subject + '</span>' +
+                '<span class="mt-0.5 block truncate text-xs blur-target text-zinc-400 dark:text-zinc-500">' + intro + '</span>' +
                 (code ? otpChipHTML(code) : '') +
               '</span>' +
               (unreadMsg ? '<span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-violet-500"></span>' : '') +
@@ -1316,13 +1677,19 @@
 
         if (fresh.length) {
           vibrate([80, 40, 80]);
+          playChime();
           const withCode = fresh.find((m) => extractOtp(m.subject, m.intro));
           if (withCode) {
             const code = extractOtp(withCode.subject, withCode.intro);
-            showToast('New email — verification code:', 'success', { copyValue: code });
+            showToast('New email — verification code:', 'success', {
+              copyValue: code,
+              action: { label: 'View', fn: () => openEmail(withCode.id) },
+            });
             if (state.settings.autoCopyOtp) copyText(code, 'Code ' + code + ' copied!');
           } else {
-            showToast(fresh.length + ' new email' + (fresh.length > 1 ? 's' : '') + ' received!', 'success');
+            showToast(fresh.length + ' new email' + (fresh.length > 1 ? 's' : '') + ' received!', 'success', {
+              action: { label: 'View', fn: () => openEmail(fresh[0].id) },
+            });
           }
         }
       } catch (err) {
@@ -1342,6 +1709,203 @@
         el.refreshBtn.classList.remove('refreshing');
       }
     }
+
+    /* ---------------- Mark all as read ---------------- */
+    async function markAllRead() {
+      const unseen = state.messages.filter((m) => !state.hiddenIds.has(m.id) && !state.seenIds.has(m.id) && !m.seen);
+      if (!unseen.length) { showToast('All caught up!', 'info'); return; }
+      unseen.forEach((m) => state.seenIds.add(m.id));
+      renderInbox();
+      showToast(unseen.length + ' message' + (unseen.length > 1 ? 's' : '') + ' marked as read', 'success');
+      // Best-effort server sync so unread state survives a reload
+      await Promise.allSettled(unseen.map((m) =>
+        api('/messages/' + encodeURIComponent(m.id), {
+          method: 'PATCH', auth: true, body: { seen: true }, contentType: 'application/merge-patch+json',
+        }).catch(() => {})
+      ));
+    }
+
+    /* ---------------- Privacy blur ---------------- */
+    function applyBlur() {
+      document.body.classList.toggle('privacy-blur', !!state.settings.blur);
+      state.revealed = false;
+      document.body.classList.remove('revealed');
+      el.privacyEyeBtn.classList.toggle('hidden', !state.settings.blur);
+      el.privacyEyeIcon.textContent = 'visibility';
+      el.privacyEyeBtn.setAttribute('aria-label', 'Temporarily reveal private content');
+    }
+
+    function toggleReveal() {
+      if (!state.settings.blur) return;
+      state.revealed = !state.revealed;
+      document.body.classList.toggle('revealed', state.revealed);
+      el.privacyEyeIcon.textContent = state.revealed ? 'visibility_off' : 'visibility';
+      el.privacyEyeBtn.setAttribute('aria-label', state.revealed ? 'Hide private content again' : 'Temporarily reveal private content');
+      showToast(state.revealed ? 'Content revealed — tap again to hide' : 'Content hidden again', 'info');
+    }
+
+    /* ---------------- Attachments ---------------- */
+    function attachmentIcon(contentType) {
+      const ct = (contentType || '').toLowerCase();
+      if (ct.startsWith('image/')) return 'image';
+      if (ct.includes('pdf')) return 'picture_as_pdf';
+      if (ct.startsWith('audio/')) return 'music_note';
+      if (ct.startsWith('video/')) return 'movie';
+      if (ct.includes('zip') || ct.includes('compressed') || ct.includes('tar')) return 'folder_zip';
+      if (ct.startsWith('text/')) return 'description';
+      return 'draft';
+    }
+
+    function renderAttachments(msg) {
+      const list = Array.isArray(msg.attachments) ? msg.attachments : [];
+      state.currentAttachments = list;
+      el.detailAttachments.classList.toggle('hidden', !list.length);
+      el.attachmentCount.textContent = list.length ? 'Attachments (' + list.length + ')' : 'Attachments';
+      el.attachmentList.innerHTML = list.map((a, i) => {
+        const name = escapeHTML(a.filename || ('file-' + (i + 1)));
+        const size = a.size ? '<span class="font-medium">· ' + escapeHTML(formatBytes(a.size)) + '</span>' : '';
+        return (
+          '<div class="att-chip flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50 p-2.5 dark:border-zinc-700 dark:bg-zinc-800/60">' +
+            '<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400">' +
+              '<span class="material-symbols-outlined !text-[20px]">' + attachmentIcon(a.contentType) + '</span>' +
+            '</span>' +
+            '<span class="min-w-0 flex-1">' +
+              '<span class="block truncate text-xs font-bold">' + name + '</span>' +
+              '<span class="block truncate text-[10px] text-zinc-400 dark:text-zinc-500">' + escapeHTML(a.contentType || 'file') + ' ' + size + '</span>' +
+            '</span>' +
+            '<button type="button" data-att-index="' + i + '" aria-label="Download ' + name + '"' +
+              ' class="flex h-9 shrink-0 items-center gap-1 rounded-lg bg-zinc-900 px-2.5 text-[11px] font-bold text-white transition hover:bg-zinc-700 active:scale-95 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">' +
+              '<span class="material-symbols-outlined !text-[15px]">download</span> Get</button>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    async function downloadAttachment(index) {
+      const att = state.currentAttachments[index];
+      if (!att || !att.downloadUrl) { showToast('Attachment unavailable.', 'error'); return; }
+      const btn = el.attachmentList.querySelector('[data-att-index="' + index + '"]');
+      if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+      try {
+        const blob = await apiBlob(att.downloadUrl);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = att.filename || 'attachment';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        showToast('Attachment downloaded', 'success');
+      } catch (err) {
+        console.error('[AR TEMPMAIL] attachment download failed:', err);
+        showToast(err.message || 'Could not download attachment.', 'error');
+      } finally {
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+      }
+    }
+
+    function copyCurrentText() {
+      if (!state.currentMsgText) return;
+      copyText(state.currentMsgText, 'Message text copied!');
+    }
+
+    /* ---------------- Backup export / import (device-local by design) ---------------- */
+    function exportSavedBackup() {
+      if (!state.saved.length) { showToast('No saved mailboxes to back up yet.', 'info'); return; }
+      const payload = {
+        app: 'ar-tempmail',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        mailboxes: state.saved.map((s) => ({
+          id: s.id, address: s.address, password: s.password,
+          savedAt: s.savedAt, lastUsedAt: s.lastUsedAt,
+        })),
+      };
+      copyText(JSON.stringify(payload, null, 2), 'Backup copied — store it somewhere safe!');
+    }
+
+    function openImportSheet() {
+      el.importText.value = '';
+      el.importSheet.classList.remove('hidden');
+      el.importText.focus();
+    }
+
+    function closeImportSheet() { el.importSheet.classList.add('hidden'); }
+
+    function importSavedPayload() {
+      let parsed;
+      try { parsed = JSON.parse(el.importText.value); } catch (e) {
+        showToast('Invalid backup — not valid JSON.', 'error'); return;
+      }
+      const list = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.mailboxes) ? parsed.mailboxes : null);
+      if (!list) { showToast('Invalid backup — "mailboxes" array not found.', 'error'); return; }
+      const known = new Set(state.saved.map((s) => s.address.toLowerCase()));
+      let added = 0, skipped = 0;
+      for (const item of list) {
+        if (!item || typeof item.address !== 'string' || typeof item.password !== 'string' || !item.address.includes('@')) { skipped++; continue; }
+        const address = item.address.toLowerCase();
+        if (known.has(address)) { skipped++; continue; }
+        state.saved.push({
+          id: typeof item.id === 'string' ? item.id : '',
+          address,
+          password: item.password,
+          savedAt: Number.isFinite(item.savedAt) ? item.savedAt : Date.now(),
+          lastUsedAt: Number.isFinite(item.lastUsedAt) ? item.lastUsedAt : undefined,
+        });
+        known.add(address);
+        added++;
+      }
+      if (added) { persistSaved(); renderSavedList(); updateSaveBtn(); }
+      closeImportSheet();
+      showToast(
+        added ? 'Imported ' + added + ' mailbox' + (added > 1 ? 'es' : '') + (skipped ? ' · ' + skipped + ' skipped' : '')
+              : 'Nothing imported — all entries were invalid or duplicates.',
+        added ? 'success' : 'warning'
+      );
+    }
+
+    /* ---------------- Pull-to-refresh (touch) ---------------- */
+    const PTR_THRESHOLD = 72;
+    let ptrStartY = null, ptrArmed = false, ptrTracking = false;
+
+    function resetPTR() {
+      ptrTracking = false; ptrStartY = null; ptrArmed = false;
+      el.ptrIndicator.style.height = '0px';
+      el.ptrText.textContent = 'Pull to refresh';
+      el.ptrIcon.style.transform = '';
+    }
+
+    el.mailScreen.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1 || window.scrollY > 0 || el.inboxList.scrollTop > 0) return;
+      ptrStartY = e.touches[0].clientY;
+      ptrTracking = true;
+      ptrArmed = false;
+    }, { passive: true });
+
+    el.mailScreen.addEventListener('touchmove', (e) => {
+      if (!ptrTracking || ptrStartY === null) return;
+      const dy = e.touches[0].clientY - ptrStartY;
+      if (dy <= 0 || window.scrollY > 0) { resetPTR(); return; }
+      if (dy > 8) e.preventDefault(); // own the gesture while pulling down
+      const clamped = Math.min(dy * 0.4, PTR_THRESHOLD + 20);
+      el.ptrIndicator.style.height = Math.min(clamped, 44) + 'px';
+      ptrArmed = dy >= PTR_THRESHOLD;
+      el.ptrText.textContent = ptrArmed ? 'Release to refresh' : 'Pull to refresh';
+      el.ptrIcon.style.transform = ptrArmed ? 'rotate(180deg)' : '';
+    }, { passive: false });
+
+    el.mailScreen.addEventListener('touchend', () => {
+      if (!ptrTracking) return;
+      const wasArmed = ptrArmed;
+      resetPTR();
+      if (wasArmed) {
+        vibrate(30);
+        checkInbox(true);
+      }
+    });
+
+    el.mailScreen.addEventListener('touchcancel', resetPTR);
 
     /* ---------------- Navigation ---------------- */
     const TAB_SCREENS = { mail: 'mailScreen', saved: 'savedScreen', settings: 'settingsScreen' };
@@ -1417,14 +1981,19 @@
         for (const attr of Array.from(node.attributes || [])) {
           const name = attr.name.toLowerCase();
           if (name.startsWith('on')) { node.removeAttribute(attr.name); continue; }
-          if ((name === 'href' || name === 'src' || name === 'xlink:href' || name === 'srcset' || name === 'action') &&
+          if ((name === 'href' || name === 'src' || name === 'xlink:href' || name === 'srcset' || name === 'action' ||
+               name === 'formaction' || name === 'background' || name === 'poster') &&
               /^\s*(javascript|vbscript|data:text\/html)/i.test(attr.value)) {
             node.removeAttribute(attr.name);
           }
         }
+        // Anti-phishing: emails must not overlay the app UI with fixed/sticky layers
+        const style = node.getAttribute('style');
+        if (style && /position\s*:\s*(fixed|sticky)/i.test(style)) node.removeAttribute('style');
         if (node.tagName === 'A') {
           node.setAttribute('target', '_blank');
           node.setAttribute('rel', 'noopener noreferrer nofollow');
+          node.setAttribute('referrerpolicy', 'no-referrer');
         }
       });
       return (doc.body && doc.body.innerHTML) || '';
@@ -1447,6 +2016,9 @@
       el.detailFromAddress.textContent = (msg.from && msg.from.address) || '';
       el.detailTime.textContent = formatDate(msg.createdAt);
       el.detailBody.innerHTML = renderEmailBody(msg);
+      renderAttachments(msg);
+      state.currentMsgText = (msg.text && String(msg.text).trim()) || null;
+      el.copyTextBtn.classList.toggle('hidden', !state.currentMsgText);
       el.deleteMsgBtn.dataset.id = msg.id || '';
 
       const code = extractOtp(
@@ -1475,6 +2047,10 @@
       el.detailFromAddress.textContent = '';
       el.detailTime.textContent = '';
       el.detailOtp.classList.add('hidden');
+      el.detailAttachments.classList.add('hidden');
+      el.copyTextBtn.classList.add('hidden');
+      state.currentMsgText = null;
+      state.currentAttachments = [];
       el.detailBody.innerHTML =
         '<div class="flex items-center justify-center gap-2 py-10 text-zinc-400 dark:text-zinc-500">' +
           '<span class="spinner"></span><span class="text-sm">Loading message…</span>' +
@@ -1539,6 +2115,10 @@
       el.vibrateSwitch.setAttribute('aria-checked', state.settings.vibrate ? 'true' : 'false');
       el.autoCopySwitch.dataset.on = state.settings.autoCopyOtp ? 'true' : 'false';
       el.autoCopySwitch.setAttribute('aria-checked', state.settings.autoCopyOtp ? 'true' : 'false');
+      el.soundSwitch.dataset.on = state.settings.sound ? 'true' : 'false';
+      el.soundSwitch.setAttribute('aria-checked', state.settings.sound ? 'true' : 'false');
+      el.blurSwitch.dataset.on = state.settings.blur ? 'true' : 'false';
+      el.blurSwitch.setAttribute('aria-checked', state.settings.blur ? 'true' : 'false');
       el.intervalSeg.querySelectorAll('button').forEach((b) => {
         b.classList.toggle('active', Number(b.dataset.val) === Number(state.settings.autoRefresh));
       });
@@ -1566,6 +2146,11 @@
     });
     bindSwitch(el.vibrateSwitch, 'vibrate');
     bindSwitch(el.autoCopySwitch, 'autoCopyOtp');
+    bindSwitch(el.soundSwitch, 'sound');
+    bindSwitch(el.blurSwitch, 'blur', (on) => {
+      applyBlur();
+      showToast(on ? 'Privacy blur enabled' : 'Privacy blur disabled', 'info');
+    });
 
     el.intervalSeg.addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-val]');
@@ -1617,6 +2202,24 @@
       renderInbox();
     });
 
+    el.markAllReadBtn.addEventListener('click', markAllRead);
+    el.privacyEyeBtn.addEventListener('click', toggleReveal);
+    el.copyTextBtn.addEventListener('click', copyCurrentText);
+    el.exportSavedBtn.addEventListener('click', exportSavedBackup);
+    el.importSavedBtn.addEventListener('click', openImportSheet);
+    el.importClose.addEventListener('click', closeImportSheet);
+    el.importCancel.addEventListener('click', closeImportSheet);
+    el.importBackdrop.addEventListener('click', closeImportSheet);
+    el.importApply.addEventListener('click', importSavedPayload);
+    el.attachmentList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-att-index]');
+      if (btn) downloadAttachment(Number(btn.dataset.attIndex));
+    });
+    el.tipDismiss.addEventListener('click', () => {
+      el.tipBanner.classList.add('hidden');
+      try { localStorage.setItem(LS_TIP, '1'); } catch (e) { /* no-op */ }
+    });
+
     el.inboxList.addEventListener('click', (e) => {
       const otpBtn = e.target.closest('[data-copy-otp]');
       if (otpBtn) {
@@ -1637,6 +2240,11 @@
       state.saved = loadSaved();
       state.settings = loadSettings();
       initTheme();
+      if (el.metaThemeColor) {
+        el.metaThemeColor.setAttribute('content', document.documentElement.classList.contains('dark') ? '#09090b' : '#7c3aed');
+      }
+      applyBlur();
+      try { if (!localStorage.getItem(LS_TIP)) el.tipBanner.classList.remove('hidden'); } catch (e) { /* no-op */ }
       updateSettingsUI();
       updateBadges();
       renderSavedList();
@@ -1661,6 +2269,8 @@
     window.__AR_TEMPMAIL__ = {
       state, checkInbox, getNewEmail, renderDetail, renderInbox, renderSavedList,
       switchTab, showToast, restoreMailbox, extractOtp, toggleSaveCurrent, clearActiveSession,
+      confirmDialog, markAllRead, applyBlur, toggleReveal, exportSavedBackup,
+      importSavedPayload, downloadAttachment, deleteMail, removeSaved, playChime,
     };
   </script>
 </body>

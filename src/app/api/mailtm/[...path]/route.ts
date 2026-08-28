@@ -45,7 +45,12 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     const resContentType = res.headers.get("content-type");
     if (resContentType) resHeaders.set("Content-Type", resContentType);
 
-    const body = res.status === 204 ? null : await res.text();
+    // Binary-safe passthrough (attachment downloads stream through here too).
+    // arrayBuffer() keeps JSON responses working while preserving bytes exactly.
+    const body =
+      res.status === 204
+        ? null
+        : await res.arrayBuffer();
     return new NextResponse(body, { status: res.status, headers: resHeaders });
   } catch (err) {
     const message = err instanceof Error ? err.message : "relay error";
