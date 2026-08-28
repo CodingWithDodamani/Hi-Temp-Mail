@@ -193,10 +193,10 @@ export default function Home() {
             </div>
           ))}
           <p className="mt-6 text-sm">
-            <a className="text-violet-600 underline" href="/about.html">About</a> ·{" "}
-            <a className="text-violet-600 underline" href="/faq.html">FAQ</a> ·{" "}
-            <a className="text-violet-600 underline" href="/privacy.html">Privacy Policy</a> ·{" "}
-            <a className="text-violet-600 underline" href="/disclaimer.html">Disclaimer</a>
+            <a className="text-pink-600 underline" href="/about.html">About</a> ·{" "}
+            <a className="text-pink-600 underline" href="/faq.html">FAQ</a> ·{" "}
+            <a className="text-pink-600 underline" href="/privacy.html">Privacy Policy</a> ·{" "}
+            <a className="text-pink-600 underline" href="/disclaimer.html">Disclaimer</a>
           </p>
         </div>
       </noscript>
