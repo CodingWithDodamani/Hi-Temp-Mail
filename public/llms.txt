@@ -1,0 +1,24 @@
+# AR TEMPMAIL
+
+> AR TEMPMAIL is a free, privacy-first disposable email web app. It generates a working temporary email address instantly (no login, no signup), auto-detects OTP/verification codes as one-tap copyable chips, and lets users save mailboxes locally (browser localStorage) and restore them days later to keep receiving mail. Receive-only; mailboxes are provisioned by the Mail.tm API via a technical relay. No analytics, no ads, no tracking; the app has no server-side database.
+
+Primary app: https://artempmail.app/ (open the app; it runs entirely client-side)
+
+## Pages
+- [About](https://artempmail.app/about.html): what the app is, who it is for, how it works, features, technology.
+- [FAQ](https://artempmail.app/faq.html): 10 answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
+- [Privacy Policy](https://artempmail.app/privacy.html): what is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel blocking.
+- [Disclaimer](https://artempmail.app/disclaimer.html): as-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
+
+## Key facts
+- Cost: free, no account required.
+- Mailbox lifetime: 10 minutes by default, extendable; saved mailboxes can be restored indefinitely while the provider keeps them.
+- OTP detection: 4–8 digit codes extracted from incoming mail; optional auto-copy.
+- Platform: web, mobile-first, light/dark themes, installable via web manifest.
+- Data: credentials and preferences stay in the browser's localStorage (keys: theme, ar_saved_mails, ar_active_session, ar_settings).
+- Not affiliated with Mail.tm; receive-only; not for sensitive accounts.
+
+## For machines
+- Full documentation in one file: https://artempmail.app/llms-full.txt
+- Sitemap: https://artempmail.app/sitemap.xml
+- Last updated: 2026-08-28

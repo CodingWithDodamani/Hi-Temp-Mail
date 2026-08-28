@@ -1,0 +1,300 @@
+# AR TEMPMAIL — Full Documentation
+
+> > AR TEMPMAIL is a free, privacy-first disposable email web app. It generates a working temporary
+> email address instantly (no login, no signup), auto-detects OTP/verification codes as one-tap
+> copyable chips, and lets users save mailboxes locally (browser localStorage) and restore them days
+> later to keep receiving mail. Receive-only; mailboxes are provisioned by the Mail.tm API via a
+> technical relay. No analytics, no ads, no tracking; the app has no server-side database.
+
+- App (open and use it here): https://artempmail.app/
+- About page: https://artempmail.app/about.html
+- FAQ page: https://artempmail.app/faq.html
+- Privacy Policy page: https://artempmail.app/privacy.html
+- Disclaimer page: https://artempmail.app/disclaimer.html
+- Sitemap: https://artempmail.app/sitemap.xml
+- Short agent index: https://artempmail.app/llms.txt
+- Last updated: 2026-08-28
+
+This file (llms-full.txt) is the complete documentation of AR TEMPMAIL in a single plain-text
+markdown document, intended for AI assistants, agents and search crawlers. It contains the full
+verbatim content of the About, FAQ, Privacy Policy and Disclaimer pages, followed by a feature
+reference, the exact browser storage keys the app uses, and contact guidance.
+
+## About
+
+What the app is, who it is for, how it works, features and technology.
+Source: https://artempmail.app/about.html
+
+## What is AR TEMPMAIL?
+
+AR TEMPMAIL is a free, privacy-first disposable email service that gives you a working temporary
+email address the moment you open the app — no account, no signup, no personal details. Use it to
+receive verification emails, one-time passwords (OTPs), download links and newsletters without ever
+exposing your real inbox.
+
+## Who is it for?
+
+Anyone who needs a quick email address for a low-risk signup: free trials, public Wi-Fi portals,
+forum accounts, one-time downloads, app testing, or simply receiving a verification code without
+sharing your primary email. If you would not write your real address on a sticky note in a café, use
+a temporary one.
+
+## How it works
+
+1. Open the app — a secure mailbox is generated instantly.
+2. Copy the address and paste it into any signup or verification form.
+3. Watch the inbox — verification codes are detected automatically and shown as a one-tap copy chip.
+
+## Feature highlights
+
+- Instant mailbox generation — an address is ready in seconds
+- 10-minute mailbox lifetime with a one-tap Extend button
+- Saved Mailboxes — bookmark a mailbox and restore it days later; OTPs keep arriving
+- OTP auto-detection with auto-copy option
+- Attachments — view and download files from emails
+- Privacy blur, remote-image blocking and sanitized email HTML
+- Light & dark themes, pull-to-refresh, offline-friendly local storage
+- Export / import backups of saved mailboxes
+- No ads, no analytics, no tracking
+
+## Technology
+
+AR TEMPMAIL is a single-page web app that talks to the Mail.tm REST API through a lightweight
+technical relay (Mail.tm's API does not allow direct browser access from third-party sites). Your
+mailbox credentials live only in your browser's local storage. AR TEMPMAIL is an independent project
+and is not affiliated with Mail.tm.
+
+## Status
+
+Version 5.0 · Free forever · Private by design.
+
+## FAQ
+
+Ten answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
+Source: https://artempmail.app/faq.html
+
+## Q1: What is a temporary email address?
+
+A temporary (or disposable) email address is a real, working inbox that you use instead of your
+personal email when signing up somewhere. It receives mail exactly like a normal address, but it is
+not connected to your identity, so spam and data leaks never reach your real inbox.
+
+## Q2: How long does a mailbox last?
+
+By default a mailbox lives for 10 minutes, and you can extend the timer with one tap. If you save a
+mailbox to your Saved Mailboxes vault, you can restore it any time — the same day or days later —
+and keep receiving mail, including verification codes.
+
+## Q3: Can I receive OTP and verification codes?
+
+Yes. AR TEMPMAIL automatically detects 4–8 digit codes in incoming mail and shows them as a
+highlighted chip in the inbox list and a large copy button in the message view. There is also an
+optional setting that copies the code to your clipboard the instant it arrives.
+
+## Q4: What does saving a mailbox do?
+
+Saving stores the mailbox address and its password in your browser's local storage — nothing is sent
+to any server of ours. You can then reopen that exact mailbox later from the Saved tab and continue
+receiving mail addressed to it.
+
+## Q5: Do you read or store my emails?
+
+No. The app runs entirely in your browser and has no server database. Messages are created and
+stored by the Mail.tm service when the app requests them on your behalf. There are no analytics
+scripts, no advertising and no tracking of any kind.
+
+## Q6: Is AR TEMPMAIL free?
+
+Yes — every feature is free, and there is no account, subscription or ad in the app.
+
+## Q7: Can I send email or attachments?
+
+AR TEMPMAIL is receive-only. You can view and download attachments that arrive in your mailbox, but
+sending email is not supported — which also means the app cannot be used for outbound spam.
+
+## Q8: Why did my email stop working?
+
+Unsaved temporary mailboxes are discarded when you delete them or when the provider expires them. If
+a saved mailbox stops working, it was most likely removed on the provider side after prolonged
+inactivity; generate a fresh one or remove it from your saved list.
+
+## Q9: Is it safe to use for banking or important accounts?
+
+No. Disposable addresses are for low-risk signups only — trials, downloads, forums, Wi-Fi portals.
+Never use one for banking, government, healthcare, work or any account whose loss would hurt you,
+because anyone with access to the mailbox could receive its password resets.
+
+## Q10: How do I delete everything?
+
+Use Delete Mail in the app to remove the current mailbox from the provider, Clear all in Settings →
+Data to empty your saved vault, and clear your browser's site data to wipe every local trace. That
+is everything — there is nothing stored anywhere else.
+
+## Privacy Policy
+
+What is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel
+blocking. Last updated: 2025.
+Source: https://artempmail.app/privacy.html
+
+## Overview
+
+AR TEMPMAIL is private by architecture, not just by policy. The app has no user accounts, no
+server-side database of its own, no analytics and no advertising. This page explains exactly what
+data exists and where.
+
+## What we never collect
+
+- Your real email address or identity
+- Analytics, advertising IDs, fingerprints or tracking pixels
+- Cookies used for tracking (the app sets none)
+- Server-side logs of your mailbox contents (we keep none)
+
+## Data stored on your device
+
+The app stores its data in your browser's local storage. It never leaves your device, because we
+operate no server that could receive it:
+
+- `theme` — your light/dark preference
+- - `ar_saved_mails` — mailboxes you bookmarked: address, its Mail.tm password and timestamps, so
+  they can be restored later
+- - `ar_active_session` — the current mailbox session, so reloading keeps the same address (can be
+  turned off in Settings)
+- - `ar_settings` — your in-app preferences (auto-refresh interval, sound, vibration, auto-copy OTP,
+  privacy blur)
+- `read` / `hidden` message ids — so unread badges stay accurate
+
+## How to erase everything
+
+Use Delete Mail for the current mailbox, Clear all (Settings → Data) for saved mailboxes, and your
+browser's 'clear site data' for a full wipe. After that, no record of your mailboxes exists anywhere
+except on the provider's servers until they expire the account.
+
+## Third-party mail storage (Mail.tm)
+
+Temporary mailboxes and their messages are created and stored by the Mail.tm service (api.mail.tm)
+under Mail.tm's own terms and privacy policy — please review them on mail.tm. When you generate a
+mailbox, the app registers an account there using a random address and a random password. Because
+Mail.tm's API does not allow direct browser calls from third-party sites, your requests are
+transparently proxied through a technical relay on this site. The relay forwards your requests and
+responses as-is and stores nothing.
+
+## Emails and tracking pixels
+
+Remote images inside emails are blocked by default, so senders cannot log your IP address through
+tracking pixels; you can load images for a specific message when you choose to. Email HTML is always
+sanitized before display: scripts, frames, forms and event handlers are removed, and links open with
+rel='noopener noreferrer' and a no-referrer policy.
+
+## Security
+
+Mailbox passwords are generated with the browser's cryptographic random generator and stored only on
+your device. Access tokens are kept in memory, not written to storage, unless you enable Remember
+session, which stores the minimum needed to restore your own mailbox on reload. Email content is
+rendered through a strict sanitizer.
+
+## Children
+
+AR TEMPMAIL is not directed at children under 13, and we do not knowingly collect any personal
+information from anyone — there is simply nothing to collect.
+
+## Changes to this policy
+
+If this policy changes, the updated version will always be published on this page. Material changes
+will be summarized at the top.
+
+## Disclaimer
+
+As-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
+Source: https://artempmail.app/disclaimer.html
+
+## General — provided as is
+
+AR TEMPMAIL is provided free of charge, 'as is' and 'as available', without warranties of any kind,
+express or implied — including but not limited to fitness for a particular purpose, accuracy and
+availability. Use it at your own risk.
+
+## Not affiliated with Mail.tm
+
+AR TEMPMAIL is an independent tool that uses the public Mail.tm API through a technical relay.
+Mail.tm is a service of its respective owner, and mailbox availability, retention and deliverability
+depend entirely on that third party. We cannot guarantee that any particular mailbox or message will
+work at any time.
+
+## Not for sensitive accounts
+
+Never use disposable email addresses for banking, government, healthcare, employment, cryptocurrency
+exchanges or any account whose loss or compromise would cause you harm. Anyone who gains access to
+the temporary mailbox could read its password-reset emails. Use disposable addresses only for
+low-risk, non-critical signups.
+
+## Lawful use only
+
+You may use AR TEMPMAIL only in compliance with all applicable laws and with the terms of service of
+any site you use it on. You are solely responsible for your use — the app must not be used for
+fraud, harassment, evading bans or any unlawful activity. The app is receive-only and cannot send
+email.
+
+## Availability and data loss
+
+Mailboxes may expire, be rate-limited or become unreachable without notice, and messages may fail to
+arrive. Do not rely on AR TEMPMAIL for anything important, and never save anything valuable in a
+temporary inbox. We are not responsible for lost codes, lost accounts or missed emails.
+
+## Limitation of liability
+
+To the maximum extent permitted by law, the AR TEMPMAIL authors shall not be liable for any direct,
+indirect, incidental, consequential or punitive damages — including lost data, lost accounts or lost
+profits — arising from or related to your use of, or inability to use, the app.
+
+## Changes
+
+This disclaimer may be updated from time to time; the current version is always the one published on
+this page.
+
+## Feature reference
+
+Complete list of user-facing features in the current version (v5.0):
+
+- **Instant mailbox generation** — a working address is ready the moment the app opens.
+- - **10-minute timer + Extend** — mailbox lifetime with one-tap extension and a visual countdown
+  ring.
+- - **Saved Mailboxes vault** — bookmark any mailbox; restore it later via re-authentication with
+  the stored password.
+- - **Session restore** — reloading the page keeps the same address while "Remember session" is
+  enabled.
+- - **OTP auto-detection + auto-copy** — 4–8 digit verification codes are extracted from incoming
+  mail and shown as one-tap copy chips; an optional setting copies the code to the clipboard the
+  instant it arrives.
+- **Inbox search** — filter messages by sender, subject, preview text or the detected OTP code.
+- **Attachments view + download** — file chips with type-aware icons and authenticated download.
+- - **Privacy blur** — optional blur of sender, subject, preview and addresses, with an eye-toggle
+  reveal.
+- - **Remote-image blocking** — tracking pixels are blocked by default; images load per message on
+  request.
+- - **Sanitized HTML rendering** — scripts, frames, forms and event handlers are stripped from email
+  bodies; links are no-referrer.
+- **Sound / vibration notifications** — WebAudio chime and haptic feedback on new mail.
+- **Pull-to-refresh** — gesture refresh on the inbox screen.
+- - **Export / import backups** — copy a JSON backup of saved mailboxes to the clipboard and
+  re-import it later.
+- **Light / dark theme** — persisted preference, applied before first paint to avoid flashing.
+- **Web manifest / PWA metadata** — installable app metadata served from /manifest.webmanifest.
+
+## Storage keys
+
+All persistent data lives in the browser's localStorage on the user's device. There is no
+server-side database.
+
+| Key | What it holds |
+| --- | --- |
+| `theme` | Light/dark theme preference ("dark" or "light"). |
+| `ar_saved_mails` | Bookmarked mailboxes: address, Mail.tm password, savedAt and lastUsedAt timestamps. |
+| `ar_active_session` | The current mailbox session (address + credentials) so a page reload restores the same address; can be disabled via the "Remember session" setting. |
+| `ar_settings` | In-app preferences: auto-refresh interval, sound, vibration, auto-copy OTP, privacy blur, remember session. |
+
+## Contact
+
+Support is self-serve: there is no support email, ticket system or account service, because the app
+stores nothing about its users. For answers about mailbox lifetime, OTP codes, saved mailboxes,
+privacy and safety, see the FAQ at https://artempmail.app/faq.html. Agent indexes:
+https://artempmail.app/llms.txt (short) and https://artempmail.app/llms-full.txt (this file).

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,26 +13,98 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+/* ---------------------------------------------------------------------------
+ * AR TEMPMAIL — site metadata (SEO / agentic SEO / LLM-friendly)
+ * Site URL is overridable via NEXT_PUBLIC_SITE_URL; the placeholder domain is
+ * used consistently across canonical/OG tags, sitemap.xml and llms.txt.
+ * ------------------------------------------------------------------------- */
+export const SITE_NAME = "AR TEMPMAIL";
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://artempmail.app";
+export const SITE_DESCRIPTION =
+  "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.";
+
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Free Temporary Email, Instant OTPs`,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "temporary email",
+    "disposable email",
+    "temp mail",
+    "throwaway email",
+    "fake email generator",
+    "OTP receiver",
+    "verification code inbox",
+    "anonymous email",
+    "10 minute mail",
+    "burner email",
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "utilities",
+  alternates: { canonical: "/" },
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icon-192.png" }],
   },
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
     type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    title: `${SITE_NAME} — Free Temporary Email, Instant OTPs`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AR TEMPMAIL — free temporary email app with OTP auto-detection",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: `${SITE_NAME} — Free Temporary Email, Instant OTPs`,
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.png"],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: SITE_NAME,
+  },
+  formatDetection: { telephone: false, address: false, email: false },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f3fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0912" },
+  ],
 };
 
 export default function RootLayout({
