@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Offline · Hi Temp Mail</title>
+  <meta name="description" content="Hi Temp Mail is offline right now. Reconnect to keep receiving temporary email and OTP codes." />
+  <meta name="theme-color" content="#0b0912" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 20px; padding: 24px; text-align: center;
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(236, 72, 153, .12), transparent 60%),
+                  radial-gradient(900px 500px at 85% 110%, rgba(59, 130, 246, .10), transparent 60%),
+                  #0b0912;
+      color: #e4e4e7;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .badge {
+      display: flex; align-items: center; justify-content: center;
+      width: 76px; height: 76px; border-radius: 22px;
+      background: linear-gradient(135deg, #f43f5e, #ec4899, #3b82f6);
+      box-shadow: 0 18px 40px -12px rgba(236, 72, 153, .45);
+    }
+    .badge svg { width: 38px; height: 38px; }
+    h1 {
+      font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: #fff;
+    }
+    h1 .grad {
+      background: linear-gradient(90deg, #fb7185, #f472b6, #60a5fa);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      font-style: italic; font-family: Georgia, "Times New Roman", serif; font-weight: 500;
+    }
+    p { max-width: 40ch; font-size: 14px; line-height: 1.7; color: #a1a1aa; }
+    .status {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 14px; border-radius: 999px;
+      border: 1px solid rgba(236, 72, 153, .25); background: rgba(236, 72, 153, .08);
+      font-size: 12px; font-weight: 700; color: #f9a8d4;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 999px; background: #f43f5e; animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.8); } }
+    button {
+      margin-top: 4px; display: inline-flex; align-items: center; gap: 8px;
+      height: 46px; padding: 0 26px; border: 0; border-radius: 14px; cursor: pointer;
+      background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6);
+      color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .01em;
+      box-shadow: 0 14px 30px -10px rgba(236, 72, 153, .5);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 18px 34px -10px rgba(236, 72, 153, .6); }
+    button:active { transform: translateY(0) scale(.98); }
+    footer { position: fixed; bottom: max(18px, env(safe-area-inset-bottom)); font-size: 11px; font-weight: 600; color: #52525b; }
+  </style>
+</head>
+<body>
+  <div class="badge" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none">
+      <path d="M14 24l18 12 18-12v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="#fff" opacity=".96"/>
+      <path d="M14 24l18 12 18-12" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".96"/>
+    </svg>
+  </div>
+  <h1>You&rsquo;re <span class="grad">offline</span></h1>
+  <p>Hi&nbsp;Temp&nbsp;Mail needs a connection to receive new messages and OTP codes. Cached pages are still available — everything syncs as soon as you&rsquo;re back online.</p>
+  <span class="status" id="status"><span class="dot"></span>Waiting for network…</span>
+  <button id="retry" type="button">Try again</button>
+  <footer>Hi&nbsp;Temp&nbsp;Mail · Free temporary email</footer>
+  <script>
+    var retry = function () { location.reload(); };
+    document.getElementById('retry').addEventListener('click', retry);
+    window.addEventListener('online', retry);
+  </script>
+</body>
+</html>

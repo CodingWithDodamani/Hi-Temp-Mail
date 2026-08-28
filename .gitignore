@@ -52,3 +52,16 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# local database (prisma dev store, not used in production)
+/db
+*.db
+
+# local agent working artifacts
+worklog.md
+tool-results/
+agent-ctx/
+
+# scaffold demo/reference folders (not part of the product)
+/examples/
+/mini-services/

@@ -324,6 +324,10 @@
             Hi&nbsp;<span class="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 bg-clip-text text-transparent dark:from-rose-400 dark:via-pink-400 dark:to-blue-400">Temp&nbsp;Mail</span>
           </h1>
         </a>
+        <button id="pwaInstall" type="button" aria-label="Install app on this device" style="display:none"
+          class="flex h-9 w-9 items-center justify-center rounded-xl border border-pink-500/30 bg-pink-500/10 text-pink-600 transition hover:bg-pink-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 active:scale-95 dark:border-pink-400/30 dark:bg-pink-400/10 dark:text-pink-300 dark:hover:bg-pink-400/15">
+          <span class="material-symbols-outlined text-[20px]">add_to_home_screen</span>
+        </button>
         <button id="themeToggle" type="button" aria-label="Toggle dark mode"
           class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-600 transition hover:bg-zinc-100 hover:text-pink-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
           <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
@@ -2639,6 +2643,30 @@
         } catch (_) { /* standalone: no parent window */ }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+    })();
+
+    /* PWA: custom install affordance (shown only when the browser allows install) */
+    (() => {
+      const btn = document.getElementById('pwaInstall');
+      if (!btn) return;
+      let deferred = null;
+      const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      const render = () => { btn.style.display = deferred ? 'flex' : 'none'; };
+      if (!installed) {
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; render(); });
+      }
+      window.addEventListener('appinstalled', () => { deferred = null; render(); });
+      btn.addEventListener('click', () => {
+        if (!deferred) return;
+        const ev = deferred;
+        deferred = null;
+        render();
+        try { ev.prompt(); } catch (_) { return; }
+        if (ev.userChoice && typeof ev.userChoice.then === 'function') {
+          ev.userChoice.then(() => render()).catch(() => render());
+        }
+      });
+      render();
     })();
 
     /* QA / debug handle (non-intrusive) */

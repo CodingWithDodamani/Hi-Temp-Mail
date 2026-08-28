@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ServiceWorkerRegistrar } from "@/components/service-worker-registrar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -114,10 +115,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {/*
+        suppressHydrationWarning on <body>: browser extensions and embedded
+        preview environments can inject extra attributes (e.g. __processed_*)
+        before React hydrates. It only silences attribute mismatches on the
+        <body> element itself — never on children.
+      */}
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {children}
+        <ServiceWorkerRegistrar />
         <Toaster />
       </body>
     </html>
