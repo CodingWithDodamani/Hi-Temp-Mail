@@ -1,13 +1,24 @@
+'use client';
+
 /* ---------------------------------------------------------------------------
  * AR TEMPMAIL — home route.
- * Renders the single-file app full-viewport via iframe; everything below the
- * iframe (JSON-LD + noscript content) is crawlable by search engines and
+ * Flow: / renders the intro/landing experience first; every "Open app" action
+ * on the landing page posts AR_TEMPMAIL_LAUNCH and this shell crossfades to
+ * the app iframe. The app stays mounted afterwards (hidden, still polling) so
+ * the generated mailbox survives a round-trip; the app's brand button posts
+ * AR_TEMPMAIL_HOME to come back to the landing page.
+ * JSON-LD + <noscript> content below remains crawlable by search engines and
  * AI/LLM agents, since iframe content is not indexed under this URL.
  * ------------------------------------------------------------------------- */
+
+import { useEffect, useState } from "react";
 
 const SITE_NAME = "AR TEMPMAIL";
 const SITE_DESCRIPTION =
   "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.";
+
+const LAUNCH_MSG = "AR_TEMPMAIL_LAUNCH";
+const HOME_MSG = "AR_TEMPMAIL_HOME";
 
 const FAQ = [
   {
@@ -111,9 +122,41 @@ const jsonLd = {
   ],
 };
 
+type View = "landing" | "app";
+
 export default function Home() {
+  const [view, setView] = useState<View>("landing");
+  const [appMounted, setAppMounted] = useState(false);
+  const [appRevealed, setAppRevealed] = useState(false);
+
+  useEffect(() => {
+    function onMessage(event: MessageEvent) {
+      if (event.origin !== window.location.origin) return;
+      const data = event.data as { type?: unknown } | null;
+      if (!data || typeof data.type !== "string") return;
+      if (data.type === LAUNCH_MSG) {
+        setAppMounted(true);
+        setView("app");
+      } else if (data.type === HOME_MSG) {
+        setView("landing");
+      }
+    }
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  const appActive = view === "app";
+
+  useEffect(() => {
+    if (!appMounted) return;
+    // one tick after the app iframe mounts, reveal it — so the very first
+    // appearance fades in from opacity-0 instead of popping in
+    const id = window.setTimeout(() => setAppRevealed(true), 80);
+    return () => window.clearTimeout(id);
+  }, [appMounted]);
+
   return (
-    <main className="fixed inset-0 bg-white">
+    <main className="fixed inset-0 overflow-hidden bg-[#f5f3fb] dark:bg-[#0b0912]">
       {/* Structured data for search engines & AI agents */}
       <script
         type="application/ld+json"
@@ -158,12 +201,30 @@ export default function Home() {
         </div>
       </noscript>
 
+      {/* Landing / intro — always mounted so scroll position and theme persist */}
       <iframe
-        src="/ar-tempmail.html"
-        title="AR TEMPMAIL — Free Temporary Email, Instant OTPs"
-        className="h-full w-full border-0"
-        allow="clipboard-write"
+        src="/landing.html"
+        title="AR TEMPMAIL — Intro & overview"
+        aria-hidden={appActive}
+        inert={appActive}
+        className={`absolute inset-0 h-full w-full border-0 ${
+          appActive ? "pointer-events-none" : ""
+        }`}
       />
+
+      {/* The app — mounted on first open, kept alive so the mailbox persists */}
+      {appMounted && (
+        <iframe
+          src="/ar-tempmail.html"
+          title="AR TEMPMAIL — Free Temporary Email, Instant OTPs"
+          aria-hidden={!appActive}
+          inert={!appActive}
+          allow="clipboard-write"
+          className={`absolute inset-0 z-10 h-full w-full border-0 transition-opacity duration-700 ease-out ${
+            appRevealed && appActive ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+        />
+      )}
     </main>
   );
 }

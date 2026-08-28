@@ -315,12 +315,15 @@
     <!-- Header -->
     <header class="sticky top-0 z-40 border-b border-line-light/70 bg-card-light/80 backdrop-blur-xl dark:border-line-dark/70 dark:bg-paper-dark/85">
       <div class="mx-auto flex h-14 max-w-md items-center justify-between px-4">
-        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
-          <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
-        </div>
-        <h1 class="font-display text-lg font-bold tracking-tight">
-          AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
-        </h1>
+        <a id="brandHome" href="#" title="Back to intro" aria-label="AR TEMPMAIL — back to intro"
+          class="flex items-center gap-2.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500">
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md shadow-violet-500/25">
+            <span class="material-symbols-outlined icon-fill text-[20px] text-white">mail_lock</span>
+          </span>
+          <h1 class="font-display text-lg font-bold tracking-tight">
+            AR&nbsp;<span class="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:to-fuchsia-400">TEMPMAIL</span>
+          </h1>
+        </a>
         <button id="themeToggle" type="button" aria-label="Toggle dark mode"
           class="flex h-9 w-9 items-center justify-center rounded-xl border border-line-light bg-card-light text-zinc-600 transition hover:bg-zinc-100 hover:text-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 active:scale-95 dark:border-line-dark dark:bg-card-dark dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-300">
           <span id="themeIcon" class="material-symbols-outlined text-[20px]">dark_mode</span>
@@ -2624,6 +2627,19 @@
     }
 
     initApp();
+
+    /* v5: tap the brand to return to the intro/landing page (when embedded in the site shell) */
+    (() => {
+      const brand = document.getElementById('brandHome');
+      if (!brand) return;
+      brand.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          if (window.self !== window.top) { window.parent.postMessage({ type: 'AR_TEMPMAIL_HOME' }, '*'); return; }
+        } catch (_) { /* standalone: no parent window */ }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
 
     /* QA / debug handle (non-intrusive) */
     window.__AR_TEMPMAIL__ = {
