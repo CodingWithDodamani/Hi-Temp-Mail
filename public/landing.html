@@ -76,11 +76,11 @@
     #scrollbar { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 90; transform-origin: 0 50%; transform: scaleX(0);
       background: linear-gradient(90deg, #f43f5e, #ec4899, #3b82f6); }
 
-    /* ============================== preloader ============================== */
-    #preloader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
-      background: #f5f3fb; transition: opacity .55s ease, visibility .55s ease, transform .55s ease; }
+    /* ============================== preloader (active on CTA launch click) ============================== */
+    #preloader { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center;
+      background: #f5f3fb; opacity: 0; transition: opacity .3s ease, visibility .3s ease; }
     .dark #preloader { background: #0b0912; }
-    #preloader.done { opacity: 0; visibility: hidden; transform: scale(1.05); }
+    #preloader.active { display: flex !important; opacity: 1 !important; visibility: visible !important; }
     .pre-letter { display: inline-block; opacity: 0; animation: letterIn .7s cubic-bezier(.22,1,.36,1) forwards; animation-delay: calc(var(--i) * 55ms + 120ms); }
     @keyframes letterIn { from { opacity: 0; transform: translateY(16px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
     .pre-logo { animation: prePulse 1.6s ease-in-out infinite; }
@@ -777,20 +777,8 @@
         paintThemeIcon();
       });
 
-      /* ============================== preloader ============================== */
-      var preloader = doc.getElementById('preloader');
-      function ready() {
-        if (!preloader || preloader.classList.contains('done')) return;
-        preloader.classList.add('done');
-        doc.body.classList.add('ready');
-        setTimeout(function () { if (preloader.parentNode) preloader.parentNode.removeChild(preloader); }, 650);
-      }
-      if (reduceMotion) { ready(); }
-      else {
-        if (doc.readyState === 'complete') setTimeout(ready, 900);
-        else window.addEventListener('load', function () { setTimeout(ready, 900); });
-        setTimeout(ready, 3200); // hard fallback — never trap the visitor
-      }
+      /* ============================== direct main website view (instant ready) ============================== */
+      doc.body.classList.add('ready');
 
       /* ============================== scroll progress ============================== */
       var bar = doc.getElementById('scrollbar');
@@ -1020,12 +1008,18 @@
         });
       });
 
-      /* ============================== launch → site shell shows the app ============================== */
+      /* ============================== launch → show loading animation & switch to app ============================== */
       function launch() {
-        try {
-          if (window.self !== window.top) { window.parent.postMessage({ type: 'HI_TEMPMAIL_LAUNCH' }, '*'); return; }
-        } catch (_) { /* standalone: no parent window */ }
-        window.location.href = '/ar-tempmail.html';
+        var preloader = doc.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('active');
+        }
+        setTimeout(function () {
+          try {
+            if (window.self !== window.top) { window.parent.postMessage({ type: 'HI_TEMPMAIL_LAUNCH' }, '*'); return; }
+          } catch (_) { /* standalone: no parent window */ }
+          window.location.href = '/ar-tempmail.html';
+        }, 350);
       }
       [].slice.call(doc.querySelectorAll('[data-launch]')).forEach(function (el) {
         el.addEventListener('click', launch);
