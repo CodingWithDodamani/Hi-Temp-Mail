@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // "standalone" powers self-hosting (npm run build:standalone + npm start);
-  // Vercel ignores it and uses its own optimized output, so it is safe to keep.
-  output: "standalone",
+  // Vercel handles its own output — standalone is only for Docker/self-host
+  // Setting it on Vercel breaks API routes (500 on /api/mailtm)
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactStrictMode: false,
   async headers() {
     return [

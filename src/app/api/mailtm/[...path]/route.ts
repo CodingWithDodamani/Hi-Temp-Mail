@@ -13,6 +13,8 @@ const API_BASE = "https://api.mail.tm";
 const TIMEOUT_MS = 20000;
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const fetchCache = "force-no-store";
 
 function corsHeaders(): Record<string, string> {
   return {
@@ -24,22 +26,51 @@ function corsHeaders(): Record<string, string> {
 }
 
 async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> }) {
-  const { path } = await ctx.params;
-  const target = `${API_BASE}/${(path ?? []).join("/")}${req.nextUrl.search}`;
-
-  const headers: Record<string, string> = { Accept: "application/json" };
-  const contentType = req.headers.get("content-type");
-  const authorization = req.headers.get("authorization");
-  if (contentType) headers["Content-Type"] = contentType;
-  if (authorization) headers["Authorization"] = authorization;
-
+  // Entire handler wrapped — any throw before fetch must return JSON, not empty 500
   try {
-    const res = await fetch(target, {
-      method: req.method,
-      headers,
-      body: req.method === "GET" || req.method === "HEAD" ? undefined : await req.text(),
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
+    // Vercel/Next 15+ : params is a Promise, locally it may be plain object — handle both
+    let path: string[] | undefined;
+    try {
+      const p = await (ctx as unknown as { params: Promise<{ path?: string[] }> | { path?: string[] } }).params;
+      path = (p as { path?: string[] })?.path;
+    } catch {
+      path = undefined;
+    }
+
+    const target = `${API_BASE}/${(path ?? []).join("/")}${req.nextUrl.search}`;
+
+    const headers: Record<string, string> = { Accept: "application/json" };
+    const contentType = req.headers.get("content-type");
+    const authorization = req.headers.get("authorization");
+    if (contentType) headers["Content-Type"] = contentType;
+    if (authorization) headers["Authorization"] = authorization;
+
+    // Body handling — only for methods that allow it
+    let body: string | undefined = undefined;
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      try {
+        body = await req.text();
+        if (body === "") body = undefined;
+      } catch {
+        body = undefined;
+      }
+    }
+
+    // Timeout using AbortController (more compatible than AbortSignal.timeout on some Node versions)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+    let res: Response;
+    try {
+      res = await fetch(target, {
+        method: req.method,
+        headers,
+        body,
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     const resHeaders = new Headers(corsHeaders());
     const resContentType = res.headers.get("content-type");
@@ -47,13 +78,16 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
 
     // Binary-safe passthrough (attachment downloads stream through here too).
     // arrayBuffer() keeps JSON responses working while preserving bytes exactly.
-    const body =
-      res.status === 204
-        ? null
-        : await res.arrayBuffer();
-    return new NextResponse(body, { status: res.status, headers: resHeaders });
+    if (res.status === 204) {
+      return new NextResponse(null, { status: 204, headers: resHeaders });
+    }
+
+    const buffer = await res.arrayBuffer();
+    return new NextResponse(buffer, { status: res.status, headers: resHeaders });
   } catch (err) {
     const message = err instanceof Error ? err.message : "relay error";
+    // Include target in logs for Vercel Runtime Logs
+    console.error("[mailtm relay] error:", message, err);
     return NextResponse.json(
       { message: `Relay error: ${message}` },
       { status: 502, headers: corsHeaders() },
