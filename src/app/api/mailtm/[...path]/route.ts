@@ -26,7 +26,7 @@ function corsHeaders(): Record<string, string> {
 }
 
 async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> }) {
-  // Entire handler wrapped — any throw before fetch must return JSON, not empty 500
+  // Entire handler wrapped — any throw must return JSON, not empty 500
   try {
     // Vercel/Next 15+ : params is a Promise, locally it may be plain object — handle both
     let path: string[] | undefined;
@@ -35,6 +35,15 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       path = (p as { path?: string[] })?.path;
     } catch {
       path = undefined;
+    }
+
+    // DEBUG MODE: if you see this JSON, routing works — fetch is the culprit
+    const debug = req.nextUrl.searchParams.get("debug");
+    if (debug === "1") {
+      return NextResponse.json(
+        { ok: true, path, search: req.nextUrl.search, method: req.method, debug: "relay reached handler" },
+        { headers: corsHeaders() }
+      );
     }
 
     const target = `${API_BASE}/${(path ?? []).join("/")}${req.nextUrl.search}`;
@@ -86,10 +95,11 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     return new NextResponse(buffer, { status: res.status, headers: resHeaders });
   } catch (err) {
     const message = err instanceof Error ? err.message : "relay error";
+    const stack = err instanceof Error ? err.stack : String(err);
     // Include target in logs for Vercel Runtime Logs
-    console.error("[mailtm relay] error:", message, err);
+    console.error("[mailtm relay] error:", message, stack);
     return NextResponse.json(
-      { message: `Relay error: ${message}` },
+      { message: `Relay error: ${message}`, stack: stack?.slice(0, 500) },
       { status: 502, headers: corsHeaders() },
     );
   }
