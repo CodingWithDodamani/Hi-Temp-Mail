@@ -81,6 +81,40 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
         return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e) }, { status: 502, headers: corsHeaders() });
       }
     }
+    if (debug === "multi") {
+      const tests: Record<string, unknown> = {};
+      const urls = [
+        "https://api.mail.tm/domains",
+        "https://api.mail.tm/",
+        "https://api.mail.tm/docs",
+      ];
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, { headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126" } });
+          const t = await r.text();
+          tests[u] = { status: r.status, body: t.slice(0, 300), headers: Object.fromEntries(r.headers.entries()) };
+        } catch (e) {
+          tests[u] = { error: e instanceof Error ? e.message : String(e) };
+        }
+      }
+      // Also test with Origin spoof
+      try {
+        const r = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json", Origin: "https://mail.tm", Referer: "https://mail.tm/" } });
+        const t = await r.text();
+        tests["origin-spoof"] = { status: r.status, body: t.slice(0, 300) };
+      } catch (e) {
+        tests["origin-spoof"] = { error: e instanceof Error ? e.message : String(e) };
+      }
+      // Test corsproxy
+      try {
+        const r = await fetch("https://corsproxy.io/?https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
+        const t = await r.text();
+        tests["corsproxy"] = { status: r.status, body: t.slice(0, 300) };
+      } catch (e) {
+        tests["corsproxy"] = { error: e instanceof Error ? e.message : String(e) };
+      }
+      return NextResponse.json(tests, { headers: corsHeaders() });
+    }
     if (debug === "fetch2") {
       try {
         const test = await fetch("https://example.com", { headers: { Accept: "text/html" } });
