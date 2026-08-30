@@ -50,9 +50,35 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       try {
         const test = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
         const txt = await test.text();
-        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 400) }, { headers: corsHeaders() });
+        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 400), headers: Object.fromEntries(test.headers.entries()) }, { headers: corsHeaders() });
       } catch (e) {
         return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e), stack: e instanceof Error ? e.stack?.slice(0, 800) : "" }, { status: 502, headers: corsHeaders() });
+      }
+    }
+    if (debug === "ua") {
+      try {
+        const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+        const test = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json", "User-Agent": ua } });
+        const txt = await test.text();
+        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 600), headers: Object.fromEntries(test.headers.entries()) }, { headers: corsHeaders() });
+      } catch (e) {
+        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e), stack: e instanceof Error ? e.stack?.slice(0, 800) : "" }, { status: 502, headers: corsHeaders() });
+      }
+    }
+    if (debug === "ua2") {
+      try {
+        const test = await fetch("https://api.mail.tm/domains", {
+          headers: {
+            Accept: "application/json",
+            "User-Agent": "Mozilla/5.0",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cache-Control": "no-cache",
+          },
+        });
+        const txt = await test.text();
+        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 600) }, { headers: corsHeaders() });
+      } catch (e) {
+        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e) }, { status: 502, headers: corsHeaders() });
       }
     }
     if (debug === "fetch2") {
