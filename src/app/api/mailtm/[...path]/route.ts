@@ -83,13 +83,13 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     }
     if (debug === "multi") {
       const tests: Record<string, unknown> = {};
-      // Test 1secmail as alternative (may not be blocked)
+      // Test guerrillamail
       try {
-        const r = await fetch("https://www.1secmail.com/api/v1/?action=getDomainList", { headers: { Accept: "application/json" } });
+        const r = await fetch("https://api.guerrillamail.com/ajax.php?f=get_email_address", { headers: { Accept: "application/json" } });
         const t = await r.text();
-        tests["1secmail"] = { status: r.status, body: t.slice(0, 400) };
+        tests["guerrilla"] = { status: r.status, body: t.slice(0, 500) };
       } catch (e) {
-        tests["1secmail"] = { error: e instanceof Error ? e.message : String(e) };
+        tests["guerrilla"] = { error: e instanceof Error ? e.message : String(e) };
       }
       try {
         const r = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
@@ -98,13 +98,21 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       } catch (e) {
         tests["mailtm-direct"] = { error: e instanceof Error ? e.message : String(e) };
       }
-      // Test via codetabs alternative
+      // Test mail.gw (same as mail.tm but different domain)
       try {
-        const r = await fetch("https://proxy.corsfix.com/?https://api.mail.tm/domains", { headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" } });
+        const r = await fetch("https://api.mail.gw/domains", { headers: { Accept: "application/json" } });
         const t = await r.text();
-        tests["corsfix"] = { status: r.status, body: t.slice(0, 400) };
+        tests["mailgw"] = { status: r.status, body: t.slice(0, 400) };
       } catch (e) {
-        tests["corsfix"] = { error: e instanceof Error ? e.message : String(e) };
+        tests["mailgw"] = { error: e instanceof Error ? e.message : String(e) };
+      }
+      // Test tempmail.lol
+      try {
+        const r = await fetch("https://api.tempmail.lol/generate", { headers: { Accept: "application/json" } });
+        const t = await r.text();
+        tests["tempmail.lol"] = { status: r.status, body: t.slice(0, 400) };
+      } catch (e) {
+        tests["tempmail.lol"] = { error: e instanceof Error ? e.message : String(e) };
       }
       return NextResponse.json(tests, { headers: corsHeaders() });
     }
