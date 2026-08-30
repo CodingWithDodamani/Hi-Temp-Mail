@@ -9,11 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
  * CORS headers, so the single-file app works anywhere it can reach this route.
  */
 
-const API_BASE = "https://api.mail.tm";
+const API_PRIMARY = "https://api.mail.tm";
+const API_FALLBACK = "https://api.mail.gw";
 const TIMEOUT_MS = 20000;
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
 
 function corsHeaders(): Record<string, string> {
@@ -126,8 +127,6 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       }
     }
 
-    const target = `${API_BASE}/${(path ?? []).join("/")}${req.nextUrl.search}`;
-
     const headers: Record<string, string> = { Accept: "application/json" };
     const contentType = req.headers.get("content-type");
     const authorization = req.headers.get("authorization");
@@ -145,20 +144,53 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       }
     }
 
-    // Timeout using AbortController (more compatible than AbortSignal.timeout on some Node versions)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    async function fetchWithTimeout(url: string): Promise<Response> {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+      try {
+        return await fetch(url, {
+          method: req.method,
+          headers,
+          body,
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
 
-    let res: Response;
-    try {
-      res = await fetch(target, {
-        method: req.method,
-        headers,
-        body,
-        signal: controller.signal,
-      });
-    } finally {
-      clearTimeout(timeoutId);
+    // Try primary (mail.tm), fallback to mail.gw if primary is blocked (500 empty from Vercel IP)
+    const targets = [
+      `${API_PRIMARY}/${(path ?? []).join("/")}${req.nextUrl.search}`,
+      `${API_FALLBACK}/${(path ?? []).join("/")}${req.nextUrl.search}`,
+    ];
+
+    let res: Response | null = null;
+    let lastError: unknown = null;
+    for (const target of targets) {
+      try {
+        const r = await fetchWithTimeout(target);
+        // If primary returns 500 with empty body (Vercel IP block), try fallback
+        if (r.status === 500) {
+          const clone = r.clone();
+          const txt = await clone.text().catch(() => "");
+          if (txt.trim() === "" && target.includes("mail.tm")) {
+            console.warn(`[mailtm relay] ${target} returned 500 empty — trying fallback ${API_FALLBACK}`);
+            continue;
+          }
+        }
+        res = r;
+        break;
+      } catch (e) {
+        lastError = e;
+        console.warn(`[mailtm relay] fetch failed for ${target}:`, e instanceof Error ? e.message : String(e));
+        // Try next target
+        continue;
+      }
+    }
+
+    if (!res) {
+      throw lastError ?? new Error("All upstreams failed");
     }
 
     const resHeaders = new Headers(corsHeaders());
