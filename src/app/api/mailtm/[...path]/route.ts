@@ -113,6 +113,23 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       } catch (e) {
         tests["corsproxy"] = { error: e instanceof Error ? e.message : String(e) };
       }
+      // Test alternative proxies
+      const proxies = [
+        "https://isomorphic-git.org/cors/https://api.mail.tm/domains",
+        "https://thingproxy.freeboard.io/fetch/https://api.mail.tm/domains",
+        "https://yacdn.org/proxy/https://api.mail.tm/domains",
+        "https://api.allorigins.win/get?url=https://api.mail.tm/domains",
+        "https://cors-anywhere.herokuapp.com/https://api.mail.tm/domains",
+      ];
+      for (const p of proxies) {
+        try {
+          const r = await fetch(p, { headers: { Accept: "application/json" } });
+          const t = await r.text();
+          tests[p] = { status: r.status, body: t.slice(0, 400) };
+        } catch (e) {
+          tests[p] = { error: e instanceof Error ? e.message : String(e) };
+        }
+      }
       return NextResponse.json(tests, { headers: corsHeaders() });
     }
     if (debug === "fetch2") {
