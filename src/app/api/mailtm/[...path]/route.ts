@@ -13,7 +13,7 @@ const API_BASE = "https://api.mail.tm";
 const TIMEOUT_MS = 20000;
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const runtime = "edge";
 export const fetchCache = "force-no-store";
 
 function corsHeaders(): Record<string, string> {
