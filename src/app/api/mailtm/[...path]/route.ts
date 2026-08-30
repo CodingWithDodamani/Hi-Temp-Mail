@@ -37,13 +37,32 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       path = undefined;
     }
 
-    // DEBUG MODE: if you see this JSON, routing works — fetch is the culprit
+    // DEBUG MODES
     const debug = req.nextUrl.searchParams.get("debug");
     if (debug === "1") {
       return NextResponse.json(
         { ok: true, path, search: req.nextUrl.search, method: req.method, debug: "relay reached handler" },
         { headers: corsHeaders() }
       );
+    }
+    if (debug === "fetch") {
+      // Test if Vercel can fetch at all
+      try {
+        const test = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
+        const txt = await test.text();
+        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 400) }, { headers: corsHeaders() });
+      } catch (e) {
+        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e), stack: e instanceof Error ? e.stack?.slice(0, 800) : "" }, { status: 502, headers: corsHeaders() });
+      }
+    }
+    if (debug === "fetch2") {
+      try {
+        const test = await fetch("https://example.com", { headers: { Accept: "text/html" } });
+        const txt = await test.text();
+        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 200) }, { headers: corsHeaders() });
+      } catch (e) {
+        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e) }, { status: 502, headers: corsHeaders() });
+      }
     }
 
     const target = `${API_BASE}/${(path ?? []).join("/")}${req.nextUrl.search}`;
