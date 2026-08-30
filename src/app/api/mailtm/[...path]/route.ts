@@ -83,52 +83,28 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     }
     if (debug === "multi") {
       const tests: Record<string, unknown> = {};
-      const urls = [
-        "https://api.mail.tm/domains",
-        "https://api.mail.tm/",
-        "https://api.mail.tm/docs",
-      ];
-      for (const u of urls) {
-        try {
-          const r = await fetch(u, { headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126" } });
-          const t = await r.text();
-          tests[u] = { status: r.status, body: t.slice(0, 300), headers: Object.fromEntries(r.headers.entries()) };
-        } catch (e) {
-          tests[u] = { error: e instanceof Error ? e.message : String(e) };
-        }
-      }
-      // Also test with Origin spoof
+      // Test 1secmail as alternative (may not be blocked)
       try {
-        const r = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json", Origin: "https://mail.tm", Referer: "https://mail.tm/" } });
+        const r = await fetch("https://www.1secmail.com/api/v1/?action=getDomainList", { headers: { Accept: "application/json" } });
         const t = await r.text();
-        tests["origin-spoof"] = { status: r.status, body: t.slice(0, 300) };
+        tests["1secmail"] = { status: r.status, body: t.slice(0, 400) };
       } catch (e) {
-        tests["origin-spoof"] = { error: e instanceof Error ? e.message : String(e) };
+        tests["1secmail"] = { error: e instanceof Error ? e.message : String(e) };
       }
-      // Test corsproxy
       try {
-        const r = await fetch("https://corsproxy.io/?https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
+        const r = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
         const t = await r.text();
-        tests["corsproxy"] = { status: r.status, body: t.slice(0, 300) };
+        tests["mailtm-direct"] = { status: r.status, body: t.slice(0, 300) };
       } catch (e) {
-        tests["corsproxy"] = { error: e instanceof Error ? e.message : String(e) };
+        tests["mailtm-direct"] = { error: e instanceof Error ? e.message : String(e) };
       }
-      // Test alternative proxies
-      const proxies = [
-        "https://isomorphic-git.org/cors/https://api.mail.tm/domains",
-        "https://thingproxy.freeboard.io/fetch/https://api.mail.tm/domains",
-        "https://yacdn.org/proxy/https://api.mail.tm/domains",
-        "https://api.allorigins.win/get?url=https://api.mail.tm/domains",
-        "https://cors-anywhere.herokuapp.com/https://api.mail.tm/domains",
-      ];
-      for (const p of proxies) {
-        try {
-          const r = await fetch(p, { headers: { Accept: "application/json" } });
-          const t = await r.text();
-          tests[p] = { status: r.status, body: t.slice(0, 400) };
-        } catch (e) {
-          tests[p] = { error: e instanceof Error ? e.message : String(e) };
-        }
+      // Test via codetabs alternative
+      try {
+        const r = await fetch("https://proxy.corsfix.com/?https://api.mail.tm/domains", { headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" } });
+        const t = await r.text();
+        tests["corsfix"] = { status: r.status, body: t.slice(0, 400) };
+      } catch (e) {
+        tests["corsfix"] = { error: e instanceof Error ? e.message : String(e) };
       }
       return NextResponse.json(tests, { headers: corsHeaders() });
     }
