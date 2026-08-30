@@ -38,93 +38,12 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       path = undefined;
     }
 
-    // DEBUG MODES
-    const debug = req.nextUrl.searchParams.get("debug");
-    if (debug === "1") {
+    // Health check for Vercel — https://hitempmail.vercel.app/api/mailtm/domains?health=1
+    if (req.nextUrl.searchParams.get("health") === "1" || req.nextUrl.searchParams.get("debug") === "1") {
       return NextResponse.json(
-        { ok: true, path, search: req.nextUrl.search, method: req.method, debug: "relay reached handler" },
+        { ok: true, path, search: req.nextUrl.search, method: req.method, primary: API_PRIMARY, fallback: API_FALLBACK },
         { headers: corsHeaders() }
       );
-    }
-    if (debug === "fetch") {
-      // Test if Vercel can fetch at all
-      try {
-        const test = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
-        const txt = await test.text();
-        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 400), headers: Object.fromEntries(test.headers.entries()) }, { headers: corsHeaders() });
-      } catch (e) {
-        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e), stack: e instanceof Error ? e.stack?.slice(0, 800) : "" }, { status: 502, headers: corsHeaders() });
-      }
-    }
-    if (debug === "ua") {
-      try {
-        const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
-        const test = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json", "User-Agent": ua } });
-        const txt = await test.text();
-        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 600), headers: Object.fromEntries(test.headers.entries()) }, { headers: corsHeaders() });
-      } catch (e) {
-        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e), stack: e instanceof Error ? e.stack?.slice(0, 800) : "" }, { status: 502, headers: corsHeaders() });
-      }
-    }
-    if (debug === "ua2") {
-      try {
-        const test = await fetch("https://api.mail.tm/domains", {
-          headers: {
-            Accept: "application/json",
-            "User-Agent": "Mozilla/5.0",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Cache-Control": "no-cache",
-          },
-        });
-        const txt = await test.text();
-        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 600) }, { headers: corsHeaders() });
-      } catch (e) {
-        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e) }, { status: 502, headers: corsHeaders() });
-      }
-    }
-    if (debug === "multi") {
-      const tests: Record<string, unknown> = {};
-      // Test guerrillamail
-      try {
-        const r = await fetch("https://api.guerrillamail.com/ajax.php?f=get_email_address", { headers: { Accept: "application/json" } });
-        const t = await r.text();
-        tests["guerrilla"] = { status: r.status, body: t.slice(0, 500) };
-      } catch (e) {
-        tests["guerrilla"] = { error: e instanceof Error ? e.message : String(e) };
-      }
-      try {
-        const r = await fetch("https://api.mail.tm/domains", { headers: { Accept: "application/json" } });
-        const t = await r.text();
-        tests["mailtm-direct"] = { status: r.status, body: t.slice(0, 300) };
-      } catch (e) {
-        tests["mailtm-direct"] = { error: e instanceof Error ? e.message : String(e) };
-      }
-      // Test mail.gw (same as mail.tm but different domain)
-      try {
-        const r = await fetch("https://api.mail.gw/domains", { headers: { Accept: "application/json" } });
-        const t = await r.text();
-        tests["mailgw"] = { status: r.status, body: t.slice(0, 400) };
-      } catch (e) {
-        tests["mailgw"] = { error: e instanceof Error ? e.message : String(e) };
-      }
-      // Test tempmail.lol
-      try {
-        const r = await fetch("https://api.tempmail.lol/generate", { headers: { Accept: "application/json" } });
-        const t = await r.text();
-        tests["tempmail.lol"] = { status: r.status, body: t.slice(0, 400) };
-      } catch (e) {
-        tests["tempmail.lol"] = { error: e instanceof Error ? e.message : String(e) };
-      }
-      return NextResponse.json(tests, { headers: corsHeaders() });
-    }
-    if (debug === "fetch2") {
-      try {
-        const test = await fetch("https://example.com", { headers: { Accept: "text/html" } });
-        const txt = await test.text();
-        return NextResponse.json({ fetchOk: true, status: test.status, bodyPreview: txt.slice(0, 200) }, { headers: corsHeaders() });
-      } catch (e) {
-        return NextResponse.json({ fetchOk: false, error: e instanceof Error ? e.message : String(e) }, { status: 502, headers: corsHeaders() });
-      }
     }
 
     const headers: Record<string, string> = { Accept: "application/json" };
