@@ -36,6 +36,7 @@ arrive — catch OTP codes, keep the spam out, and walk away when you're done.
 | 💾 | **Backup & restore** | Export / import your saved mailboxes as a file — works across devices. |
 | 🌗 | **Light & dark themes** | A hand-tuned rose → pink → blue design system, beautiful in both modes. |
 | 📱 | **Installable PWA** | Install to your home screen, use it offline, launch it like a native app. |
+| 🤖 | **Agent-ready** | `llms.txt` + `llms-full.txt`, OpenAPI spec, MCP server and Markdown negotiation — Claude, ChatGPT and other agents can discover and call the product natively. |
 
 ## 🧑‍💻 How it works
 
@@ -52,8 +53,9 @@ arrive — catch OTP codes, keep the spam out, and walk away when you're done.
 | UI | **Tailwind CSS 4**, custom rose→pink→blue design system, Material Symbols |
 | App engine | Zero-dependency single-file app (`index.html` → served as `public/ar-tempmail.html`), rendered in an iframe |
 | Orchestration | `src/app/page.tsx` shell — landing ⇄ app crossfade, postMessage protocol (`HI_TEMPMAIL_LAUNCH` / `HI_TEMPMAIL_HOME`), app stays mounted so the mailbox survives round-trips |
-| Mail backend | [Mail.tm](https://mail.tm) free API — reached through a **same-origin relay** (`src/app/api/mailtm/[...path]/route.ts`) that transparently solves Mail.tm's CORS restriction. No API keys, no server database. |
-| SEO / AI agents | JSON-LD (`WebSite`, `WebApplication`, `HowTo`, `FAQPage`), crawlable `<noscript>` content, `sitemap.xml`, `robots.txt`, `llms.txt` + `llms-full.txt` |
+| Mail backend | [Mail.tm](https://mail.tm) free API — reached through a **same-origin relay** (`src/app/api/mailtm/[...path]/route.ts`) that transparently solves Mail.tm's CORS restriction, with automatic fallback to `api.mail.gw`. No API keys, no server database. |
+| SEO / AI agents | JSON-LD (`WebSite`, `WebApplication`, `Organization`, `HowTo`, `FAQPage`), crawlable SSR + `<noscript>` content, `sitemap.xml`, `robots.txt`, `llms.txt` + `llms-full.txt`, Markdown negotiation, MCP server |
+| Agent API | OpenAPI 3.1 spec (`public/openapi.json`), developer guide (`public/docs.html`), MCP endpoint (`/.well-known/mcp`), all keyless |
 
 ```text
 hi-temp-mail/
@@ -62,6 +64,8 @@ hi-temp-mail/
 │   ├── ar-tempmail.html              # The app as served (mirror of index.html)
 │   ├── landing.html                  # Premium intro / landing experience
 │   ├── about.html · faq.html · privacy.html · disclaimer.html
+│   ├── contact.html · docs.html      # Contact page + developer docs
+│   ├── openapi.json                  # OpenAPI 3.1 spec for the relay
 │   ├── sw.js                         # Service worker (PWA)
 │   ├── offline.html                  # Branded offline fallback
 │   ├── manifest.webmanifest          # PWA manifest
@@ -69,14 +73,27 @@ hi-temp-mail/
 │   └── favicon.svg · logo.svg · og-image.png · icon-*.png · apple-touch-icon.png
 ├── docs/
 │   └── banner.png                    # GitHub README banner
+├── scripts/
+│   └── verify-agentic.mjs            # Agentic-readiness checks (npm run verify:agentic)
 └── src/
     ├── app/
     │   ├── layout.tsx                # SEO metadata, fonts, PWA wiring
     │   ├── page.tsx                  # Landing ⇄ app shell (iframe orchestration + JSON-LD)
+    │   ├── not-found.tsx             # Agent-friendly 404 with recovery links
+    │   ├── .well-known/mcp/route.ts  # MCP server (Streamable HTTP, stateless)
     │   └── api/mailtm/[...path]/route.ts   # Same-origin Mail.tm relay
+    ├── proxy.ts                      # Accept: text/markdown negotiation + Vary: Accept
     └── components/
         └── service-worker-registrar.tsx    # Production-only SW registration
 ```
+
+## 🤖 For AI agents
+
+- **Start here:** [`llms.txt`](https://hitempmail.app/llms.txt) (short index with when-to-use guidance) or [`llms-full.txt`](https://hitempmail.app/llms-full.txt) (complete docs in one file).
+- **Call it natively:** MCP server at `/.well-known/mcp` (Streamable HTTP, stateless, no auth) — `initialize`, then `tools/list` (`get_domains`, `server_health`).
+- **Call it over HTTP:** relay base `https://hitempmail.app/api/mailtm` (1:1 mirror of `api.mail.tm`), contract in [`openapi.json`](https://hitempmail.app/openapi.json), guide in [`docs.html`](https://hitempmail.app/docs.html).
+- **Prefer Markdown?** Send `Accept: text/markdown` to `/` and you'll get Markdown back (`Vary: Accept` respected).
+- **Verify your integration:** `npm run verify:agentic` (set `BASE_URL` to target staging/production).
 
 ## 🏁 Getting started
 
@@ -102,6 +119,7 @@ npm run dev        # or: bun run dev
 | `npm run build:standalone` | Production build + standalone output for self-hosting |
 | `npm start` | Serve the standalone build (`build:standalone` first) |
 | `npm run lint` | ESLint |
+| `npm run verify:agentic` | Agentic-readiness checks (needs the app running; `BASE_URL=…` to target Vercel) |
 
 > After editing the app (`index.html`), mirror it to the served copy: `cp index.html public/ar-tempmail.html`.
 
@@ -120,6 +138,14 @@ npm run dev        # or: bun run dev
 npm run build:standalone
 npm start          # serves on port 3000
 ```
+
+## 🛠 Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| Dev console shows `WebSocket ... /_next/hmr failed` on `http://127.0.0.1:3000` | Already handled — `allowedDevOrigins` in `next.config.ts` covers `127.0.0.1`/`localhost`. Dev-only; production has no HMR socket. |
+| `/api/mailtm/*` returns 500/502 on Vercel | The relay tries `api.mail.tm`, then `api.mail.gw`. If both fail, the provider is down — check `GET /api/mailtm/domains?health=1` and Vercel Runtime Logs. |
+| App shows "Could not create a mailbox" | Upstream `POST /accounts` flakiness (returns 400 even for valid payloads at times). Wait a minute and retry — `GET /domains` working means the relay is fine. |
 
 ## 📱 PWA — offline first
 

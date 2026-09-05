@@ -70,7 +70,7 @@ and is not affiliated with Mail.tm.
 
 ## Status
 
-Version 5.0 · Free forever · Private by design.
+Version 6.0 · Free forever · Private by design.
 
 ## FAQ
 
@@ -257,7 +257,7 @@ this page.
 
 ## Feature reference
 
-Complete list of user-facing features in the current version (v5.0):
+Complete list of user-facing features in the current version (v6.0):
 
 - **Instant mailbox generation** — a working address is ready the moment the app opens.
 - - **10-minute timer + Extend** — mailbox lifetime with one-tap extension and a visual countdown
