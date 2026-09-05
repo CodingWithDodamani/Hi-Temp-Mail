@@ -112,41 +112,42 @@
         <div class="mt-3 h-1 w-12 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500" aria-hidden="true"></div>
 
         <div class="prose-hi mt-6 rounded-2xl border border-line-light bg-card-light p-6 text-sm leading-relaxed text-zinc-600 shadow-card dark:border-line-dark dark:bg-card-dark dark:text-zinc-300">
-          <p class="mt-0">A temporary email — also called disposable, throwaway or burner email — is a real, working inbox you use instead of your personal address for signups you don't fully trust. It receives mail exactly like a normal address, but it isn't connected to your identity, so the spam, tracking and data-leak fallout never reaches your real inbox. This guide explains how it works, the five jobs it's perfect for, how long mailboxes actually last, and the honest limits most providers won't tell you about.</p>
+          <p class="mt-0">You know that moment. You want the free ebook, the trial, the Wi-Fi password — and the form wants your email first. You can almost hear the next three years of newsletters lining up. A temporary email gets you past that screen: a real inbox that works for a bit, then goes away, while your actual address stays clean. People also call them disposable, throwaway or burner emails. Same thing.</p>
+          <p>I've watched friends maintain three separate Gmail accounts just to dodge signup spam. That's the problem this solves, minus the account juggling. Below is how it all works, where it shines, and where you shouldn't trust it — including the parts most providers conveniently leave out.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">How a temporary email works</h2>
-          <p>Behind the scenes nothing magical happens: a mail server creates a normal mailbox with a random address, and a web app shows you what's inside it. The disposable part is policy, not technology — the address is meant to be used briefly and abandoned. With Hi Temp Mail the whole flow takes seconds:</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">So how does it actually work?</h2>
+          <p>Nothing exotic. A mail server spins up a normal mailbox with a random address, and a web page shows you what's inside. The "disposable" part is just a policy: use it briefly, abandon it, done. With Hi Temp Mail it goes like this:</p>
           <ol class="mt-3 list-decimal space-y-2 pl-5">
-            <li><strong>Open the app</strong> — a mailbox is generated instantly. No forms, no verification, no waiting room.</li>
-            <li><strong>Copy the address</strong> and paste it into any signup, trial or download form.</li>
-            <li><strong>Read the inbox</strong> — verification codes are auto-detected and offered as a one-tap copy chip, then you walk away and the mailbox expires.</li>
+            <li><strong>Open the app.</strong> A mailbox is already there. No form, no "verify your email to get an email" nonsense.</li>
+            <li><strong>Copy the address</strong> into whatever signup, trial or download form you're facing.</li>
+            <li><strong>Grab your code or link</strong> from the inbox — verification codes pop up as a one-tap copy chip — then leave. The mailbox expires on its own.</li>
           </ol>
-          <p>Because the app runs entirely in your browser with no accounts of its own, there is nothing to sign up for and nothing tracking you — the mailbox lives on the mail provider's servers until it expires or you delete it.</p>
+          <p>There's no account behind any of this. The app runs in your browser, nothing tracks you, and the mailbox sits on the mail provider's servers until it expires or you delete it yourself.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">5 jobs a temporary email is perfect for</h2>
-          <p><strong>1. One-time-password codes.</strong> The number-one use case: paste a disposable address into a verification form and grab the 4–8 digit code. Good temp-mail apps detect the code automatically so you never hunt through message bodies — see our <a href="/blog/how-to-receive-otp-verification-codes.html" class="font-semibold text-pink-600 underline dark:text-pink-400">OTP walkthrough</a>.</p>
-          <p><strong>2. Free trials that demand an email.</strong> Software trials, streaming previews, ebook downloads — anywhere the price of admission is your inbox. A burner address gets you in without subscribing to years of "we miss you" campaigns.</p>
-          <p><strong>3. Forums, Wi-Fi portals and app testing.</strong> Hotel Wi-Fi, community forums, beta apps and QA runs all want an address for an account you'll use three times. Developers especially love throwaway inboxes for testing signup flows without polluting real mailboxes.</p>
-          <p><strong>4. Newsletters you're curious about.</strong> Want to read three issues before committing? Subscribe with a temporary address. If the content earns it, resubscribe with your real one later.</p>
-          <p><strong>5. Shopping for quotes and downloads.</strong> Price-comparison sites, whitepapers, coupon gates — classic lead-harvesting machines. A disposable address keeps the follow-up sales calls out of your life.</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Where it earns its keep</h2>
+          <p><strong>Verification codes, obviously.</strong> This is the number-one reason people show up: paste a burner into a form, grab the 4–8 digit code, move on with your day. A decent app spots the code for you so you're not squinting at message bodies — our <a href="/blog/how-to-receive-otp-verification-codes.html" class="font-semibold text-pink-600 underline dark:text-pink-400">OTP walkthrough</a> covers the whole dance.</p>
+          <p><strong>Free trials with strings attached.</strong> Software trials, streaming previews, that ebook "everyone" is reading. The admission fee is your inbox, and the price keeps charging for years through "we miss you" campaigns. Pay with an address you can throw away instead.</p>
+          <p><strong>Forums, hotel Wi-Fi, beta apps.</strong> Half the internet wants an account you'll use exactly three times. Developers are some of the heaviest temp-mail users I know — nothing beats a fresh inbox per test run when you're debugging a signup flow.</p>
+          <p><strong>Test-driving newsletters.</strong> Curious but not committed? Subscribe with a burner, read three issues, and only then decide if it deserves your real address. Most won't make the cut. That's the point.</p>
+          <p><strong>Quotes, coupons, whitepapers.</strong> Price-comparison sites and download gates are lead-harvesting machines wearing a friendly mask. A disposable address keeps the follow-up sales calls out of your life.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">How long does a temporary mailbox last?</h2>
-          <p>It depends on the provider. Classic "10-minute mail" services destroy the inbox after ten minutes. Hi Temp Mail starts with the same 10-minute lifetime and a one-tap Extend — but adds a <strong>Saved Mailboxes vault</strong>: bookmark any address and restore the exact same mailbox days later, with new mail (OTPs included) still arriving. The catch, honest as always: saved mailboxes live on the provider's servers, so if the provider retires an address after long inactivity, it's gone. For anything that must survive months, use a permanent address.</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">How long before it vanishes?</h2>
+          <p>Depends who you ask. Old-school "10-minute mail" nukes the inbox after ten minutes flat. Hi Temp Mail starts there too, with a one-tap Extend — but then there's the <strong>Saved Mailboxes vault</strong>. Bookmark an address and you can reopen that exact mailbox days later, with fresh mail and OTPs still landing. The honest catch: saved boxes still live on the provider's servers, so if one gets retired after long inactivity, it's gone for good. Need something to survive months? That's what your permanent address is for.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Temporary vs permanent email</h2>
-          <p>A temporary address is a mask, not a home. It has no password recovery safety net, no multi-year archive, and some sites block known disposable domains outright. Rule of thumb: if losing access tomorrow would hurt — banking, government, health, work, crypto, primary social accounts — use your permanent inbox. If the worst case is missing a newsletter, go disposable. Our full breakdown of the risks lives in <a href="/blog/is-temp-mail-safe.html" class="font-semibold text-pink-600 underline dark:text-pink-400">Is Temp Mail Safe?</a></p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Mask, not home</h2>
+          <p>Think of a burner as a mask, not a home address. No recovery safety net, no years-long archive, and yes, some sites block known disposable domains on sight. My rule is simple: if losing access tomorrow would ruin your week — bank, government, health, work, crypto, main social accounts — use the real inbox. Worst case is a missed newsletter? Go disposable. The longer version of this argument, risks and all, is <a href="/blog/is-temp-mail-safe.html" class="font-semibold text-pink-600 underline dark:text-pink-400">Is Temp Mail Safe?</a></p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Try it in 30 seconds</h2>
-          <p><a href="/" class="font-semibold text-pink-600 underline dark:text-pink-400">Open Hi Temp Mail</a> — your first disposable address is already generated before you finish reading this sentence. Copy it, paste it into any form, and watch the OTP chip appear. No signup. No tracking. When you're done, delete the mailbox or just close the tab.</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Just try it</h2>
+          <p><a href="/" class="font-semibold text-pink-600 underline dark:text-pink-400">Open Hi Temp Mail</a>. Your first address is sitting there before you've finished this sentence — copy it, paste it somewhere annoying, watch the OTP chip appear. No signup, no tracking. Done with it? Delete the mailbox, or just close the tab and forget it ever existed.</p>
         </div>
 
         <div class="mt-6 rounded-2xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark">
           <h2 class="font-display text-lg font-bold tracking-tight">Quick answers</h2>
           <div class="mt-3 space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            <p><strong>Is temporary email free?</strong> Yes — Hi Temp Mail and most providers cost nothing and need no account.</p>
-            <p><strong>Can I receive OTP codes?</strong> Yes. 4–8 digit codes are auto-detected with one-tap copy; see the <a href="/blog/how-to-receive-otp-verification-codes.html" class="font-semibold text-pink-600 underline dark:text-pink-400">OTP guide</a>.</p>
-            <p><strong>Can I send email from it?</strong> No — Hi Temp Mail is receive-only, which is also why it can't be used for outbound spam.</p>
-            <p><strong>Is it anonymous?</strong> It hides your real address, but it doesn't hide your IP or make you untraceable — read <a href="/blog/how-to-stay-anonymous-online.html" class="font-semibold text-pink-600 underline dark:text-pink-400">the anonymity guide</a> for the full picture.</p>
+            <p><strong>Does it cost anything?</strong> Nope. Hi Temp Mail is free, no account, no catch I can find.</p>
+            <p><strong>Will OTP codes actually arrive?</strong> Yes — 4 to 8 digit codes get spotted automatically with one-tap copy. The full routine is in the <a href="/blog/how-to-receive-otp-verification-codes.html" class="font-semibold text-pink-600 underline dark:text-pink-400">OTP guide</a>.</p>
+            <p><strong>Can I send email from it?</strong> No, it's receive-only. Silver lining: that also means nobody can use it for outbound spam.</p>
+            <p><strong>Am I anonymous then?</strong> Your address stays hidden, but your IP doesn't, and "untraceable" is a fantasy. <a href="/blog/how-to-stay-anonymous-online.html" class="font-semibold text-pink-600 underline dark:text-pink-400">The anonymity guide</a> lays out what burner mail can and can't do for you.</p>
           </div>
         </div>
 

@@ -113,10 +113,10 @@
         <div class="mt-3 h-1 w-12 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500" aria-hidden="true"></div>
 
         <div class="prose-hi mt-6 rounded-2xl border border-line-light bg-card-light p-6 text-sm leading-relaxed text-zinc-600 shadow-card dark:border-line-dark dark:bg-card-dark dark:text-zinc-300">
-          <p class="mt-0">Every signup flow needs a victim inbox: registration, email verification, OTP, password reset, notification preferences. Maintaining shared test mailboxes is how teams end up with flaky suites and mystery state. Scripted disposable inboxes give every test run a fresh address, then throw it away. Here's the pattern that works.</p>
+          <p class="mt-0">Every signup flow needs somewhere to send its mail: registration, verification, OTPs, password resets, notification prefs. Most teams start with a shared test mailbox, and that's exactly how you end up with flaky suites and mystery state at 2am — leftover mail from somebody else's run. Scripted disposable inboxes fix it properly: every test gets a virgin address, then throws it away. Here's the pattern.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">The 30-second scripted loop</h2>
-          <p>Hi Temp Mail's relay is a plain 1:1 mirror of the Mail.tm API with CORS enabled, so scripts and CI runners can call it directly — full contract in <a href="/openapi.json" class="font-mono font-semibold text-pink-600 underline dark:text-pink-400">openapi.json</a>, walkthrough in the <a href="/docs.html" class="font-semibold text-pink-600 underline dark:text-pink-400">developer docs</a>. The loop per test:</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">The loop, in about 30 seconds of scripting</h2>
+          <p>Hi Temp Mail's relay is a plain 1:1 mirror of the Mail.tm API with CORS switched on, so your scripts and CI runners can hit it directly — the full contract lives in <a href="/openapi.json" class="font-mono font-semibold text-pink-600 underline dark:text-pink-400">openapi.json</a>, with a longer walkthrough in the <a href="/docs.html" class="font-semibold text-pink-600 underline dark:text-pink-400">developer docs</a>. Per test, per run:</p>
           <pre class="rounded-xl bg-zinc-900 p-4 font-mono text-xs leading-relaxed text-zinc-100 dark:bg-black">BASE=https://hitempmail.app/api/mailtm
 ADDR="qa-$GITHUB_RUN_ID-$RANDOM@&lt;domain-from-GET-/domains&gt;"
 PASS="$(openssl rand -hex 8)"
@@ -135,22 +135,22 @@ for i in $(seq 1 18); do
   [ "$N" -gt 0 ] && break; sleep 5
 done</pre>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">What to assert</h2>
-          <p>Don't just check "an email arrived." Assert the things that actually break in production: the message arrives within your SLA (measure it — delivery latency is the #1 signup killer); the OTP matches the expected format and is single-use; resend generates a <em>new</em> code and invalidates the old; links carry the right token and expire correctly; and unsubscribing or deleting the account stops the mail. Extract codes the same way the app does — first 4–8 digit group near words like "code" or "verify".</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Assert the stuff that actually breaks</h2>
+          <p>"An email arrived" is the weakest assertion you can write. The things that bite in production: delivery time against your SLA (measure it — latency is the #1 signup killer and nobody tracks it); OTP format plus single-use; resend minting a <em>new</em> code while killing the old one; links carrying the right token with real expiry; unsubscribe and account-deletion actually stopping the mail. Steal the app's own trick for reading codes: first 4–8 digit group sitting near the words "code" or "verify".</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">CI hygiene</h2>
-          <p>Use a unique address per run (parallel jobs sharing one inbox is the classic flake factory). Delete the mailbox at test end (<span class="font-mono">DELETE /accounts/{id}</span>) so provider quotas don't rot. Back off on HTTP 429 instead of hammering — roughly 30 requests/minute is the upstream neighborhood. And never point these scripts at production user data: disposable inboxes are for test environments, full stop.</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Keep CI from rotting</h2>
+          <p>Unique address per run — parallel jobs sharing one inbox is the classic flake factory, and you'll chase ghosts for days before you figure it out. Delete the mailbox when the test ends (<span class="font-mono">DELETE /accounts/{id}</span>) so provider quotas don't slowly die. Back off on HTTP 429 instead of hammering through it; ~30 requests a minute is the neighborhood. And keep these scripts pointed at staging and test envs only. Disposable inboxes near production user data is a horror story, not a strategy.</p>
 
-          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Manual QA counts too</h2>
-          <p>Not everything needs a script. For exploratory testing, <a href="/" class="font-semibold text-pink-600 underline dark:text-pink-400">open the app</a>, copy the address into your staging build, and watch codes land with auto-detected copy chips. Bookmark the mailbox and tomorrow's regression run starts from the same address.</p>
+          <h2 class="font-display mt-8 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Clicking around counts too</h2>
+          <p>Not everything deserves a script. For exploratory testing, <a href="/" class="font-semibold text-pink-600 underline dark:text-pink-400">open the app</a>, paste the address into your staging build, and watch the codes land with their little copy chips. Bookmark that mailbox and tomorrow's regression session starts from the exact same address. Lovely.</p>
         </div>
 
         <div class="mt-6 rounded-2xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark">
           <h2 class="font-display text-lg font-bold tracking-tight">Quick answers</h2>
           <div class="mt-3 space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            <p><strong>Is there an official API?</strong> Yes — the keyless relay at <span class="font-mono">/api/mailtm</span>, specified in <a href="/openapi.json" class="font-mono font-semibold text-pink-600 underline dark:text-pink-400">openapi.json</a>.</p>
-            <p><strong>Can CI create unlimited addresses?</strong> Within upstream rate limits (~30 req/min). One address per run, delete afterwards.</p>
-            <p><strong>Why did my test address get rejected?</strong> Some apps block disposable domains. That's product behavior worth asserting — and a reason to keep one permanent test inbox alongside.</p>
+            <p><strong>Is there a real API, or is this screen-scraping?</strong> Real API — keyless relay at <span class="font-mono">/api/mailtm</span>, fully specified in <a href="/openapi.json" class="font-mono font-semibold text-pink-600 underline dark:text-pink-400">openapi.json</a>.</p>
+            <p><strong>How many addresses can CI mint?</strong> As many as the rate limit allows (~30 req/min). One per run, delete after — house rules.</p>
+            <p><strong>My test address got rejected — bug?</strong> Probably the app under test blocking burner domains. Honestly that's behavior worth asserting in your suite — and why teams keep one permanent test inbox next to the disposable pipeline.</p>
           </div>
         </div>
 
