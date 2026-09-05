@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   // Setting it on Vercel breaks API routes (500 on /api/mailtm)
   ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactStrictMode: false,
+  // Dev-only: opening the app via http://127.0.0.1:3000 makes Next treat HMR
+  // polls as cross-origin and answer 403/400 (tab console shows
+  // "Blocked cross-origin request ... /_next/hmr"). No effect on production.
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   // Extensionless trust-anchor URLs (AI agents and link checkers probe /about,
   // /contact, /privacy). Served from the static .html twins in /public so both
   // spellings resolve to the same 500+ character documents.
