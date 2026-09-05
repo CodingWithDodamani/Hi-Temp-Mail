@@ -216,11 +216,27 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox",
-    "url": "https://hitempmail.app/",
-    "description": "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.",
-    "inLanguage": "en"
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "name": "Hi Temp Mail — Free Temporary Email, Instant Disposable Inbox",
+        "url": "https://hitempmail.app/",
+        "description": "Free disposable email with instant temporary addresses, OTP auto-detection and saved mailboxes you can restore days later. No login, no signup, just privacy.",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What is Hi Temp Mail?", "acceptedAnswer": { "@type": "Answer", "text": "Hi Temp Mail is a free, privacy-first disposable email service. A real, working temporary address is generated the moment you open the app — no account, no signup, no personal details." } },
+          { "@type": "Question", "name": "Can I receive OTP and verification codes?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. 4–8 digit codes are detected automatically and shown as a copyable chip in the inbox and a large copy button in the message view, with an optional auto-copy setting." } },
+          { "@type": "Question", "name": "How long does a mailbox last?", "acceptedAnswer": { "@type": "Answer", "text": "Ten minutes by default, with one-tap extend. Saved mailboxes can be restored any time — the same day or days later — and keep receiving mail." } },
+          { "@type": "Question", "name": "Do you read or store my emails?", "acceptedAnswer": { "@type": "Answer", "text": "No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There are no analytics, ads or tracking." } },
+          { "@type": "Question", "name": "Is Hi Temp Mail really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every feature is free. No account, no subscription, no ads." } },
+          { "@type": "Question", "name": "Is it safe for banking or important accounts?", "acceptedAnswer": { "@type": "Answer", "text": "No. Disposable addresses are for low-risk signups only — trials, downloads, forums, Wi-Fi portals. Never use one for an account whose loss would harm you." } },
+          { "@type": "Question", "name": "Is Hi Temp Mail a 10 minute mail?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every mailbox starts with a 10-minute lifetime and a one-tap extend. Unlike classic throwaway generators, saved addresses can be restored days later with new mail still arriving." } }
+        ]
+      }
+    ]
   }
   </script>
 </head>
@@ -667,6 +683,14 @@
             <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
           </button>
           <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No — and we won't pretend otherwise. Disposable addresses are for low-risk signups only: trials, downloads, forums, Wi-Fi portals. Never use one for an account whose loss would harm you.</p></div></div>
+        </div>
+
+        <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.36s">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+            <span class="font-display text-sm font-bold tracking-tight sm:text-base">Is Hi Temp Mail a 10 minute mail?</span>
+            <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every mailbox starts with a 10-minute lifetime and a one-tap extend, just like classic throwaway and fake email generators. The difference: this anonymous inbox has a memory. Save any address to your vault and restore the exact same mailbox days later, with new mail and OTP codes still arriving.</p></div></div>
         </div>
       </div>
     </section>
