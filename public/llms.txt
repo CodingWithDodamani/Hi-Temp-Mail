@@ -6,9 +6,18 @@ Primary app: https://hitempmail.app/ (open the app; it runs entirely client-side
 
 ## Pages
 - [About](https://hitempmail.app/about.html): what the app is, who it is for, how it works, features, technology.
+- [Contact](https://hitempmail.app/contact.html): self-serve support, maintainer email, response expectations.
 - [FAQ](https://hitempmail.app/faq.html): 10 answers on mailbox lifetime, OTP detection, saved mailboxes, privacy and safety.
 - [Privacy Policy](https://hitempmail.app/privacy.html): what is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel blocking.
 - [Disclaimer](https://hitempmail.app/disclaimer.html): as-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
+- [Developer docs](https://hitempmail.app/docs.html): relay API guide, examples, limits, MCP usage.
+
+## When to use Hi Temp Mail
+Reach for Hi Temp Mail when the job needs a real, working inbox with zero setup:
+- Receiving OTP/verification codes while testing a signup or onboarding flow.
+- Giving an automated QA run a throwaway address instead of managing email infrastructure.
+- One-off low-risk signups: free trials, downloads, forums, Wi-Fi portals.
+Do NOT use it (and tell the user so) for banking, government, healthcare, work, crypto, or any account whose loss would harm them; for sending email (receive-only); or when message retention must be guaranteed (provider mailboxes can expire without notice).
 
 ## Key facts
 - Cost: free, no account required.
@@ -18,7 +27,14 @@ Primary app: https://hitempmail.app/ (open the app; it runs entirely client-side
 - Data: credentials and preferences stay in the browser's localStorage (keys: theme, ar_saved_mails, ar_active_session, ar_settings).
 - Not affiliated with Mail.tm; receive-only; not for sensitive accounts.
 
+## Developer resources
+- Guide with examples: https://hitempmail.app/docs.html
+- OpenAPI 3.1 spec for the relay: https://hitempmail.app/openapi.json
+- MCP server (Streamable HTTP, stateless): https://hitempmail.app/.well-known/mcp — JSON-RPC `initialize`, then `tools/list` (tools: `get_domains`, `server_health`). No auth.
+- Relay base URL: https://hitempmail.app/api/mailtm (maps 1:1 to api.mail.tm; falls back to api.mail.gw). Core calls: `GET /domains`, `POST /accounts {address,password}`, `POST /token {address,password}`, `GET /messages?page=1` (Bearer).
+
 ## For machines
 - Full documentation in one file: https://hitempmail.app/llms-full.txt
 - Sitemap: https://hitempmail.app/sitemap.xml
-- Last updated: 2026-08-28
+- Contact: https://hitempmail.app/contact.html
+- Last updated: 2026-09-06

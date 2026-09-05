@@ -7,7 +7,8 @@
     "build": "next build",
     "build:standalone": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "next start -p 3000",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "verify:agentic": "node scripts/verify-agentic.mjs"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.2.14",

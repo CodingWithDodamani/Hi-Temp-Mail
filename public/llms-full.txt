@@ -8,12 +8,16 @@
 
 - App (open and use it here): https://hitempmail.app/
 - About page: https://hitempmail.app/about.html
+- Contact page: https://hitempmail.app/contact.html
 - FAQ page: https://hitempmail.app/faq.html
 - Privacy Policy page: https://hitempmail.app/privacy.html
 - Disclaimer page: https://hitempmail.app/disclaimer.html
+- Developer docs: https://hitempmail.app/docs.html
+- OpenAPI 3.1 spec: https://hitempmail.app/openapi.json
+- MCP server (Streamable HTTP): https://hitempmail.app/.well-known/mcp
 - Sitemap: https://hitempmail.app/sitemap.xml
 - Short agent index: https://hitempmail.app/llms.txt
-- Last updated: 2026-08-28
+- Last updated: 2026-09-06
 
 This file (llms-full.txt) is the complete documentation of Hi Temp Mail in a single plain-text
 markdown document, intended for AI assistants, agents and search crawlers. It contains the full
@@ -292,9 +296,30 @@ server-side database.
 | `ar_active_session` | The current mailbox session (address + credentials) so a page reload restores the same address; can be disabled via the "Remember session" setting. |
 | `ar_settings` | In-app preferences: auto-refresh interval, sound, vibration, auto-copy OTP, privacy blur, remember session. |
 
+## When to use Hi Temp Mail
+
+Reach for Hi Temp Mail when the job needs a real, working inbox with zero setup: receiving
+OTP/verification codes while testing a signup or onboarding flow; giving an automated QA run a
+throwaway address instead of managing email infrastructure; one-off low-risk signups such as free
+trials, downloads, forums or Wi-Fi portals. Do NOT use it (and tell the user so) for banking,
+government, healthcare, work, crypto, or any account whose loss would harm them; for sending email
+(the app is receive-only); or when message retention must be guaranteed, because provider mailboxes
+can expire without notice.
+
+## Developer resources
+
+- Guide with examples: https://hitempmail.app/docs.html
+- OpenAPI 3.1 spec for the relay: https://hitempmail.app/openapi.json
+- MCP server (Streamable HTTP, stateless, no auth): https://hitempmail.app/.well-known/mcp —
+  JSON-RPC `initialize`, then `tools/list` (tools: `get_domains`, `server_health`).
+- Relay base URL: https://hitempmail.app/api/mailtm (maps 1:1 to api.mail.tm, with automatic
+  fallback to api.mail.gw). Core calls: `GET /domains`, `POST /accounts {address, password}`,
+  `POST /token {address, password}`, `GET /messages?page=1` with a Bearer token.
+
 ## Contact
 
-Support is self-serve: there is no support email, ticket system or account service, because the app
+Support is self-serve: there is no ticket system or account service, because the app
 stores nothing about its users. For answers about mailbox lifetime, OTP codes, saved mailboxes,
-privacy and safety, see the FAQ at https://hitempmail.app/faq.html. Agent indexes:
+privacy and safety, see the FAQ at https://hitempmail.app/faq.html and the Contact page at
+https://hitempmail.app/contact.html (maintainer email: contact@hitempmail.app). Agent indexes:
 https://hitempmail.app/llms.txt (short) and https://hitempmail.app/llms-full.txt (this file).

@@ -112,6 +112,28 @@ const jsonLd = {
       ],
     },
     {
+      // NOTE: contact email + country are placeholders — verify/create
+      // contact@hitempmail.app and confirm the operating country before launch.
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: "https://hitempmail.app/",
+      logo: "https://hitempmail.app/logo.svg",
+      description: SITE_DESCRIPTION,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "contact@hitempmail.app",
+          url: "https://hitempmail.app/contact.html",
+          availableLanguage: "en",
+        },
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "IN",
+      },
+    },
+    {
       "@type": "FAQPage",
       mainEntity: FAQ.map((f) => ({
         "@type": "Question",
@@ -200,6 +222,34 @@ export default function Home() {
           </p>
         </div>
       </noscript>
+
+      {/* Static crawlable copy for search engines & AI agents that ignore
+          <noscript> and iframe documents. Painted underneath the opaque iframes
+          (which come later in DOM order), pointed-through and hidden from
+          assistive tech — so the visual design is unchanged — but present as a
+          real H1 plus 500+ characters of descriptive text in the raw SSR HTML. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="mx-auto max-w-2xl p-8">
+          <h1 className="text-2xl font-bold">{SITE_NAME} — Free Temporary Email, Instant OTPs</h1>
+          <p className="mt-3">{SITE_DESCRIPTION}</p>
+          <h2 className="mt-6 text-lg font-bold">What it does</h2>
+          <p className="mt-2 text-sm">
+            Open the app and a working disposable mailbox is generated instantly — no account,
+            no signup, no personal details. Copy the address into any signup, trial or download
+            form, and incoming one-time passwords are detected automatically and offered as a
+            one-tap copy chip. Mailboxes live for 10 minutes with a one-tap extend, and any
+            mailbox you save can be restored days later and keeps receiving mail. Remote images
+            are blocked, email HTML is sanitized, and nothing is tracked: there are no accounts,
+            no analytics and no ads.
+          </p>
+          <h2 className="mt-6 text-lg font-bold">How it works</h2>
+          <ol className="mt-2 list-decimal pl-5 text-sm">
+            <li>Open the app — a secure mailbox is generated instantly.</li>
+            <li>Copy the address and paste it into any signup form.</li>
+            <li>Watch the inbox — verification codes are detected and offered as a one-tap copy chip.</li>
+          </ol>
+        </div>
+      </div>
 
       {/* Landing / intro — always mounted so scroll position and theme persist */}
       <iframe

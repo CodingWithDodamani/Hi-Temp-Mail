@@ -3,6 +3,12 @@
   "buildCommand": "npm run build",
   "headers": [
     {
+      "source": "/",
+      "headers": [
+        { "key": "Vary", "value": "Accept" }
+      ]
+    },
+    {
       "source": "/api/mailtm/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },

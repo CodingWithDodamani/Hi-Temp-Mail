@@ -5,6 +5,19 @@ const nextConfig: NextConfig = {
   // Setting it on Vercel breaks API routes (500 on /api/mailtm)
   ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactStrictMode: false,
+  // Extensionless trust-anchor URLs (AI agents and link checkers probe /about,
+  // /contact, /privacy). Served from the static .html twins in /public so both
+  // spellings resolve to the same 500+ character documents.
+  async rewrites() {
+    return [
+      { source: "/about", destination: "/about.html" },
+      { source: "/contact", destination: "/contact.html" },
+      { source: "/privacy", destination: "/privacy.html" },
+      { source: "/faq", destination: "/faq.html" },
+      { source: "/disclaimer", destination: "/disclaimer.html" },
+      { source: "/docs", destination: "/docs.html" },
+    ];
+  },
   async headers() {
     return [
       {

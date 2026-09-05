@@ -1,0 +1,140 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hi Temp Mail Relay API",
+    "version": "1.0.0",
+    "description": "Hi Temp Mail exposes a same-origin relay over the Mail.tm REST API (Mail.tm blocks cross-origin browser calls). Every path below maps 1:1 to the upstream API, including query strings; JSON bodies pass through untouched and attachment downloads stream byte-identical. If the primary upstream (api.mail.tm) is unreachable, the relay transparently retries api.mail.gw. Free, no API keys. Receive-only: sending email is not supported. Full guide: https://hitempmail.app/docs.html",
+    "contact": {
+      "name": "Hi Temp Mail",
+      "url": "https://hitempmail.app/contact.html",
+      "email": "contact@hitempmail.app"
+    },
+    "license": { "name": "MIT", "url": "https://hitempmail.app/disclaimer.html" }
+  },
+  "servers": [
+    { "url": "https://hitempmail.app/api/mailtm", "description": "Production relay (canonical)" },
+    { "url": "https://hitempmail.vercel.app/api/mailtm", "description": "Production relay (Vercel)" }
+  ],
+  "security": [],
+  "paths": {
+    "/domains": {
+      "get": {
+        "summary": "List active public mail domains",
+        "operationId": "listDomains",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } }
+        ],
+        "responses": {
+          "200": { "description": "Hydra collection of Domain resources" },
+          "502": { "description": "Relay error (all upstreams failed)" }
+        }
+      }
+    },
+    "/accounts": {
+      "post": {
+        "summary": "Register a mailbox",
+        "operationId": "createAccount",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["address", "password"],
+                "properties": {
+                  "address": { "type": "string", "format": "email", "description": "Must use a domain from GET /domains" },
+                  "password": { "type": "string", "minLength": 8 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Account resource created" },
+          "400": { "description": "Validation error (e.g. unknown domain)" },
+          "422": { "description": "Address already taken — retry with another" }
+        }
+      }
+    },
+    "/token": {
+      "post": {
+        "summary": "Exchange mailbox credentials for a Bearer JWT",
+        "operationId": "createToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["address", "password"],
+                "properties": {
+                  "address": { "type": "string", "format": "email" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "{ token, id } — use token as Bearer for authenticated routes" },
+          "401": { "description": "Bad credentials" }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "summary": "List inbox messages (newest first)",
+        "operationId": "listMessages",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } }
+        ],
+        "responses": {
+          "200": { "description": "Hydra collection of Message resources" },
+          "401": { "description": "Missing or invalid Bearer token" }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "summary": "Fetch one message with body",
+        "operationId": "getMessage",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Message resource" }, "404": { "description": "Unknown message id" } }
+      },
+      "patch": {
+        "summary": "Mark a message read/unread",
+        "operationId": "patchMessage",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/merge-patch+json": { "schema": { "type": "object", "properties": { "seen": { "type": "boolean" } } } } }
+        },
+        "responses": { "200": { "description": "Updated message" } }
+      },
+      "delete": {
+        "summary": "Delete a message",
+        "operationId": "deleteMessage",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    },
+    "/accounts/{id}": {
+      "delete": {
+        "summary": "Permanently delete a mailbox and all its messages",
+        "operationId": "deleteAccount",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT", "description": "JWT from POST /token" }
+    }
+  }
+}
