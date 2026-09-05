@@ -73,7 +73,10 @@ export default function proxy(req: NextRequest) {
         // Critical: without Vary: Accept a CDN could cache one variant and
         // serve it to clients asking for the other.
         Vary: "Accept",
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=60",
+        // Match the HTML shell's revalidate-every-time semantics: shared
+        // caches must re-run negotiation per request, never serve a stored
+        // markdown variant to an HTML client (or vice versa).
+        "Cache-Control": "public, max-age=0, must-revalidate",
       },
     });
   }
