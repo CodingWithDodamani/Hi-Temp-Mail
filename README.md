@@ -139,6 +139,21 @@ npm run build:standalone
 npm start          # serves on port 3000
 ```
 
+## 💰 Ads (planned — for after AdSense approval)
+
+No ad code ships today. Empty `data-ad-slot` placeholder divs (zero-height, invisible) mark every future placement — paste the AdSense unit inside the matching div when approved:
+
+| Page | Slot (`data-ad-slot`) | Suggested format |
+|---|---|---|
+| Landing (`landing.html`) | `landing-below-hero` | Responsive leaderboard |
+| Landing (`landing.html`) | `landing-above-footer` | Responsive leaderboard |
+| App (`index.html`) | `app-below-inbox` | Responsive banner |
+| App (`index.html`) | `app-mail-bottom` | Responsive banner |
+| Blog index (`blog.html`) | `blog-index-bottom` | Responsive / in-feed |
+| Articles (`blog/*.html`) | `blog-below-article` | In-article rectangle |
+
+Activation checklist: (1) get approved, (2) add `public/ads.txt` → `google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0`, (3) paste the AdSense `<script>` once per page `<head>` + one `<ins>` unit per slot, (4) privacy page already discloses cookies/ads. Recommended: enable Auto Ads as the base layer and keep these manual slots as guaranteed positions. Never add ad code before approval — it risks the application.
+
 ## 🛠 Troubleshooting
 
 | Symptom | Fix |
