@@ -11,6 +11,7 @@ Primary app: https://hitempmail.app/ (open the app; it runs entirely client-side
 - [Privacy Policy](https://hitempmail.app/privacy.html): what is (and is not) collected; localStorage keys; Mail.tm third-party storage; tracking-pixel blocking.
 - [Disclaimer](https://hitempmail.app/disclaimer.html): as-is service, no affiliation with Mail.tm, not for sensitive accounts, lawful use only.
 - [Developer docs](https://hitempmail.app/docs.html): relay API guide, examples, limits, MCP usage.
+- [Blog](https://hitempmail.app/blog.html): guides to temporary email, OTP codes, safety and anonymity.
 
 ## When to use Hi Temp Mail
 Reach for Hi Temp Mail when the job needs a real, working inbox with zero setup:

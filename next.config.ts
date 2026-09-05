@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
       { source: "/faq", destination: "/faq.html" },
       { source: "/disclaimer", destination: "/disclaimer.html" },
       { source: "/docs", destination: "/docs.html" },
+      { source: "/blog", destination: "/blog.html" },
     ];
   },
   async headers() {
