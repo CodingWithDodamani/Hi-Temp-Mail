@@ -254,6 +254,11 @@ export default function Home() {
       {/* Landing / intro — always mounted so scroll position and theme persist */}
       <iframe
         src="/landing.html"
+        // fetchpriority isn't in React's iframe types; set the DOM attribute
+        // directly so the landing document outranks invisible shell requests.
+        ref={(el) => {
+          el?.setAttribute("fetchpriority", "high");
+        }}
         title="Hi Temp Mail — Intro & overview"
         aria-hidden={appActive}
         inert={appActive}

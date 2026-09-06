@@ -26,6 +26,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Mobile perf: the landing iframe can't start painting until its
+        // stylesheet arrives. This Link header lets Vercel emit a 103 Early
+        // Hint, so /landing.css downloads in parallel with the shell instead
+        // of waiting a full round trip behind /landing.html.
+        source: "/",
+        headers: [
+          { key: "Link", value: "</landing.css>; rel=preload; as=style" },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },

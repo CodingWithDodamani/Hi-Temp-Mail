@@ -1,18 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ServiceWorkerRegistrar } from "@/components/service-worker-registrar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// NOTE: no next/font Google fonts here on purpose. Everything visible runs
+// inside same-origin iframes with their own font loading; downloading two
+// variable fonts for the shell's (invisible) fallback text only burns mobile
+// data and delays the iframe on Slow-4G. System stacks instead (globals.css).
 
 /* ---------------------------------------------------------------------------
  * Hi Temp Mail — site metadata (SEO / agentic SEO / LLM-friendly)
@@ -123,7 +117,7 @@ export default function RootLayout({
       */}
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className="antialiased bg-background text-foreground"
       >
         {children}
         <ServiceWorkerRegistrar />
