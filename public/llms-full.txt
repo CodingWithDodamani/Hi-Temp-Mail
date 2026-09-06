@@ -13,7 +13,7 @@
 - Privacy Policy page: https://hitempmail.app/privacy.html
 - Disclaimer page: https://hitempmail.app/disclaimer.html
 - Developer docs: https://hitempmail.app/docs.html
-- Blog: https://hitempmail.app/blog.html (10 guides: what-is-temporary-email, otp codes, safety, social signups, anonymity, 10-minute vs saved, gmail aliases, developers, otp fixes, shopping)
+- Blog: https://hitempmail.app/blog.html (15 guides: what-is-temporary-email, otp codes, safety, social signups, anonymity, 10-minute vs saved, gmail aliases, developers, otp fixes, shopping, newsletter spam, AI trials, 10-minute explained, gaming, password resets)
 - OpenAPI 3.1 spec: https://hitempmail.app/openapi.json
 - MCP server (Streamable HTTP): https://hitempmail.app/.well-known/mcp
 - Sitemap: https://hitempmail.app/sitemap.xml
