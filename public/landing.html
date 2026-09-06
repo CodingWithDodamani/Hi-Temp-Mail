@@ -230,8 +230,8 @@
           { "@type": "Question", "name": "What is Hi Temp Mail?", "acceptedAnswer": { "@type": "Answer", "text": "Hi Temp Mail is a free, privacy-first disposable email service. A real, working temporary address is generated the moment you open the app — no account, no signup, no personal details." } },
           { "@type": "Question", "name": "Can I receive OTP and verification codes?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. 4–8 digit codes are detected automatically and shown as a copyable chip in the inbox and a large copy button in the message view, with an optional auto-copy setting." } },
           { "@type": "Question", "name": "How long does a mailbox last?", "acceptedAnswer": { "@type": "Answer", "text": "Ten minutes by default, with one-tap extend. Saved mailboxes can be restored any time — the same day or days later — and keep receiving mail." } },
-          { "@type": "Question", "name": "Do you read or store my emails?", "acceptedAnswer": { "@type": "Answer", "text": "No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There are no analytics, ads or tracking." } },
-          { "@type": "Question", "name": "Is Hi Temp Mail really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every feature is free. No account, no subscription, no ads." } },
+          { "@type": "Question", "name": "Do you read or store my emails?", "acceptedAnswer": { "@type": "Answer", "text": "No. The app runs entirely in your browser with no server database; messages are stored by the Mail.tm service. There is no analytics or tracking." } },
+          { "@type": "Question", "name": "Is Hi Temp Mail really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every feature is free. No account, no subscription, no premium tier hiding the good parts." } },
           { "@type": "Question", "name": "Is it safe for banking or important accounts?", "acceptedAnswer": { "@type": "Answer", "text": "No. Disposable addresses are for low-risk signups only — trials, downloads, forums, Wi-Fi portals. Never use one for an account whose loss would harm you." } },
           { "@type": "Question", "name": "Is Hi Temp Mail a 10 minute mail?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — every mailbox starts with a 10-minute lifetime and a one-tap extend. Unlike classic throwaway generators, saved addresses can be restored days later with new mail still arriving." } }
         ]
@@ -540,11 +540,14 @@
           <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">A real, working address the moment you open the app. No forms, no email verification, no waiting rooms.</p>
         </article>
 
-        <!-- Saved mailboxes -->
+        <!-- Saved mailboxes — the feature other temp-mail generators don't have -->
         <article class="reveal card-lift card-glow rounded-3xl border border-line-light bg-card-light p-6 shadow-card dark:border-line-dark dark:bg-card-dark" style="--d:.16s">
-          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">bookmarks</span></span>
+          <div class="flex items-start justify-between gap-4">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-400"><span class="material-symbols-outlined" aria-hidden="true">bookmarks</span></span>
+            <span class="rounded-md bg-pink-500/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-pink-600 dark:text-pink-400">ONLY HERE</span>
+          </div>
           <h3 class="font-display mt-4 text-xl font-bold tracking-tight">Saved mailboxes</h3>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Bookmark an address and restore it days later — same inbox, codes still arriving. Stored only on your device.</p>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Most temp-mail generators delete your inbox forever after 10 minutes. Hi Temp Mail keeps a vault instead — bookmark any address and restore the exact same mailbox days later, OTPs still arriving. Stored only on your device.</p>
         </article>
 
         <!-- Self-destruct -->
@@ -583,8 +586,8 @@
           <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">No account</span>
         </div>
         <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
-          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">block</span>
-          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">No ads, ever</span>
+          <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">bookmarks</span>
+          <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">Saved vault</span>
         </div>
         <div class="flex items-center gap-2.5 bg-card-light px-5 py-4 dark:bg-card-dark">
           <span class="material-symbols-outlined !text-[18px] text-pink-500" aria-hidden="true">verified_user</span>
@@ -671,7 +674,7 @@
             <span class="font-display text-sm font-bold tracking-tight sm:text-base">Do you read or store my emails?</span>
             <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. The app runs entirely in your browser with no server database of its own — messages live with the upstream mail provider, and your saved mailboxes live in your browser's local storage. There are no analytics, no ads and no tracking.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">No. The app runs entirely in your browser with no server database of its own — messages live with the upstream mail provider, and your saved mailboxes live in your browser's local storage. There is no analytics and no tracking.</p></div></div>
         </div>
 
         <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.24s">
@@ -679,7 +682,7 @@
             <span class="font-display text-sm font-bold tracking-tight sm:text-base">Is Hi Temp Mail really free?</span>
             <span class="faq-chevron material-symbols-outlined !text-[20px] shrink-0 text-pink-500" aria-hidden="true">expand_more</span>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every feature is free. No account, no subscription, no ads, no "premium" tier hiding the good parts.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Yes — every feature is free. No account, no subscription, no "premium" tier hiding the good parts.</p></div></div>
         </div>
 
         <div class="faq-item reveal overflow-hidden rounded-2xl border border-line-light bg-card-light shadow-card dark:border-line-dark dark:bg-card-dark" data-open="false" style="--d:.3s">
@@ -804,7 +807,7 @@
           </button>
           <p class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
             <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>No signup</span>
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>No ads</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>No spam</span>
             <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[13px]" aria-hidden="true">check_circle</span>Free forever</span>
           </p>
         </div>
