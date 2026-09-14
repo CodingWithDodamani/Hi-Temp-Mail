@@ -4,6 +4,7 @@
 
 **Last Updated:** 2026-09-06
 **Changelog:**
+- 2026-09-06 — Added: Cloudflare Worker relay option + app 3-base failover chain (direct→worker→bundled). Untested against mail.tm until user deploys worker.
 - 2026-09-06 — Fixed: gateway auto-retry + human outage message (no more raw 502 in UI); live upstream probes in `?health=1`. (mail.gw outage ongoing.)
 - 2026-09-06 — Added: blog system (20 posts), landing guides section, tool-page SEO block, ad-slot placeholders, mobile perf fixes (Geist removal, Early Hints), HMR dev fix.
 - 2026-09-05 — Added: MCP server, Markdown negotiation (proxy), custom 404, trust pages + rewrites, openapi.json/docs.html, Organization schema, verify-agentic script.
@@ -109,7 +110,7 @@ hi-temp-mail/
 
 - **Mailbox lifecycle (all in `index.html` JS):** `getNewEmail()` → `GET /domains` → `POST /accounts {address,password}` (retry 4× on 400/422 collision) → `POST /token` → poll `GET /messages` every 10s (5/10/30s setting) → OTP extract → render. Delete = `DELETE /accounts/{id}` + regenerate.
 - **Relay:** forwards method+path+query; forwards only `Content-Type` + `Authorization`; tries `api.mail.tm`, on empty-500 retries `api.mail.gw`; `arrayBuffer()` passthrough (attachments safe); throws → JSON 502.
-- **Browser→relay fallback:** app tries direct `https://api.mail.tm` first; on `TypeError` (CORS/network) switches `API_BASE` to `/api/mailtm` with toast. NOTE: `AbortError` (timeout) is rethrown as plain Error → NO fallback.
+- **Browser→relay chain:** app walks `[DIRECT_API, ...relayChain()]` = direct → own Cloudflare Worker (`EDGE_RELAY`, '' = skip) → bundled `/api/mailtm`, advancing on network-like errors; 429/502/504 back off. `apiBlob()` walks the same chain. Worker code: `workers/mail-relay.js` (+ `wrangler.toml`, setup in `workers/README.md`).
 - **Persistence:** `localStorage` only — `theme`, `ar_saved_mails`, `ar_active_session`, `ar_settings`, read/hidden message ids. Mail bodies live on Mail.tm servers.
 
 ---

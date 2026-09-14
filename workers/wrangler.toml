@@ -1,0 +1,9 @@
+# Hi Temp Mail — Cloudflare Worker deploy config.
+# Usage: npm i -g wrangler && wrangler login && wrangler deploy
+# (from the repo root; wrangler finds this file in workers/).
+# After deploy, copy the *.workers.dev URL into EDGE_RELAY in index.html.
+
+name = "hi-temp-mail-relay"
+main = "mail-relay.js"
+compatibility_date = "2026-09-01"
+workers_dev = true

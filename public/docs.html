@@ -107,6 +107,7 @@
 Mirrors:   https://api.mail.tm  (primary)
            https://api.mail.gw  (automatic fallback)</pre>
             <p class="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Every path under the base URL maps 1:1 to the upstream API, including query strings. JSON bodies pass through untouched, attachment downloads stream through byte-identical, and only <span class="font-mono">Content-Type</span> and <span class="font-mono">Authorization</span> request headers are forwarded.</p>
+            <p class="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">Note for self-hosters: Mail.tm IP-bans some shared serverless networks. The app therefore tries three bases in order — direct API, your own Cloudflare Worker relay, bundled relay — advancing automatically on failure. To run your own edge relay (free, ~10 minutes), see <span class="font-mono">workers/README.md</span> in the repository and set <span class="font-mono">EDGE_RELAY</span> in the app source.</p>
           </section>
           <section class="mt-8 first:mt-0">
             <h2 class="font-display text-lg font-bold tracking-tight">Core endpoints</h2>

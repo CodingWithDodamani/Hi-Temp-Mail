@@ -930,9 +930,15 @@
        ====================================================================== */
 
     const DIRECT_API = 'https://api.mail.tm'; // official Mail.tm API (per spec)
-    const RELAY_API = '/api/mailtm';          // optional same-origin relay, used only if the
-                                              // browser blocks the direct call (Mail.tm sends
-                                              // CORS headers to its own origin only)
+    // Relay chain, tried left → right whenever the current base is unreachable
+    // (CORS block, network failure, timeout). Mail.tm IP-bans shared serverless
+    // egress, so the bundled same-origin relay only works while mail.gw is up.
+    // EDGE_RELAY = your own Cloudflare Worker (see workers/README.md) whose
+    // edge IPs aren't banned. Paste its URL here (no trailing slash), or leave
+    // '' to skip it — the app degrades gracefully to the bundled relay.
+    const EDGE_RELAY = ''; // e.g. 'https://hi-temp-mail-relay.<you>.workers.dev'
+    const RELAY_API = '/api/mailtm';          // bundled same-origin relay
+    function relayChain() { return [EDGE_RELAY, RELAY_API].filter(Boolean); }
     let API_BASE = DIRECT_API;
     const TIMER_SECONDS = 600;     // 10-minute session lifetime
     const LS_SAVED = 'ar_saved_mails';
@@ -1195,8 +1201,9 @@
 
     /**
      * Small wrapper around the Mail.tm REST API.
-     * - Calls the official API first; if the browser blocks it (CORS / network
-     *   or timeout), transparently retries through the same-origin relay.
+     * - Calls the official API first, then walks the relay chain
+     *   (own edge Worker → bundled same-origin relay) whenever the current
+     *   base is unreachable (CORS / network / timeout).
      * - Auto-retries rate-limited (429) and transient gateway (502/504)
      *   responses with a short backoff.
      */
@@ -1214,42 +1221,43 @@
       };
 
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      // fetchWithTimeout converts AbortError to a plain Error, so match
+      // both TypeError (CORS/network) and the timeout message/shape.
+      const isNetworkLike = (err) => (err instanceof TypeError) ||
+        (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
+      const chain = [DIRECT_API, ...relayChain()];
+      if (!chain.includes(API_BASE)) API_BASE = DIRECT_API;
       let res = null;
 
-      for (let attempt = 0; attempt < 3; attempt++) {
+      for (let attempt = 0; attempt < 4; attempt++) {
         try {
           res = await call(API_BASE);
         } catch (err) {
-          // fetchWithTimeout converts AbortError to a plain Error, so match
-          // both TypeError (CORS/network) and the timeout message/shape.
-          const isNetworkLike = (err instanceof TypeError) ||
-            (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
-          if (isNetworkLike && API_BASE === DIRECT_API && RELAY_API) {
-            console.warn('[Hi Temp Mail] direct Mail.tm API unreachable — switching to relay endpoint');
-            API_BASE = RELAY_API;
-            showToast('Using secure relay for the Mail.tm API', 'info');
-            continue; // retry immediately through the relay
-          } else if (isNetworkLike) {
-            throw new Error('Network error — check your connection.');
-          } else {
-            throw err;
+          if (!isNetworkLike(err)) throw err;
+          const i = chain.indexOf(API_BASE);
+          if (i >= 0 && i < chain.length - 1) {
+            API_BASE = chain[i + 1];
+            console.warn('[Hi Temp Mail] API unreachable — switching to', API_BASE);
+            if (API_BASE !== DIRECT_API) showToast('Using secure relay for the Mail.tm API', 'info');
+            continue; // retry immediately through the next base
           }
+          throw new Error('Network error — check your connection.');
         }
-        // Transient relay/upstream gateway failure → back off and retry once
+        // Transient relay/upstream gateway failure → back off and retry
         // before surfacing "Request failed (502/504)".
-        if (res && (res.status === 502 || res.status === 504) && attempt < 2) {
+        if (res && (res.status === 502 || res.status === 504) && attempt < 3) {
           await sleep(1200 * (attempt + 1));
           continue;
         }
-        if (res && res.status === 429 && attempt < 2) {
+        if (res && res.status === 429 && attempt < 3) {
           await sleep(1500 * (attempt + 1)); // rate limited → back off and retry
           continue;
         }
         break;
       }
 
-      // The DIRECT→RELAY switch uses `continue`, so the loop can exit with
-      // res==null when the switch happened on the final iteration.
+      // A base switch uses `continue`, so the loop can exit with res==null
+      // when the switch happened on the final iteration.
       if (!res) throw new Error('Network error — check your connection.');
 
       if (res.status === 204) return null;
@@ -1269,8 +1277,8 @@
     }
 
     /**
-     * Authenticated binary fetch (attachment downloads). Follows the same
-     * direct-API-first → relay fallback strategy as api(), but returns a Blob.
+     * Authenticated binary fetch (attachment downloads). Walks the same
+     * direct-API-first → relay-chain strategy as api(), but returns a Blob.
      */
     async function apiBlob(path) {
       const attempt = async (base) => {
@@ -1278,22 +1286,23 @@
         if (state.account && state.account.token) headers.Authorization = 'Bearer ' + state.account.token;
         return fetchWithTimeout(base + path, { headers });
       };
+      const isNetworkLike = (err) => (err instanceof TypeError) ||
+        (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
+      const chain = [DIRECT_API, ...relayChain()];
+      let startAt = chain.indexOf(API_BASE);
+      if (startAt < 0) startAt = 0;
       let res = null;
-      try {
-        res = await attempt(API_BASE);
-      } catch (err) {
-        const isNetworkLike = (err instanceof TypeError) ||
-          (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
-        if (isNetworkLike && API_BASE === DIRECT_API && RELAY_API) {
-          console.warn('[Hi Temp Mail] direct API unreachable for blob — switching to relay');
-          API_BASE = RELAY_API;
+      for (let k = startAt; k < chain.length; k++) {
+        API_BASE = chain[k];
+        try {
           res = await attempt(API_BASE);
-        } else if (isNetworkLike) {
-          throw new Error('Network error — check your connection.');
-        } else {
-          throw err;
+          break;
+        } catch (err) {
+          if (!isNetworkLike(err)) throw err;
+          console.warn('[Hi Temp Mail] API unreachable for blob — switching to', chain[k + 1] || 'nothing left');
         }
       }
+      if (!res) throw new Error('Network error — check your connection.');
       if (!res.ok) throw new Error('Download failed (' + res.status + ').');
       return res.blob();
     }
