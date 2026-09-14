@@ -4,6 +4,7 @@
 
 **Last Updated:** 2026-09-06
 **Changelog:**
+- 2026-09-06 — Fixed: gateway auto-retry + human outage message (no more raw 502 in UI); live upstream probes in `?health=1`. (mail.gw outage ongoing.)
 - 2026-09-06 — Added: blog system (20 posts), landing guides section, tool-page SEO block, ad-slot placeholders, mobile perf fixes (Geist removal, Early Hints), HMR dev fix.
 - 2026-09-05 — Added: MCP server, Markdown negotiation (proxy), custom 404, trust pages + rewrites, openapi.json/docs.html, Organization schema, verify-agentic script.
 - 2026-09-05 — Fixed: Vercel 500 on `/api/mailtm` (mail.tm blocks Vercel IPs → mail.gw fallback).
@@ -136,5 +137,183 @@ hi-temp-mail/
 
 | Role | Font | Scale / weights |
 |---|---|---|
-| Body (app) | Inter, sys
+| Body (app) | Inter, system fallback | `text-sm/xs/[13px]/[11px]/[10px]`; 400–800 |
+| Display | Space Grotesk (`.font-display`) | App `lg/xl/3xl`; landing hero `2.6rem→6xl→4.2rem`, sections `3xl→5xl`; 500–800 |
+| Mono (codes/addresses/timers) | JetBrains Mono, tabular-nums | Addresses 15–16px bold; OTP chips 12px + `.1em` tracking |
+| Editorial accent | Instrument Serif italic (`.fancy`, landing only) | Single headline words |
+| Icons | Material Symbols Outlined (500/FILL0/opsz24); landing subset 23 names | `!text-[13–22px]` overrides; `.icon-fill` variant |
+
+### Layout / responsive
+
+- App: `max-w-md` centered, `px-4`, `pb-32` (bottom-nav clearance); sticky `h-14` header; bottom tab bar.
+- Landing: `max-w-6xl` (features/guides), `max-w-3xl` (FAQ), `max-w-2xl` (content/blog); grids `sm:grid-cols-2`, `lg:grid-cols-3/4`; hamburger under `md`.
+- Content pages: `max-w-2xl` article column, shared header/footer shell.
+
+### Components (variants × states)
+
+| Component | Variants | States |
+|---|---|---|
+| Primary btn | Gradient (`btn-shine` sweep on hover), dark (`zinc-900⇄white`), danger-ghost rose | `hover` shadow/opacity, `active:scale-[.98]`, `focus-visible:ring-2` pink, `.btn-spinner` hides icon |
+| Icon btn | `h-9 w-9` / `h-11 w-11`, `rounded-xl`, bordered | hover pink border/text, `active:scale-95` |
+| Switch 46×26 | `data-on=true` → gradient bg, knob +20px | .2s transition; dark track `#2b2439` |
+| Segmented `.seg` | Buttons; `.active` white/pink pill + shadow | — |
+| OTP chip | Dashed pink border, mono bold 12px | hover deepen; sheen (landing) |
+| Cards | `rounded-2xl/3xl`, border-line, `shadow-card`; landing `card-lift` (−6px + glow on hover) | hover lift |
+| Timer ring | Conic `--p` 0–100; `.warn` amber, `.danger` rose | — |
+| Tab pill | Gradient `::before` bar scales in on `.active` | — |
+| Toast (Radix) | `toast-in/out` .3s; destructive variant | swipe/dismiss |
+| Sheets/dialogs | `.sheet-pop` .3s spring | — |
+| Email body | Sanitized type: h1–3, lists, quotes, code, tables; blocked-img striped grayscale | per-message image allow |
+| Privacy blur | `body.privacy-blur:not(.revealed) .blur-target {blur(7px)}` + eye toggle | — |
+| Landing extras | CTA-only preloader, aurora orbs, grid-mask, mock-inbox sim, conic-border CTA, 30s marquee, tilt/magnetic (pointer:fine only) | — |
+
+### Motion & a11y
+
+- Standard easing `cubic-bezier(.22,1,.36,1)`; entrances `.28–.55s`; toasts `.3s`; ambient `1.4–36s`.
+- `prefers-reduced-motion` → animations ~off, no smooth scroll, reveals forced visible.
+- Pink `focus-visible` rings; `aria-label/live/roles`, `role=timer/switch`; decorative `aria-hidden`.
+
+---
+
+## 5. App Flow & Navigation
+
+### Journeys
+
+1. **First visit:** open → auto-generate → Copy → paste in signup → OTP chip → done. Optional: bookmark (vault), Extend, Delete.
+2. **Return:** Saved tab → Open → same address restored → new mail arrives.
+3. **Explore:** Settings (theme/refresh/sound/blur/backup) → info tabs; landing → Guides → blog → Open app.
+4. **Failure:** gateway outage → auto-retry ×3 (4s backoff, RETRYING badge) → friendly "Mail servers are down — tap Change Mail" (RETRY badge) or OFFLINE for true network loss.
+5. **Exits:** Delete Mail (provider delete + regenerate), Clear all, timer expiry, site-data wipe.
+
+### Routes
+
+| Route | Type | Behavior |
+|---|---|---|
+| `/` | Client shell | Landing iframe; `HI_TEMPMAIL_LAUNCH` mounts + crossfades app iframe (stays mounted); `HI_TEMPMAIL_HOME` back. Hidden SSR crawler div + JSON-LD + noscript |
+| `/landing.html` | Static | Hero+mock sim, stats, marquee, features, how-it-works, FAQ (7), guides (6 cards), CTA, footer (10-article index) |
+| `/ar-tempmail.html` (= `index.html`) | Static app | 4 screens below; all mailbox logic; SEO block under inbox |
+| `/about\|contact\|privacy\|faq\|disclaimer\|docs\|blog` | Rewrites → `.html` | Trust/dev content (500–8000 chars each) |
+| `/blog.html` + `/blog/*.html` (20) | Static | Index (Blog JSON-LD) + articles (BlogPosting+Breadcrumb JSON-LD, FAQs, related links) |
+| `/api` | Route | Hello-world placeholder (dead, keep) |
+| `/api/mailtm/[...path]` | Route, dynamic, nodejs, `maxDuration: 25` | Relay — see §7 |
+| `/.well-known/mcp` | Route | MCP manifest (GET) + JSON-RPC (POST) |
+| unmatched | `not-found.tsx` | HTTP 404 + links + markdown recovery `<pre>` |
+
+### App screens (`index.html`)
+
+- **mailScreen** (default): tip, Change/Delete, identity card (Copy/save/share), timer ring + Extend, inbox (search/refresh/mark-read/eye/list), SEO block.
+- **savedScreen**: vault list (Open/Delete), explainer.
+- **settingsScreen**: Appearance (dark), Mailbox (remember session, 5/10/30s), Notifications (vibrate/sound/auto-copy), Privacy (blur), Data (counts, Clear all, Export/Import), Security notes, legal → infoScreen.
+- **infoScreen**: About/FAQ/Privacy/Disclaimer tabs (JS-rendered).
+
+### State (all client-side)
+
+| State | Where | Why |
+|---|---|---|
+| `account {id,address,password,token}` | JS memory (+ `ar_active_session` if remember on) | Token must not persist by default |
+| `messages/seenIds/hiddenIds` | Memory (+ read/hidden ids in localStorage) | Inbox re-polled; only read-state persists |
+| `settings {autoRefresh:10,…}` | `ar_settings` | Survive reloads |
+| Vault `[{address,password,savedAt}]` | `ar_saved_mails` | Cross-session restore = core feature |
+| `theme` | localStorage + pre-paint `dark` class | No flash |
+
+### Auth flow
+
+No login system. "Auth" = per-mailbox Mail.tm JWT from `POST /token`, held in memory (or active session if remembered). All routes public.
+
+---
+
+## 6. Implementation Details
+
+| Feature | How |
+|---|---|
+| Instant mailbox | `getNewEmail()`: domains → random `letter+7–10 alnum` local + random domain → `randString(16)` via `crypto.getRandomValues` (rejection sampling) → create (4× retry on 400/422) → token → poll |
+| Gateway auto-retry | `isGatewayError()` (status 502/504, `50x` in msg, `/relay error/i`) wraps generation: 3 rounds, 4s backoff, RETRYING badge; final failure → human message (never raw 502) |
+| OTP detect | `extractOtp()`: keyword-anchored `(\d{3}[\s-]?\d{3}\|\d{4,8})` → spaced-3+3 → bare-6 → bare-4..8; tags stripped, space collapsed |
+| Polling/alerts | Interval per `autoRefresh`; id-diff → toast + WebAudio chime (880/1318Hz, gesture-unlocked) + `vibrate(60)` + optional auto-copy |
+| Sanitization | Strip scripts/frames/forms/handlers; remote imgs blocked w/ placeholder class; links `noopener`, `no-referrer` meta |
+| Timer | `TIMER_SECONDS=600`; 1s tick → `mm:ss` + `--p` ring; warn/danger tones; Extend resets |
+| Backup | Export vault JSON to clipboard; import parses+merges (dedupe by address) |
+| Relay | 8s timeout (Hobby-safe), tm→gw fallback on empty-500/502-504, probe params stripped, `arrayBuffer()` passthrough, `no-store` + `X-Relay-Upstream`, throws → JSON 502/504 |
+| Browser→relay | Direct `api.mail.tm` first; `TypeError` → switch to `/api/mailtm` + toast. `AbortError` rethrown (no fallback by design) |
+| MCP | Stateless: `initialize` (negotiate 2025-06-18/2025-03-26/2024-11-05) → `tools/list` → `tools/call` (`get_domains` = parallel upstream race, `server_health`); `notifications/initialized`→202 |
+| Markdown | `src/proxy.ts` (Next16 renamed middleware→proxy): `Accept: text/markdown` on `/` → markdown + `Vary: Accept`; Vary appended on HTML passthrough too |
+| SW | `VERSION` bump invalidates; precache shell; navigations network-first→cache→offline; assets SWR; `/api/*` bypass; only `res.ok` navigations cached (poison-guard) |
+| Landing sim | Mock-mail cycle, IO counters, cached-rect tilt (measure on `pointerenter`, never at load) |
+
+### Decisions + reasoning
+
+- Iframe shell: keeps single-file app portable; app stays mounted so mailbox survives round-trips.
+- No database ever: privacy story + zero ops; provider + localStorage suffice.
+- mail.gw fallback (not retry): Mail.tm 500s are IP-bans, not flakes.
+- Precompiled landing CSS + subset fonts: killed 124KB blocking JIT + 3.9MB icons → 79KB + 23 icons.
+- Geist removed: 2 preloads served only invisible text; hurt Slow-4G.
+- Empty ad divs (never `display:none`, never ad code): zero layout impact + zero policy risk.
+- Human-voice blog, SEO skeleton untouched (H1/keywords/links/schema).
+
+### Edge cases
+
+- Collision (400/422) → regenerate; dead-code resends invalidate priors (documented); blocked domains → fresh mailbox → permanent-inbox advice.
+- Expiry mid-flow → Extend; saved restore after provider prune → honest error.
+- SW failures swallowed; audio needs first gesture; clipboard absence → `[UNKNOWN — fallback unverified]`.
+
+---
+
+## 7. Data Layer
+
+**Database: none.** Logical models = `ar_saved_mails[] {address,password,savedAt(,lastUsedAt)}`, `ar_active_session`.
+
+| Method | Path | Purpose | Req / Res | Auth |
+|---|---|---|---|---|
+| GET | `/api` | Health placeholder | — / `{message}` | none |
+| ANY | `/api/mailtm/[...path]?…` | 1:1 Mail.tm mirror | Forwards CT+Auth only; binary-safe; 502/504 JSON on failure | Upstream JWT passthrough |
+| GET | `…?health=1` | Relay + LIVE upstream probe (parallel 6s) | — / `{ok,relay,upstreams:{mail_tm,mail_gw},anyUpstream}` | none |
+| GET | `/.well-known/mcp` | MCP manifest | — / server/tools/usage JSON | none |
+| POST | `/.well-known/mcp` | JSON-RPC | initialize/tools.list+call / `-32700/-32600/-32601/-32602` | none |
+| GET | `/` + `Accept: text/markdown` | Markdown homepage | — / `text/markdown`, `Vary: Accept` | none |
+
+---
+
+## 8. Conventions & Patterns
+
+- Commits: Conventional Commits (`feat|fix|chore|docs|style|perf` + scope); amend only unpushed; push only on explicit approval.
+- App JS: one script scope, `state` object, `el` cache, `PascalCase` screens, `ar_` storage prefix, `data-*` hooks (`data-launch`, `data-ad-slot`).
+- CSS: utilities + small custom classes; `dark:` everywhere; `!`-important + arbitrary values OK in landing source.
+- Files: kebab-case pages; blog slugs = titles; **mirror rule** `Copy-Item index.html public/ar-tempmail.html` + hash check; rebuild CSS after landing markup (`npm run build:landing`, chained in build); never hand-edit `landing.css`.
+- Node scripts: bare-specifier `require()` only (absolute scoped-dir require breaks on Node 26).
+- Docs: README + `llms.txt`/`llms-full.txt` + `docs.html` + `openapi.json` — update together when adding pages/endpoints.
+
+---
+
+## 9. Known Issues & TODOs
+
+| # | Issue / debt | Status (2026-09-06) |
+|---|---|---|
+| 1 | **mail.gw DOWN (502 empty, direct-verified); mail.tm IP-bans Vercel** → generation 502s from Vercel; app auto-retries ×3 + human message; heals when gw recovers | ACTIVE OUTAGE — no code fix exists; monitor `?health=1` |
+| 2 | Upstream `POST /accounts` intermittent `400 Syntax error` (both providers, direct-verified) | Provider-side; app surfaces toast |
+| 3 | HTML `Vary: Accept` stripped by Vercel edge on documents (check 3b) | Accepted; markdown direction correct |
+| 4 | `hitempmail.app` unregistered; canonicals point at it | Buy → connect → rewire + redirect |
+| 5 | Blog 20/25 posts; India 6-month AdSense age rule | 2 posts/week; apply only when all 5 signals green |
+| 6 | `contact@hitempmail.app` + `IN` in Organization schema are placeholders | Verify |
+| 7 | `src/app/api/route.ts` hello-world dead weight | Keep as monitor or remove — open |
+| 8 | Workspace junk (`tailwindcss-cli.exe`, `tw_*.txt`, logs) must never be committed | Pending cleanup |
+| 9 | Local `.env` `DATABASE_URL` orphan; stale `node` processes after restarts | Harmless |
+| 10 | `ads.txt` + unit code need real publisher ID post-approval | 15 slots + README plan ready |
+
+---
+
+## 10. Run & Deploy
+
+| Need | Value |
+|---|---|
+| Env | `NEXT_PUBLIC_SITE_URL` (optional, default `https://hitempmail.app`); `VERCEL` auto (disables standalone); `.env` `DATABASE_URL` = unused orphan |
+| Install | `npm install` (376 pkgs, 0 vulns) → `package-lock.json` |
+| Dev | `npm run dev` → `http://127.0.0.1:3000/` (IP, not localhost — HMR guard) |
+| Build | `npm run build` (= `build:landing` + `next build`); standalone `build:standalone` + `npm start` |
+| Verify | `npm run verify:agentic` (local) · `BASE_URL=https://hitempmail.vercel.app …` (prod) — 7/8, 3b excepted |
+| Deploy | Push `main` → Vercel auto-build; confirm `/`, `/api/mailtm/domains`, new pages |
+| After landing markup | `npm run build:landing`; never hand-edit `landing.css` |
+| After app edits | `Copy-Item index.html public/ar-tempmail.html` + hash-compare |
+| Troubleshoot | HMR ws fail → use 127.0.0.1; relay 500/502 → `?health=1` tells relay-vs-provider; mailbox fail during outage → wait, auto-retry handles it |
+
+---
 ...[truncated 9113 chars]

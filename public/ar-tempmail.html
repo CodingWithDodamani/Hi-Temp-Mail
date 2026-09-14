@@ -1731,6 +1731,14 @@
       }
     });
 
+    /* Gateway (502/504/relay) failures are transient provider trouble, not app
+       bugs — detect them in one place so generation can auto-retry below. */
+    function isGatewayError(err) {
+      const s = (err && err.status) || 0;
+      const msg = String((err && err.message) || '');
+      return s === 502 || s === 504 || /50[234]/.test(msg) || /relay error/i.test(msg);
+    }
+
     /* ---------------- Core: generate a new temp email ---------------- */
     async function getNewEmail(triggerBtn = null) {
       if (state.generating) return;
@@ -1741,6 +1749,13 @@
       setEmailLoading(true);
       setStatusBadge('GENERATING', 'loading');
 
+      // Auto-retry the whole generation on gateway trouble (both mail
+      // providers flapping is the common cause) with a short backoff, so a
+      // briefly-down provider doesn't strand the user on an error.
+      const MAX_ROUNDS = 3;
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      try {
+      for (let round = 0; ; round++) {
       try {
         /* 1) Fetch available public domain */
         const domainsData = await api('/domains?page=1');
@@ -1791,17 +1806,30 @@
         startPolling();
         checkInbox(false);
         showToast('New email generated!', 'success');
+        return;
+      } catch (err) {
+        if (!isGatewayError(err) || round >= MAX_ROUNDS - 1) throw err;
+        console.warn('[Hi Temp Mail] gateway hiccup — auto-retrying generation', err);
+        setStatusBadge('RETRYING', 'loading');
+        await wait(4000);
+      }
+      } // end auto-retry loop (success returns, failure rethrows)
       } catch (err) {
         state.generating = false;
         console.error('[Hi Temp Mail] getNewEmail failed:', err);
-        // 502/504 means the relay/upstream is reachable but failing;
-        // only no-status/timeout errors mean the browser is truly offline.
+        // Gateway trouble (502/504/relay) = providers down, app is fine:
+        // say so plainly instead of leaking "Request failed (502)".
+        // Only no-status/timeout errors mean the browser is truly offline.
         const s = (err && err.status) || 0;
-        const msg = (err && err.message) || '';
-        const offlineLike = !s || msg.includes('Network error') || msg.includes('timed out');
+        const raw = (err && err.message) || '';
+        const offlineLike = !s || raw.includes('Network error') || raw.includes('timed out');
+        const gateway = !offlineLike && isGatewayError(err);
+        const msg = gateway
+          ? 'Mail servers are down right now — tap Change Mail to retry.'
+          : (raw || 'Failed to generate email.');
         setStatusBadge(offlineLike ? 'OFFLINE' : 'RETRY', 'error');
-        setEmailError(msg || 'Failed to generate email.');
-        showToast(msg || 'Failed to generate email.', 'error');
+        setEmailError(msg);
+        showToast(msg, 'error');
       } finally {
         state.generating = false;
         if (triggerBtn) hideSpinner(triggerBtn);

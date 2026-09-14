@@ -44,9 +44,39 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
 
     // Health check — https://hitempmail.vercel.app/api/mailtm/domains?health=1
     // Must return BEFORE building upstream URLs so ?health=1 never forwards.
+    // Probes both upstreams live (parallel, short timeout) so monitors and
+    // the app can tell "relay healthy, providers down" apart from relay bugs.
     if (req.nextUrl.searchParams.get("health") === "1") {
+      const probe = async (base: string) => {
+        const url = `${base}/domains?page=1`;
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 6000);
+        try {
+          const r = await fetch(url, {
+            headers: { Accept: "application/json" },
+            signal: controller.signal,
+          });
+          const txt = await r.text().catch(() => "");
+          return { reachable: r.status === 200 && txt.trim() !== "", status: r.status };
+        } catch (e) {
+          return { reachable: false, error: e instanceof Error ? e.message : String(e) };
+        } finally {
+          clearTimeout(timer);
+        }
+      };
+      const [primary, fallback] = await Promise.all([
+        probe(API_PRIMARY),
+        probe(API_FALLBACK),
+      ]);
       return NextResponse.json(
-        { ok: true, path, search: req.nextUrl.search, method: req.method, primary: API_PRIMARY, fallback: API_FALLBACK },
+        {
+          ok: true,
+          relay: "ok",
+          path,
+          method: req.method,
+          upstreams: { mail_tm: primary, mail_gw: fallback },
+          anyUpstream: primary.reachable || fallback.reachable,
+        },
         { headers: { ...corsHeaders(), "Cache-Control": "no-store" } }
       );
     }
