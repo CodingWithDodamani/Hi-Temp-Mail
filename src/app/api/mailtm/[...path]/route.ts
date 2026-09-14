@@ -11,11 +11,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_PRIMARY = "https://api.mail.tm";
 const API_FALLBACK = "https://api.mail.gw";
-const TIMEOUT_MS = 20000;
+// Vercel Hobby kills functions at ~10s. 8s per upstream fails fast with JSON
+// instead of a platform HTML 502. Worst case ~16s, fits Pro limits.
+const TIMEOUT_MS = 8000;
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
+// Pro honors this (up to plan limit); Hobby caps at 10s and ignores the rest.
+export const maxDuration = 25;
 
 function corsHeaders(): Record<string, string> {
   return {
@@ -38,11 +42,12 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       path = undefined;
     }
 
-    // Health check for Vercel — https://hitempmail.vercel.app/api/mailtm/domains?health=1
-    if (req.nextUrl.searchParams.get("health") === "1" || req.nextUrl.searchParams.get("debug") === "1") {
+    // Health check — https://hitempmail.vercel.app/api/mailtm/domains?health=1
+    // Must return BEFORE building upstream URLs so ?health=1 never forwards.
+    if (req.nextUrl.searchParams.get("health") === "1") {
       return NextResponse.json(
         { ok: true, path, search: req.nextUrl.search, method: req.method, primary: API_PRIMARY, fallback: API_FALLBACK },
-        { headers: corsHeaders() }
+        { headers: { ...corsHeaders(), "Cache-Control": "no-store" } }
       );
     }
 
@@ -78,10 +83,16 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
       }
     }
 
-    // Try primary (mail.tm), fallback to mail.gw if primary is blocked (500 empty from Vercel IP)
+    // Strip internal probe params before forwarding to Mail.tm / Mail.gw.
+    const forwardSearch = new URLSearchParams(req.nextUrl.searchParams);
+    forwardSearch.delete("health");
+    forwardSearch.delete("debug");
+    const qs = forwardSearch.toString();
+    const suffix = qs ? `?${qs}` : "";
+    // Try primary (mail.tm), fallback to mail.gw if primary is blocked (5xx from Vercel IP)
     const targets = [
-      `${API_PRIMARY}/${(path ?? []).join("/")}${req.nextUrl.search}`,
-      `${API_FALLBACK}/${(path ?? []).join("/")}${req.nextUrl.search}`,
+      `${API_PRIMARY}/${(path ?? []).join("/")}${suffix}`,
+      `${API_FALLBACK}/${(path ?? []).join("/")}${suffix}`,
     ];
 
     let res: Response | null = null;
@@ -89,12 +100,14 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     for (const target of targets) {
       try {
         const r = await fetchWithTimeout(target);
-        // If primary returns 500 with empty body (Vercel IP block), try fallback
-        if (r.status === 500) {
+        // Vercel IPs get empty 500 from mail.tm; transient 502/503/504 also
+        // deserve a fallback try before surfacing an error to the browser.
+        if (r.status >= 500 && r.status <= 599) {
           const clone = r.clone();
           const txt = await clone.text().catch(() => "");
-          if (txt.trim() === "" && target.includes("mail.tm")) {
-            console.warn(`[mailtm relay] ${target} returned 500 empty — trying fallback ${API_FALLBACK}`);
+          const isPrimary = target.includes("api.mail.tm");
+          if (isPrimary && (txt.trim() === "" || r.status === 502 || r.status === 503 || r.status === 504)) {
+            console.warn(`[mailtm relay] ${target} returned ${r.status} — trying fallback ${API_FALLBACK}`);
             continue;
           }
         }
@@ -113,6 +126,14 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     }
 
     const resHeaders = new Headers(corsHeaders());
+    resHeaders.set("Cache-Control", "no-store");
+    // Lets curl/logs tell relay errors apart from upstream errors.
+    // Public upstream URL only — never includes auth headers.
+    try {
+      resHeaders.set("X-Relay-Upstream", res.url || "");
+    } catch {
+      /* header best-effort only */
+    }
     const resContentType = res.headers.get("content-type");
     if (resContentType) resHeaders.set("Content-Type", resContentType);
 
@@ -129,9 +150,12 @@ async function relay(req: NextRequest, ctx: { params: Promise<{ path?: string[] 
     const stack = err instanceof Error ? err.stack : String(err);
     // Include target in logs for Vercel Runtime Logs
     console.error("[mailtm relay] error:", message, stack);
+    // Timeout (AbortError) is a gateway timeout, not Bad Gateway — keep
+    // "Request failed (502)" vs "(504)" distinguishable in the UI.
+    const isTimeout = message.toLowerCase().includes("abort");
     return NextResponse.json(
       { message: `Relay error: ${message}`, stack: stack?.slice(0, 500) },
-      { status: 502, headers: corsHeaders() },
+      { status: isTimeout ? 504 : 502, headers: { ...corsHeaders(), "Cache-Control": "no-store" } },
     );
   }
 }

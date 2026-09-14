@@ -1195,9 +1195,10 @@
 
     /**
      * Small wrapper around the Mail.tm REST API.
-     * - Calls the official API first; if the browser blocks it (CORS / network),
-     *   transparently retries once through the same-origin relay endpoint.
-     * - Auto-retries rate-limited (429) responses with a short backoff.
+     * - Calls the official API first; if the browser blocks it (CORS / network
+     *   or timeout), transparently retries through the same-origin relay.
+     * - Auto-retries rate-limited (429) and transient gateway (502/504)
+     *   responses with a short backoff.
      */
     async function api(path, { method = 'GET', body, auth = false, timeout, contentType } = {}) {
       const call = (base) => {
@@ -1219,23 +1220,37 @@
         try {
           res = await call(API_BASE);
         } catch (err) {
-          if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+          // fetchWithTimeout converts AbortError to a plain Error, so match
+          // both TypeError (CORS/network) and the timeout message/shape.
+          const isNetworkLike = (err instanceof TypeError) ||
+            (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
+          if (isNetworkLike && API_BASE === DIRECT_API && RELAY_API) {
             console.warn('[Hi Temp Mail] direct Mail.tm API unreachable — switching to relay endpoint');
             API_BASE = RELAY_API;
             showToast('Using secure relay for the Mail.tm API', 'info');
             continue; // retry immediately through the relay
-          } else if (err instanceof TypeError) {
+          } else if (isNetworkLike) {
             throw new Error('Network error — check your connection.');
           } else {
             throw err;
           }
         }
-        if (res.status === 429 && attempt < 2) {
+        // Transient relay/upstream gateway failure → back off and retry once
+        // before surfacing "Request failed (502/504)".
+        if (res && (res.status === 502 || res.status === 504) && attempt < 2) {
+          await sleep(1200 * (attempt + 1));
+          continue;
+        }
+        if (res && res.status === 429 && attempt < 2) {
           await sleep(1500 * (attempt + 1)); // rate limited → back off and retry
           continue;
         }
         break;
       }
+
+      // The DIRECT→RELAY switch uses `continue`, so the loop can exit with
+      // res==null when the switch happened on the final iteration.
+      if (!res) throw new Error('Network error — check your connection.');
 
       if (res.status === 204) return null;
 
@@ -1267,10 +1282,14 @@
       try {
         res = await attempt(API_BASE);
       } catch (err) {
-        if (err instanceof TypeError && API_BASE === DIRECT_API && RELAY_API) {
+        const isNetworkLike = (err instanceof TypeError) ||
+          (err && (err.message === 'Request timed out. Check your connection.' || err.name === 'AbortError'));
+        if (isNetworkLike && API_BASE === DIRECT_API && RELAY_API) {
           console.warn('[Hi Temp Mail] direct API unreachable for blob — switching to relay');
           API_BASE = RELAY_API;
           res = await attempt(API_BASE);
+        } else if (isNetworkLike) {
+          throw new Error('Network error — check your connection.');
         } else {
           throw err;
         }
@@ -1775,9 +1794,14 @@
       } catch (err) {
         state.generating = false;
         console.error('[Hi Temp Mail] getNewEmail failed:', err);
-        setStatusBadge('OFFLINE', 'error');
-        setEmailError(err.message || 'Failed to generate email.');
-        showToast(err.message || 'Failed to generate email.', 'error');
+        // 502/504 means the relay/upstream is reachable but failing;
+        // only no-status/timeout errors mean the browser is truly offline.
+        const s = (err && err.status) || 0;
+        const msg = (err && err.message) || '';
+        const offlineLike = !s || msg.includes('Network error') || msg.includes('timed out');
+        setStatusBadge(offlineLike ? 'OFFLINE' : 'RETRY', 'error');
+        setEmailError(msg || 'Failed to generate email.');
+        showToast(msg || 'Failed to generate email.', 'error');
       } finally {
         state.generating = false;
         if (triggerBtn) hideSpinner(triggerBtn);

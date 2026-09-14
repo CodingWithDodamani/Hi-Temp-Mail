@@ -11,7 +11,7 @@
  * Bump VERSION to invalidate every cache after a deployment changes assets.
  * ------------------------------------------------------------------------- */
 
-const VERSION = "v1";
+const VERSION = "v2"; // v1 may hold poisoned 502 HTML; bump invalidates it
 const SHELL_CACHE = `htm-shell-${VERSION}`;
 const ASSET_CACHE = `htm-asset-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -83,8 +83,16 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const fresh = await fetch(request);
-          const cache = await caches.open(SHELL_CACHE);
-          cache.put(request, fresh.clone());
+          // Only cache successful navigations. Caching a 502 HTML error
+          // page would serve "offline" forever, even after recovery.
+          if (fresh && fresh.ok) {
+            const cache = await caches.open(SHELL_CACHE);
+            try {
+              await cache.put(request, fresh.clone());
+            } catch {
+              /* cache quota / opaque — serve network copy anyway */
+            }
+          }
           return fresh;
         } catch (err) {
           const cached = await caches.match(request, { ignoreSearch: true });
